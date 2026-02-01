@@ -1,27 +1,52 @@
-/***** Breadcrumbs *****/
+// =============================================================================
+// Breadcrumbs - Clean navigation trail
+// =============================================================================
+
 .breadcrumbs {
   @include tablet {
     margin: 0;
   }
 
-  margin: 0 0 15px 0;
-  padding: 0;
+  margin: 0 0 var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  background-color: var(--color-surface-raised);
+  border-radius: var(--radius-md);
 
   li {
-    color: $secondary-text-color;
-    font-size: $font-size-small;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
     max-width: 450px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 
     + li::before {
-      content: ">";
-      margin: 0 4px;
+      content: "/";
+      margin: 0 var(--space-2);
+      color: var(--color-text-muted);
     }
 
-    a:visited {
-      color: $link_color;
+    a {
+      color: var(--color-text-secondary);
+      transition: color var(--duration-fast) ease;
+
+      &:hover {
+        color: var(--color-interactive);
+        text-decoration: none;
+      }
+
+      &:visited {
+        color: var(--color-text-secondary);
+      }
+    }
+
+    &:last-child {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-medium);
     }
   }
 }

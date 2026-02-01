@@ -1,48 +1,92 @@
-/***** Buttons *****/
+// =============================================================================
+// Buttons - Bold, pill-shaped modern styling
+// =============================================================================
+
 .button {
   @include tablet { width: auto; }
 
-  background-color: transparent;
-  border: 1px solid $button-color;
-  border-radius: 4px;
-  color: $button-color;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 12px;
-  line-height: 2.34; //Taken from Zendesk garden bedrock
+  // Layout
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  // Sizing - Generous touch targets
+  padding: var(--space-3) var(--space-8);
   margin: 0;
-  padding: 0 20px;
-  text-align: center;
-  transition: background-color .12s ease-in-out, border-color .12s ease-in-out, color .15s ease-in-out;
-  user-select: none;
-  white-space: nowrap;
   width: 100%;
+  min-height: 48px;
+
+  // Typography - Bold and confident
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: var(--letter-spacing-tight);
+
+  // Visual - Pill-shaped, prominent
+  background-color: transparent;
+  border: 2px solid var(--color-interactive);
+  border-radius: var(--radius-full);
+  color: var(--color-interactive);
+  box-shadow: var(--shadow-sm);
+
+  // Interaction
+  cursor: pointer;
+  user-select: none;
   -webkit-touch-callout: none;
+  transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 
   &:visited {
-    color: $button-color;
+    color: var(--color-interactive);
   }
 
   &:hover,
   &:active,
-  &:focus,
-  &.button-primary {
-    background-color: $brand_color;
-    color: $brand_text_color;
+  &:focus {
+    background-color: var(--color-interactive);
+    border-color: var(--color-interactive);
+    color: var(--color-text-inverse);
     text-decoration: none;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+
+    @include reduced-motion {
+      transform: none;
+    }
+  }
+
+  &:focus-visible {
+    @include focus-ring;
   }
 
   &.button-primary {
+    background-color: var(--color-interactive);
+    border-color: var(--color-interactive);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-md);
+
     &:hover,
     &:focus,
     &:active {
-      background-color: $hover-button-color;
-      border-color: $hover-button-color;
+      background-color: var(--color-interactive-hover);
+      border-color: var(--color-interactive-hover);
+      box-shadow: var(--shadow-xl);
+      transform: translateY(-2px);
+
+      @include reduced-motion {
+        transform: none;
+      }
     }
   }
 
   &[data-disabled] {
     cursor: default;
+    opacity: 0.5;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
   }
 }
 
@@ -51,47 +95,80 @@
     width: auto;
   }
 
-  cursor: pointer;
-  background-color: $button-color;
-  border: 0;
-  border-radius: 4px;
-  color: $brand_text_color;
-  font-size: 14px;
-  line-height: 2.72;
-  min-width: 190px;
-  padding: 0 1.9286em;
+  // Layout
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // Sizing - Extra large, bold primary actions
+  padding: var(--space-5) var(--space-10);
+  min-width: 220px;
+  min-height: 56px;
   width: 100%;
 
+  // Typography - Bold and prominent
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-tight);
+
+  // Visual - Pill-shaped with prominent shadow
+  background-color: var(--color-interactive);
+  border: none;
+  border-radius: var(--radius-full);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-lg);
+
+  // Interaction
+  cursor: pointer;
+  transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+
   &:visited {
-    color: $brand_text_color;
+    color: var(--color-text-inverse);
   }
 
   &:hover,
   &:active,
   &:focus {
-    background-color: $hover-button-color;
+    background-color: var(--color-interactive-hover);
+    text-decoration: none;
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-3px);
+
+    @include reduced-motion {
+      transform: none;
+    }
   }
 
+  &:focus-visible {
+    @include focus-ring;
+  }
 
   &[disabled] {
-    background-color: #ddd;
+    background-color: var(--color-surface-overlay);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
   }
 }
 
 .button-secondary {
-  color: $secondary-text-color;
-  border: 1px solid $high-contrast-border-color;
-  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 2px solid var(--color-border-default);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
 
   &:visited {
-    color: $secondary-text-color;
+    color: var(--color-text-secondary);
   }
 
   &:hover,
   &:focus,
   &:active {
-    color: $text_color;
-    border: 1px solid $high-contrast-border-color;
-    background-color: $primary-shade;
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
+    background-color: var(--color-surface-raised);
+    box-shadow: var(--shadow-md);
   }
 }

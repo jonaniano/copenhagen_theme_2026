@@ -1,4 +1,7 @@
-/***** Section pages *****/
+// =============================================================================
+// Section Pages - Bold, modern section layout
+// =============================================================================
+
 .section {
   &-container {
     display: flex;
@@ -10,45 +13,343 @@
       flex: 0 0 80%;
     }
     flex: 1;
-    max-width: 100%
+    max-width: 100%;
   }
 
-  &-subscribe button {
-    @extend .button;
-    &[data-selected="true"] {
-      @extend .button-primary;
+  &-subscribe {
+    margin-top: var(--space-4);
+
+    button {
+      @extend .button;
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-5);
+      font-weight: var(--font-weight-semibold);
+
+      &[data-selected="true"] {
+        @extend .button-primary;
+      }
+    }
+  }
+
+  &-empty {
+    text-align: center;
+    padding: var(--space-16);
+    color: var(--color-text-muted);
+    font-style: normal;
+
+    a {
+      color: var(--color-link);
+      font-weight: var(--font-weight-medium);
     }
   }
 }
 
+// =============================================================================
+// Section List (nested sections)
+// =============================================================================
+
 .section-list {
-  margin: 40px 0;
+  margin: var(--space-10) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .section-list-item {
-  border-bottom: 1px solid $low-contrast-border-color;
-  font-size: $font-size-bigger;
-  padding: 15px 0;
+  border: none;
+  font-size: var(--font-size-md);
+  padding: 0;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 
-  &:first-child {
-    border-top: 1px solid $low-contrast-border-color;
+  // Left accent line
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(
+      180deg,
+      var(--color-interactive) 0%,
+      color-mix(in srgb, var(--color-interactive) 60%, #8B5CF6) 100%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-normal) ease;
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   a {
     align-items: center;
-    color: $text_color;
+    color: var(--color-text-primary);
     display: flex;
     justify-content: space-between;
+    font-weight: var(--font-weight-semibold);
+    padding: var(--space-5) var(--space-6);
+    transition: color var(--duration-fast) ease;
+
+    &:hover {
+      color: var(--color-interactive);
+      text-decoration: none;
+    }
+
+    span {
+      flex: 1;
+    }
+
+    // Arrow icon
+    svg {
+      color: var(--color-text-muted);
+      transition: all var(--duration-fast) ease;
+      flex-shrink: 0;
+    }
+  }
+
+  &:hover a svg {
+    color: var(--color-interactive);
+    transform: translateX(4px);
+
+    [dir="rtl"] & {
+      transform: translateX(-4px);
+    }
   }
 }
 
+// =============================================================================
+// See All Sections Trigger
+// =============================================================================
+
 .see-all-sections-trigger {
   cursor: pointer;
-  display: block;
-  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  margin-top: var(--space-4);
   text-align: center;
+  color: var(--color-interactive);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-full);
+  background-color: color-mix(in srgb, var(--color-interactive) 10%, transparent);
+  transition: all var(--duration-normal) ease;
+  border: none;
+
+  &::after {
+    content: "↓";
+    transition: transform var(--duration-fast) ease;
+  }
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-interactive) 20%, transparent);
+    transform: translateY(2px);
+
+    &::after {
+      transform: translateY(2px);
+    }
+  }
 
   &[aria-hidden="true"] {
     display: none;
+  }
+}
+
+// =============================================================================
+// Article List on Section Pages (enhanced styling)
+// =============================================================================
+
+.section-content {
+  .article-list {
+    margin-top: var(--space-8);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-md);
+
+    // Section header for articles
+    &::before {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 4px;
+      background: var(--color-interactive);
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-6);
+    }
+  }
+
+  .article-list-item {
+    padding: var(--space-4) var(--space-4);
+    margin: var(--space-1) 0;
+    border-radius: var(--radius-lg);
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// =============================================================================
+// Page Header (shared styling for category/section pages)
+// =============================================================================
+
+.page-header {
+  margin-bottom: var(--space-10);
+  padding-bottom: var(--space-8);
+  border-bottom: 2px solid var(--color-border-subtle);
+  position: relative;
+
+  // Accent underline
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--color-interactive) 0%,
+      color-mix(in srgb, var(--color-interactive) 60%, #8B5CF6) 100%
+    );
+    border-radius: var(--radius-full);
+  }
+
+  h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+    line-height: var(--line-height-tight);
+  }
+
+  &-description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: var(--space-4) 0 0;
+    max-width: 65ch;
+  }
+}
+
+// =============================================================================
+// Sub Navigation (breadcrumbs + search)
+// =============================================================================
+
+.sub-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+
+  @include tablet {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search-container {
+    position: relative;
+    flex: 0 0 auto;
+    min-width: 280px;
+
+    @include tablet {
+      max-width: 320px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+      pointer-events: none;
+      z-index: 1;
+
+      [dir="rtl"] & {
+        left: auto;
+        right: var(--space-4);
+      }
+    }
+
+    input[type="search"] {
+      padding-left: var(--space-10);
+      border-radius: var(--radius-full);
+      border: 2px solid var(--color-border-subtle);
+      background-color: var(--color-surface-raised);
+      transition: all var(--duration-fast) ease;
+
+      [dir="rtl"] & {
+        padding-left: var(--space-4);
+        padding-right: var(--space-10);
+      }
+
+      &:focus {
+        border-color: var(--color-interactive);
+        background-color: var(--color-surface);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 20%, transparent);
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Dark Mode Enhancements
+// =============================================================================
+
+@include dark-mode {
+  .section-list-item {
+    background-color: var(--color-surface-raised);
+
+    &:hover {
+      background-color: var(--color-surface-raised);
+    }
+  }
+
+  .see-all-sections-trigger {
+    background-color: color-mix(in srgb, var(--color-interactive) 15%, transparent);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--color-interactive) 25%, transparent);
+    }
+  }
+
+  .section-content .article-list {
+    background-color: var(--color-surface-raised);
+  }
+
+  .sub-nav {
+    background-color: var(--color-surface-raised);
+
+    .search-container input[type="search"] {
+      background-color: var(--color-surface);
+
+      &:focus {
+        background-color: var(--color-surface);
+      }
+    }
   }
 }

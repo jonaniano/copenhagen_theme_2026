@@ -1,6 +1,7 @@
-/***** Search field *****/
+// =============================================================================
+// Search Field
+// =============================================================================
 
-$icon-color: #777;
 $padding-left: 40px;
 $padding-right: 20px;
 
@@ -9,41 +10,50 @@ $padding-right: 20px;
 }
 
 .search {
-  border-color: $high-contrast-border-color;
-  border-radius: 30px;
+  border-color: var(--color-border-subtle);
+  border-radius: var(--radius-full);
   border-style: solid;
-  border-width: 1px;
+  border-width: 2px;
   display: flex;
   position: relative;
-  transition: $input-transition;
+  width: 100%;
+  transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+  background-color: var(--color-surface);
 
   &:focus-within {
-    border-color: $brand_color;
+    border-color: var(--color-interactive);
+    box-shadow: var(--shadow-lg), 0 0 0 4px color-mix(in srgb, var(--color-interactive) 30%, transparent);
   }
 
-  input[type="search"], 
+  input[type="search"],
   .clear-button {
-    background-color: #fff;
-    border-radius: 30px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-full);
     border: none;
   }
 
-  &-full input[type="search"], 
+  &-full input[type="search"],
   &-full .clear-button {
-    border-color: #fff;
+    border-color: var(--color-surface);
   }
 
   input[type="search"] {
     appearance: none;
     -webkit-appearance: none;
     box-sizing: border-box;
-    color: $field-text-color;
+    color: var(--color-text-secondary);
     flex: 1 1 auto;
     height: 40px;
     width: 100%;
+    font-size: var(--font-size-base);
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
 
     &:focus {
-      color: $field-text-focus-color;
+      color: var(--color-text-primary);
     }
 
     &::-webkit-search-decoration,
@@ -54,38 +64,36 @@ $padding-right: 20px;
     }
 
     &:-webkit-autofill,
-    &:-webkit-autofill:hover, 
+    &:-webkit-autofill:hover,
     &:-webkit-autofill:focus {
-      -webkit-box-shadow: 0 0 0 1000px #fff inset;
+      -webkit-box-shadow: 0 0 0 1000px var(--color-surface) inset;
     }
-
   }
 
   .clear-button {
     align-items: center;
     box-sizing: border-box;
-    color: $icon-color;
+    color: var(--color-text-muted);
     cursor: pointer;
     display: none;
     flex: none;
     justify-content: center;
-    padding: 0 15px;
+    padding: 0 var(--space-4);
+    transition: background-color var(--duration-fast) ease, color var(--duration-fast) ease;
 
     &:hover {
-      background-color: $brand_color;
-      color: #fff;
+      background-color: var(--color-interactive);
+      color: var(--color-text-inverse);
     }
 
     &:focus {
       @include focus-ring;
     }
-
   }
 
   &-has-value .clear-button {
     display: flex;
   }
-
 }
 
 [dir="ltr"] .search {
@@ -100,9 +108,8 @@ $padding-right: 20px;
     border-right-color: transparent;
 
     &:focus {
-      border-right-color: $brand_color;
+      border-right-color: var(--color-interactive);
     }
-
   }
 
   .clear-button {
@@ -111,9 +118,8 @@ $padding-right: 20px;
     border-left-color: transparent;
 
     &:focus {
-      border-left-color: $brand_color;
+      border-left-color: var(--color-interactive);
     }
-    
   }
 }
 
@@ -129,9 +135,8 @@ $padding-right: 20px;
     border-left-color: transparent;
 
     &:focus {
-      border-left-color: $brand_color;
+      border-left-color: var(--color-interactive);
     }
-
   }
 
   .clear-button {
@@ -140,9 +145,8 @@ $padding-right: 20px;
     border-right-color: transparent;
 
     &:focus {
-      border-right-color: $brand_color;
+      border-right-color: var(--color-interactive);
     }
-
   }
 }
 
@@ -153,7 +157,7 @@ $padding-right: 20px;
   z-index: 1;
   width: 18px;
   height: 18px;
-  color: $icon-color;
+  color: var(--color-text-muted);
   pointer-events: none;
 
   [dir="rtl"] & {

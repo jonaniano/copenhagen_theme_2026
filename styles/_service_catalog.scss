@@ -1,8 +1,64 @@
 .service-catalog {
   &-hero {
-    background-image: url($service_catalog_hero_image);
-    margin-bottom: 10px;
-    height: 320px;
+    margin-bottom: var(--space-3);
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+
+    // Light mode - brand-colored gradient on light background
+    background:
+      radial-gradient(ellipse at 30% 70%, color-mix(in srgb, var(--color-interactive) 12%, transparent) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 30%, color-mix(in srgb, var(--color-interactive) 10%, transparent) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--color-interactive) 8%, transparent) 0%, transparent 60%),
+      linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-raised) 100%);
+
+    // Decorative blurred shapes using brand color
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    &::before {
+      width: 400px;
+      height: 400px;
+      background: color-mix(in srgb, var(--color-interactive) 10%, transparent);
+      top: -180px;
+      right: -100px;
+      filter: blur(50px);
+    }
+
+    &::after {
+      width: 320px;
+      height: 320px;
+      background: color-mix(in srgb, var(--color-interactive) 8%, transparent);
+      bottom: -140px;
+      left: -60px;
+      filter: blur(40px);
+    }
+
+    // Dark mode - more vibrant brand colors
+    @include dark-mode {
+      background:
+        radial-gradient(ellipse at 30% 70%, color-mix(in srgb, var(--color-interactive) 22%, transparent) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 30%, color-mix(in srgb, var(--color-interactive) 18%, transparent) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--color-interactive) 14%, transparent) 0%, transparent 60%),
+        linear-gradient(135deg, var(--color-surface-raised) 0%, var(--color-surface) 100%);
+
+      &::before {
+        background: color-mix(in srgb, var(--color-interactive) 18%, transparent);
+      }
+
+      &::after {
+        background: color-mix(in srgb, var(--color-interactive) 14%, transparent);
+      }
+    }
   }
 
   &-description {

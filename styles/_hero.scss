@@ -1,16 +1,117 @@
-/***** Hero component *****/
+// =============================================================================
+// Hero Component - Bold, immersive hero section
+// =============================================================================
+
 .hero {
+  // Customer image overlays the gradient (when uploaded via theme settings)
   background-image: url($homepage_background_image);
   background-position: center;
   background-size: cover;
-  height: 300px;
-  padding: 0 20px;
+  min-height: 220px;
+  padding: var(--space-8) var(--space-5);
   text-align: center;
   width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Modern mesh gradient as default background
+  // Shows when no custom image is uploaded
+  background-color: #0f172a;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    // Multi-color mesh gradient with brand color accent
+    background:
+      // Brand color - primary accent (bottom left)
+      radial-gradient(ellipse 120% 80% at 10% 90%, color-mix(in srgb, var(--color-interactive) 70%, transparent) 0%, transparent 50%),
+      // Violet accent (top right)
+      radial-gradient(ellipse 100% 100% at 90% 10%, rgba(139, 92, 246, 0.5) 0%, transparent 45%),
+      // Pink/magenta accent (bottom right)
+      radial-gradient(ellipse 80% 80% at 85% 80%, rgba(236, 72, 153, 0.4) 0%, transparent 40%),
+      // Cyan accent (top left)
+      radial-gradient(ellipse 90% 70% at 15% 20%, rgba(34, 211, 238, 0.35) 0%, transparent 45%),
+      // Center brand glow
+      radial-gradient(ellipse 60% 60% at 50% 50%, color-mix(in srgb, var(--color-interactive) 40%, transparent) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  // Dark mode - richer, more vibrant gradients
+  @include dark-mode {
+    background-color: #030712;
+
+    &::after {
+      background:
+        // Brand color - primary accent (bottom left)
+        radial-gradient(ellipse 120% 80% at 10% 90%, color-mix(in srgb, var(--color-interactive) 80%, transparent) 0%, transparent 50%),
+        // Violet accent (top right)
+        radial-gradient(ellipse 100% 100% at 90% 10%, rgba(139, 92, 246, 0.6) 0%, transparent 45%),
+        // Pink/magenta accent (bottom right)
+        radial-gradient(ellipse 80% 80% at 85% 80%, rgba(236, 72, 153, 0.5) 0%, transparent 40%),
+        // Cyan accent (top left)
+        radial-gradient(ellipse 90% 70% at 15% 20%, rgba(34, 211, 238, 0.45) 0%, transparent 45%),
+        // Center brand glow
+        radial-gradient(ellipse 60% 60% at 50% 50%, color-mix(in srgb, var(--color-interactive) 50%, transparent) 0%, transparent 60%);
+    }
+  }
+
+  @include tablet {
+    min-height: 260px;
+    padding: var(--space-10) var(--space-6);
+  }
+
+  // When a custom image is present, it will cover the gradient
+  // No overlay is applied so custom images display cleanly
 
   &-inner {
-    @include vertical-align;
-    max-width: 610px;
+    width: 100%;
+    max-width: 760px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
+
+    // Hero text is always light (on dark gradient or custom image)
+    color: #ffffff;
+
+    // Hero title styling - Bold and impactful
+    h1, h2 {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-extrabold);
+      margin-bottom: var(--space-5);
+      color: #ffffff;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+      letter-spacing: var(--letter-spacing-tight);
+      line-height: var(--line-height-tight);
+
+      @include tablet {
+        font-size: var(--font-size-3xl);
+      }
+    }
+  }
+
+  // Search box in hero gets special treatment
+  .search {
+    max-width: 640px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-xl);
+  }
+
+  // Reposition search icon to align with centered search box
+  .search-icon {
+    // Calculate left edge of centered 640px search box, plus 15px padding
+    // Falls back to 15px on smaller screens where search takes full width
+    left: max(15px, calc((100% - 640px) / 2 + 15px));
+
+    [dir="rtl"] & {
+      left: auto;
+      right: max(15px, calc((100% - 640px) / 2 + 15px));
+    }
   }
 }

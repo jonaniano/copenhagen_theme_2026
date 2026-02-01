@@ -147,7 +147,7 @@
 
     <section id="main-content" class="search-results-column">
       {{generative_answers}}
-      <h1 class="search-results-subheading">
+      <h1 class="search-results-subheading" aria-live="polite" aria-atomic="true">
         {{#if results}}
           {{#is current_filter.identifier 'unified'}}
             {{#if content_tag_filters }}

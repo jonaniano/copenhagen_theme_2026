@@ -1,0 +1,309 @@
+// =============================================================================
+// CSS Decorative Elements
+// =============================================================================
+// Modern CSS-based decorations that replace static placeholder images.
+// These are themeable, support dark mode, and are performant.
+
+// -----------------------------------------------------------------------------
+// Decorative Gradient Backgrounds
+// -----------------------------------------------------------------------------
+// Modern mesh-style gradient backgrounds for hero sections.
+// Uses neutral colors that work with any brand color.
+
+@mixin gradient-mesh-base {
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+    linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+@mixin gradient-mesh-dark {
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 40%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+    linear-gradient(135deg, #1e1e2e 0%, #0f0f1a 100%);
+}
+
+// Alternative warm gradient
+@mixin gradient-warm {
+  background:
+    radial-gradient(ellipse at 30% 70%, rgba(251, 146, 60, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(244, 63, 94, 0.08) 0%, transparent 40%),
+    linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+}
+
+// Cool blue gradient
+@mixin gradient-cool {
+  background:
+    radial-gradient(ellipse at 25% 75%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+    linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+// -----------------------------------------------------------------------------
+// Abstract Blob Decoration
+// -----------------------------------------------------------------------------
+// Creates floating abstract shapes for visual interest
+
+.decoration-blobs {
+  position: relative;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &::before {
+    width: 300px;
+    height: 300px;
+    background: rgba(99, 102, 241, 0.2);
+    top: -100px;
+    right: -50px;
+  }
+
+  &::after {
+    width: 250px;
+    height: 250px;
+    background: rgba(59, 130, 246, 0.15);
+    bottom: -80px;
+    left: -30px;
+  }
+
+  @include dark-mode {
+    &::before {
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    &::after {
+      background: rgba(59, 130, 246, 0.25);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Geometric Pattern Background
+// -----------------------------------------------------------------------------
+
+.decoration-dots {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(var(--color-border-subtle) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Community Section CSS Illustration
+// -----------------------------------------------------------------------------
+// Abstract illustration using CSS shapes to represent community/connection
+
+.community-css-illustration {
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-raised);
+
+  // Gradient background
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(ellipse 250px 250px at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 70%),
+      radial-gradient(circle 100px at 20% 30%, rgba(59, 130, 246, 0.06) 0%, transparent 70%),
+      radial-gradient(circle 80px at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 70%),
+      radial-gradient(circle 60px at 70% 20%, rgba(244, 63, 94, 0.04) 0%, transparent 70%),
+      radial-gradient(circle 70px at 30% 80%, rgba(34, 197, 94, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  @include dark-mode {
+    background: var(--color-surface-sunken);
+
+    &::before {
+      background:
+        radial-gradient(ellipse 250px 250px at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 70%),
+        radial-gradient(circle 100px at 20% 30%, rgba(59, 130, 246, 0.12) 0%, transparent 70%),
+        radial-gradient(circle 80px at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 70%),
+        radial-gradient(circle 60px at 70% 20%, rgba(244, 63, 94, 0.08) 0%, transparent 70%),
+        radial-gradient(circle 70px at 30% 80%, rgba(34, 197, 94, 0.08) 0%, transparent 70%);
+    }
+  }
+
+  // Floating circles representing community members
+  .illustration-circles {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .circle {
+      border-radius: 50%;
+      background: var(--color-surface);
+      border: 2px solid var(--color-border-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-interactive);
+      box-shadow: var(--shadow-md);
+      transition: transform var(--duration-normal) ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      // Different sizes
+      &--sm {
+        width: 48px;
+        height: 48px;
+      }
+
+      &--md {
+        width: 64px;
+        height: 64px;
+      }
+
+      &--lg {
+        width: 80px;
+        height: 80px;
+      }
+
+      // Overlapping effect
+      &:not(:first-child) {
+        margin-left: -16px;
+      }
+
+      svg {
+        width: 50%;
+        height: 50%;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Hero Gradient Background
+// -----------------------------------------------------------------------------
+// Used as fallback/enhancement for hero sections
+
+.hero-gradient-bg {
+  @include gradient-mesh-base;
+  position: relative;
+
+  @include dark-mode {
+    @include gradient-mesh-dark;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Service/Community Hero Gradient
+// -----------------------------------------------------------------------------
+// Gradient background for secondary hero sections
+
+.section-hero-gradient {
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  @include gradient-cool;
+
+  // Decorative shapes
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::before {
+    width: 400px;
+    height: 400px;
+    background: rgba(59, 130, 246, 0.08);
+    top: -200px;
+    right: -100px;
+    filter: blur(40px);
+  }
+
+  &::after {
+    width: 300px;
+    height: 300px;
+    background: rgba(139, 92, 246, 0.06);
+    bottom: -150px;
+    left: -50px;
+    filter: blur(30px);
+  }
+
+  @include dark-mode {
+    background:
+      radial-gradient(ellipse at 25% 75%, rgba(56, 189, 248, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 75% 25%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+      linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+
+    &::before {
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    &::after {
+      background: rgba(139, 92, 246, 0.12);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Section Divider with Gradient
+// -----------------------------------------------------------------------------
+
+.decoration-divider {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-interactive) 50%,
+    transparent 100%
+  );
+  border: none;
+  margin: var(--space-8) 0;
+  opacity: 0.3;
+}
+
+// -----------------------------------------------------------------------------
+// Wave Decoration (SVG-based)
+// -----------------------------------------------------------------------------
+
+.decoration-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,32L48,37.3C96,43,192,53,288,53.3C384,53,480,43,576,37.3C672,32,768,32,864,37.3C960,43,1056,53,1152,53.3C1248,53,1344,43,1392,37.3L1440,32L1440,60L1392,60C1344,60,1248,60,1152,60C1056,60,960,60,864,60C768,60,672,60,576,60C480,60,384,60,288,60C192,60,96,60,48,60L0,60Z'%3E%3C/path%3E%3C/svg%3E");
+  background-size: cover;
+  pointer-events: none;
+}

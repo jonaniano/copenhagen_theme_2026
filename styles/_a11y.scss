@@ -1,0 +1,149 @@
+// =============================================================================
+// Accessibility Utilities
+// =============================================================================
+// Helper classes for improved accessibility support.
+// These utilities help ensure WCAG 2.1 AA compliance.
+
+// -----------------------------------------------------------------------------
+// Screen Reader Only
+// -----------------------------------------------------------------------------
+// Visually hides content while keeping it accessible to screen readers.
+// Use for skip links, form labels, or additional context for AT users.
+
+.sr-only {
+  @include visually-hidden;
+}
+
+// Screen reader only, but focusable (for skip links)
+.sr-only-focusable {
+  @include visually-hidden;
+
+  &:focus,
+  &:active {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// ARIA Live Regions
+// -----------------------------------------------------------------------------
+// Styling for live regions that announce dynamic content changes.
+// WCAG 4.1.3: Status Messages (AA)
+
+// Polite announcements - waits for user to finish current task
+[aria-live="polite"] {
+  // No visual styling needed - purely for AT
+}
+
+// Assertive announcements - interrupts immediately
+[aria-live="assertive"] {
+  // No visual styling needed - purely for AT
+}
+
+// Status message container (visually hidden but announced)
+.a11y-status {
+  @include visually-hidden;
+}
+
+// -----------------------------------------------------------------------------
+// Focus Management
+// -----------------------------------------------------------------------------
+// Classes for managing focus states and visibility
+
+// Remove focus outline (only use with alternative focus indicator)
+.focus-none {
+  outline: none !important;
+
+  &:focus,
+  &:focus-visible {
+    outline: none !important;
+  }
+}
+
+// Force visible focus (overrides browser defaults)
+.focus-visible {
+  &:focus,
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// Focus within container
+.focus-within-ring {
+  &:focus-within {
+    @include focus-ring;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// High Contrast Mode Support
+// -----------------------------------------------------------------------------
+// Styles for Windows High Contrast Mode
+
+@media (forced-colors: active) {
+  // Ensure buttons have visible borders in high contrast
+  .button,
+  .button-large,
+  .button-primary,
+  .button-secondary {
+    border: 2px solid currentColor !important;
+  }
+
+  // Ensure focus indicators are visible
+  *:focus,
+  *:focus-visible {
+    outline: 2px solid currentColor !important;
+    outline-offset: 2px !important;
+  }
+
+  // Ensure form fields have visible borders
+  input,
+  textarea,
+  select,
+  .nesty-input {
+    border: 1px solid currentColor !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Reduced Transparency
+// -----------------------------------------------------------------------------
+// For users who prefer reduced transparency (macOS accessibility setting)
+
+@media (prefers-reduced-transparency: reduce) {
+  // Remove semi-transparent backgrounds
+  .header-wrapper {
+    background-color: var(--color-surface) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Color Contrast Helpers
+// -----------------------------------------------------------------------------
+// Ensure sufficient contrast for text on various backgrounds
+
+// High contrast text on colored backgrounds
+.text-on-interactive {
+  color: var(--color-text-inverse);
+
+  // Ensure links remain visible
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+// Ensure muted text still meets contrast requirements
+.text-muted-accessible {
+  // Use secondary instead of muted for better contrast
+  color: var(--color-text-secondary);
+}

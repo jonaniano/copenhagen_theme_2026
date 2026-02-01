@@ -1,13 +1,17 @@
+// =============================================================================
+// Content Tags
+// =============================================================================
+
 .content-tags {
   > p {
-    color: #68737D;
-    margin-top: 32px;
-    margin-bottom: 4px;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-1);
   }
 
   &-add-hint {
-    color: #68737D;
-    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
   }
 }
 
@@ -17,16 +21,16 @@
   word-break: break-word;
 
   li {
-    border-right: 1px solid #C2C8CC;
-    margin-bottom: 4px;
+    border-right: 1px solid var(--color-border-default);
+    margin-bottom: var(--space-1);
 
     [dir="ltr"] & {
-      padding-right: 8px;
-      margin-right: 8px;
+      padding-right: var(--space-2);
+      margin-right: var(--space-2);
     }
     [dir="rtl"] & {
-      padding-left: 8px;
-      margin-left: 8px;
+      padding-left: var(--space-2);
+      margin-left: var(--space-2);
     }
 
     &:last-child {

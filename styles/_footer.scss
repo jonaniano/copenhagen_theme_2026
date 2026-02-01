@@ -1,28 +1,253 @@
-/***** Footer *****/
-.footer {
-  border-top: 1px solid $low-contrast-border-color;
-  margin-top: 60px;
-  padding: 30px 0;
+// =============================================================================
+// Footer - Bold, modern footer design
+// =============================================================================
 
-  a {
-    color: $secondary-text-color;
+.footer {
+  margin-top: var(--space-24);
+  padding: var(--space-16) 0 var(--space-12);
+  position: relative;
+  overflow: hidden;
+
+  // Bold gradient background
+  background: linear-gradient(
+    135deg,
+    var(--color-surface-sunken) 0%,
+    var(--color-surface-overlay) 100%
+  );
+
+  // Decorative top accent bar
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      var(--color-interactive) 0%,
+      color-mix(in srgb, var(--color-interactive) 60%, #8B5CF6) 50%,
+      var(--color-interactive) 100%
+    );
   }
 
+  // Subtle decorative circles in background
+  &::after {
+    content: "";
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-interactive) 8%, transparent);
+    pointer-events: none;
+  }
+
+  // Footer container
   &-inner {
     @include max-width-container;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-8);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    @include tablet {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    // Help center link - make it prominent
+    > a {
+      color: var(--color-text-primary);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-tight);
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-full);
+      background-color: var(--color-surface);
+      box-shadow: var(--shadow-md);
+      transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+
+      // Hover glow effect
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--color-interactive) 10%, transparent) 0%,
+          transparent 50%
+        );
+        opacity: 0;
+        transition: opacity var(--duration-normal) ease;
+      }
+
+      &:hover,
+      &:focus {
+        color: var(--color-interactive);
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+        text-decoration: none;
+
+        @include reduced-motion {
+          transform: none;
+        }
+
+        &::before {
+          opacity: 1;
+        }
+      }
+    }
   }
 
-  &-language-selector button {
-    color: $secondary-text-color;
-    display: inline-block;
+  // Language selector container
+  &-language-selector {
+    .dropdown {
+      position: relative;
+    }
+
+    // Bold dropdown toggle button
+    .dropdown-toggle {
+      color: var(--color-text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      background-color: var(--color-surface);
+      border: 2px solid var(--color-border-subtle);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+
+      .dropdown-chevron-icon {
+        width: 14px;
+        height: 14px;
+        transition: transform var(--duration-normal) ease;
+
+        @include reduced-motion {
+          transition: none;
+        }
+      }
+
+      &:hover,
+      &:focus {
+        border-color: var(--color-interactive);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+
+        @include reduced-motion {
+          transform: none;
+        }
+      }
+
+      &[aria-expanded="true"] {
+        border-color: var(--color-interactive);
+        background-color: var(--color-interactive);
+        color: var(--color-text-inverse);
+        box-shadow: var(--shadow-lg);
+
+        .dropdown-chevron-icon {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    // Dropdown menu - elevated and bold
+    .dropdown-menu {
+      position: absolute;
+      bottom: 100%;
+      right: 0;
+      margin-bottom: var(--space-3);
+      min-width: 180px;
+      background-color: var(--color-surface);
+      border: none;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-3);
+      z-index: $z-dropdown;
+
+      // Subtle top accent
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: var(--color-interactive);
+        border-radius: var(--radius-full);
+      }
+
+      a {
+        display: block;
+        padding: var(--space-3) var(--space-5);
+        color: var(--color-text-primary);
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-medium);
+        border-radius: var(--radius-lg);
+        transition: all var(--duration-fast) ease;
+
+        &:hover,
+        &:focus {
+          background-color: var(--color-surface-raised);
+          color: var(--color-interactive);
+          text-decoration: none;
+          padding-left: var(--space-6);
+        }
+      }
+    }
   }
 }
 
+// Zendesk branding
 .powered-by-zendesk {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-8);
+  text-align: center;
+  width: 100%;
+
   a,
   a:visited {
-    color: $secondary-text-color;
+    color: var(--color-text-muted);
+    transition: color var(--duration-fast) ease;
+
+    &:hover {
+      color: var(--color-text-secondary);
+    }
+  }
+}
+
+// Dark mode enhancements
+@include dark-mode {
+  .footer {
+    background: linear-gradient(
+      135deg,
+      var(--color-surface-sunken) 0%,
+      color-mix(in srgb, var(--color-interactive) 8%, var(--color-surface-sunken)) 100%
+    );
+
+    &::after {
+      background: color-mix(in srgb, var(--color-interactive) 12%, transparent);
+    }
+
+    &-inner > a {
+      background-color: var(--color-surface-raised);
+    }
+
+    &-language-selector .dropdown-menu {
+      background-color: var(--color-surface-raised);
+    }
   }
 }

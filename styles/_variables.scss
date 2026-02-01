@@ -1,34 +1,53 @@
+// =============================================================================
 // Variables
+// =============================================================================
+// This file maintains backward compatibility with existing styles while
+// referencing the new design token system defined in _tokens.scss.
 
-// Colors
-$hover-button-color: zass-darken($brand_color, 20%);
-$secondary-text-color: zass-lighten($text_color, 20%);
+// -----------------------------------------------------------------------------
+// Color Variables (aliases to tokens for backward compatibility)
+// -----------------------------------------------------------------------------
 
-$primary-shade: zass-darken($background_color, 3%); //#f8f8f8 for the default background_color
-$secondary-shade: zass-darken($background_color, 5%); //#f2f2f2 for the default background_color
+$hover-button-color: $color-interactive-hover;
+$secondary-text-color: $color-text-secondary;
 
-$font-size-bigger: 16px;
-$font-size-base: 15px;
-$font-size-navigation: 14px;
-$font-size-small: 13px;
-$font-size-smaller: 11px;
+$primary-shade: $color-surface-raised;
+$secondary-shade: $color-surface-sunken;
 
-$high-contrast-border-color: #848F99; // maintains a 3:1 contrast ratio with default background color (#FFF). Use for controls and inputs
-$low-contrast-border-color: #ddd; // less than 3:1 contrast ratio with default background color. Use for elements that do not require user interaction
+// Border colors (referenced by existing styles)
+$high-contrast-border-color: $color-border-default;
+$low-contrast-border-color: $color-border-subtle;
 $menu-border-color: #d8dcde;
 
-$button-color: $brand_color;
+$button-color: $color-interactive;
 
+// Form field colors
 $input-font-size: 14px;
 $field-text-color: #666;
 $field-text-focus-color: #555;
 
-// Breakpoints variables
-$tablet-width: 768px;
-$desktop-width: 1024px;
-$max-width-container: 1160px;
+// -----------------------------------------------------------------------------
+// Typography Variables (aliases to tokens)
+// -----------------------------------------------------------------------------
 
-$font-weight-semibold: 600;
+$font-size-bigger: $font-size-md;
+$font-size-base: $font-size-base;
+$font-size-navigation: 14px;
+$font-size-small: $font-size-sm;
+$font-size-smaller: $font-size-xs;
 
-// Transitions
-$input-transition: border .12s ease-in-out;
+$font-weight-semibold: $font-weight-semibold;
+
+// -----------------------------------------------------------------------------
+// Breakpoint Variables (aliases to tokens)
+// -----------------------------------------------------------------------------
+
+$tablet-width: $breakpoint-tablet;
+$desktop-width: $breakpoint-desktop;
+$max-width-container: $breakpoint-wide;
+
+// -----------------------------------------------------------------------------
+// Transition Variables
+// -----------------------------------------------------------------------------
+
+$input-transition: border $duration-fast $ease-in-out;

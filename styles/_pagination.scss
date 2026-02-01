@@ -1,56 +1,72 @@
-/***** Pagination *****/
+// =============================================================================
+// Pagination - Modern, accessible pagination controls
+// =============================================================================
 
 .pagination {
-  margin: 20px 0;
+  margin: var(--space-8) 0;
+  padding: var(--space-4) 0;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
 
   &-next, &-prev, &-first, &-last {
     display: inline-block;
+
     &-link {
       @extend .button;
+      padding: var(--space-2) var(--space-4);
+      min-width: auto;
     }
   }
 
   &-first, &-last {
     &-link {
-      padding: 0 10px;
+      padding: var(--space-2) var(--space-3);
     }
 
     &-text {
-     @include visually-hidden;
+      @include visually-hidden;
     }
   }
 
   &-next {
     &-link {
-      padding-right: 10px;
+      padding-right: var(--space-4);
     }
+
     &-text {
-      margin-right: 10px;
+      margin-right: var(--space-2);
     }
+
     [dir="rtl"] & {
       &-link {
-        padding-left: 10px;
+        padding-left: var(--space-4);
       }
+
       &-text {
-        margin-left: 10px;
+        margin-left: var(--space-2);
       }
     }
   }
 
   &-prev {
     &-link {
-      padding-left: 10px;
+      padding-left: var(--space-4);
     }
+
     &-text {
-      margin-left: 10px;
+      margin-left: var(--space-2);
     }
+
     [dir="rtl"] & {
       &-link {
-        padding-right: 10px;
+        padding-right: var(--space-4);
       }
+
       &-text {
-        margin-right: 10px;
+        margin-right: var(--space-2);
       }
     }
   }

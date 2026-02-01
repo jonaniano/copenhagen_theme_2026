@@ -1,5 +1,7 @@
-/***** Striped list *****/
-/* Used in community posts list and requests list */
+// =============================================================================
+// Striped List - Posts and requests list
+// =============================================================================
+
 .striped-list {
   padding: 0;
 
@@ -10,11 +12,11 @@
     }
 
     align-items: flex-start;
-    border-bottom: 1px solid $low-contrast-border-color;
+    border-bottom: 1px solid var(--color-border-subtle);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 20px 0;
+    padding: var(--space-5) 0;
   }
 
   &-info {
@@ -22,21 +24,23 @@
   }
 
   &-title {
-    color: $link_color;
-    margin-bottom: 10px;
-    margin-right: 5px;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-3);
+    margin-right: var(--space-2);
+    transition: color var(--duration-fast) ease;
 
     &:hover,
     &:focus,
     &:active {
+      color: var(--color-interactive);
       text-decoration: underline;
     }
 
-    &:visited { color: $visited_link_color; }
+    &:visited { color: var(--color-link-visited); }
   }
 
   .meta-group {
-    margin: 5px 0;
+    margin: var(--space-2) 0;
   }
 
   &-count {
@@ -46,18 +50,19 @@
       justify-content: space-around;
     }
 
-    color: $secondary-text-color;
-    font-size: $font-size-small;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
     justify-content: flex-start;
     text-transform: capitalize;
   }
+
   &-count-item {
     &::after {
       @include tablet { display: none; }
 
       content: "·";
       display: inline-block;
-      padding: 0 5px;
+      padding: 0 var(--space-2);
     }
 
     &:last-child::after { display: none; }
@@ -65,7 +70,7 @@
 
   &-number {
     @include tablet {
-      color: $text_color;
+      color: var(--color-text-primary);
       display: block;
     }
     text-align: center;

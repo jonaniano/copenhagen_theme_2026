@@ -6,6 +6,18 @@
   "default_locale": "en-us",
   "settings": [
     {
+      "label": "appearance_group_label",
+      "variables": [
+        {
+          "identifier": "enable_dark_mode",
+          "type": "checkbox",
+          "description": "enable_dark_mode_description",
+          "label": "enable_dark_mode_label",
+          "value": true
+        }
+      ]
+    },
+    {
       "label": "colors_group_label",
       "variables": [
         {
@@ -56,6 +68,53 @@
           "description": "background_color_description",
           "label": "background_color_label",
           "value": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "label": "dark_mode_colors_group_label",
+      "variables": [
+        {
+          "identifier": "brand_color_dark",
+          "type": "color",
+          "description": "brand_color_dark_description",
+          "label": "brand_color_dark_label",
+          "value": "#60A5FA"
+        },
+        {
+          "identifier": "link_color_dark",
+          "type": "color",
+          "description": "link_color_dark_description",
+          "label": "link_color_dark_label",
+          "value": "#60A5FA"
+        },
+        {
+          "identifier": "hover_link_color_dark",
+          "type": "color",
+          "description": "hover_link_color_dark_description",
+          "label": "hover_link_color_dark_label",
+          "value": "#93C5FD"
+        },
+        {
+          "identifier": "visited_link_color_dark",
+          "type": "color",
+          "description": "visited_link_color_dark_description",
+          "label": "visited_link_color_dark_label",
+          "value": "#C4B5FD"
+        },
+        {
+          "identifier": "background_color_dark",
+          "type": "color",
+          "description": "background_color_dark_description",
+          "label": "background_color_dark_label",
+          "value": "#18181B"
+        },
+        {
+          "identifier": "text_color_dark",
+          "type": "color",
+          "description": "text_color_dark_description",
+          "label": "text_color_dark_label",
+          "value": "#FAFAFA"
         }
       ]
     },

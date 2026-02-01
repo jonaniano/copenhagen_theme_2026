@@ -1,3 +1,7 @@
+// =============================================================================
+// Dropdowns
+// =============================================================================
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -26,37 +30,37 @@
 }
 
 .dropdown-menu {
-  background: #fff;
-  border: 1px solid $menu-border-color;
-  border-radius: 3px;
-  box-shadow: 0px 20px 30px 0px rgba(23, 73, 77, 0.15);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
   display: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-style: normal;
-  font-weight: normal;
+  font-weight: var(--font-weight-normal);
   left: 0;
-  margin-top: 1px;
+  margin-top: var(--space-1);
   min-width: 170px;
-  padding: 10px 0;
+  padding: var(--space-3) 0;
   position: absolute;
   text-align: left;
-  z-index: 1000;
+  z-index: $z-dropdown;
 
   [dir="rtl"] & {
     text-align: right;
   }
 
   [role="separator"] {
-    border-bottom: 1px solid #e9ebed;
-    margin: 4px 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    margin: var(--space-1) 0;
   }
 
   [role="menuitem"],
   [role="menuitemradio"] {
-    color: #2f3941;
+    color: var(--color-text-primary);
     cursor: pointer;
     display: block;
-    padding: 7px 40px 7px 20px;
+    padding: var(--space-2) var(--space-10) var(--space-2) var(--space-5);
     white-space: nowrap;
     background-color: transparent;
     border: 0;
@@ -64,15 +68,17 @@
     text-align: start;
     line-height: inherit;
     width: 100%;
+    transition: background-color var(--duration-fast) ease;
 
     [dir="rtl"] & {
-      padding: 7px 20px 7px 40px;
+      padding: var(--space-2) var(--space-5) var(--space-2) var(--space-10);
     }
+
     &:hover,
     &:focus {
-      background: rgba(31, 115, 183, 0.08);
+      background: var(--color-surface-raised);
       text-decoration: none;
-      color: #2f3941;
+      color: var(--color-text-primary);
     }
 
     &[aria-selected="true"],
@@ -84,17 +90,15 @@
         background-image: url("data:image/svg+xml,%3Csvg aria-hidden='true' xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M1 7l3 3 7-7'%3E%3C/path%3E%3C/svg%3E");
         display: inline-block;
         height: 12px;
-        margin-left: 10px;
+        margin-left: var(--space-3);
         width: 12px;
 
         [dir="rtl"] & {
           margin-left: 0;
-          margin-right: 10px;
+          margin-right: var(--space-3);
           float: left;
         }
-
       }
-
     }
 
     &[hidden], &[aria-hidden="true"] {
@@ -110,11 +114,10 @@
 
 .dropdown-menu-top {
   bottom: 100%;
-  margin-bottom: 1px;
+  margin-bottom: var(--space-1);
 }
 
 [dir="rtl"] {
-
   .dropdown-menu {
     left: auto;
     right: 0;
@@ -125,7 +128,6 @@
     left: 0;
     right: auto;
   }
-
 }
 
 .dropdown-chevron-icon {

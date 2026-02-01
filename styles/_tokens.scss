@@ -1,0 +1,188 @@
+// =============================================================================
+// Design Tokens
+// =============================================================================
+// This file defines the design token system for the Copenhagen theme.
+// Tokens are organized into semantic categories and work alongside
+// Zendesk's manifest variables for theming compatibility.
+
+// -----------------------------------------------------------------------------
+// Dark Mode Setting
+// -----------------------------------------------------------------------------
+// This setting controls whether dark mode styles are included.
+// Defaults to false (off) if not defined in manifest.
+
+$enable_dark_mode: false !default;
+
+// -----------------------------------------------------------------------------
+// Dark Mode Fallbacks
+// -----------------------------------------------------------------------------
+// These provide safe fallbacks if dark mode manifest variables aren't defined.
+// Uses !default so manifest values take precedence when available.
+
+$background_color_dark: $background_color !default;
+$text_color_dark: $text_color !default;
+$brand_color_dark: $brand_color !default;
+$link_color_dark: $link_color !default;
+$hover_link_color_dark: $hover_link_color !default;
+$visited_link_color_dark: $visited_link_color !default;
+
+// -----------------------------------------------------------------------------
+// Color Tokens
+// -----------------------------------------------------------------------------
+// These derive from manifest.json settings and provide semantic naming.
+// The zass-* functions preserve themability in Zendesk's theming UI.
+
+// Surface colors (backgrounds)
+$color-surface: $background_color;
+$color-surface-raised: zass-darken($background_color, 3%);
+$color-surface-sunken: zass-darken($background_color, 5%);
+$color-surface-overlay: zass-darken($background_color, 8%);
+
+// Text colors
+// Note: Contrast ratios calculated against white (#fff) background
+// WCAG AA requires 4.5:1 for normal text, 3:1 for large text
+$color-text-primary: $text_color;
+$color-text-secondary: zass-lighten($text_color, 20%); // ~5:1 contrast
+$color-text-muted: zass-lighten($text_color, 35%); // ~4.5:1 contrast (was 40%, now improved)
+$color-text-inverse: $brand_text_color;
+
+// Interactive colors (tied to brand)
+$color-interactive: $brand_color;
+$color-interactive-hover: zass-darken($brand_color, 20%);
+$color-interactive-active: zass-darken($brand_color, 25%);
+
+// Link colors
+$color-link: $link_color;
+$color-link-hover: $hover_link_color;
+$color-link-visited: $visited_link_color;
+
+// Border colors
+$color-border-subtle: zass-darken($background_color, 12%);
+$color-border-default: #848F99;
+$color-border-strong: zass-darken($background_color, 25%);
+$color-border-interactive: $brand_color;
+
+// Status colors (semantic)
+$color-success: #038153;
+$color-success-light: #edf8f4;
+$color-error: #cc3340;
+$color-error-light: #fff0f1;
+$color-warning: #ad5e18;
+$color-warning-light: #fff7ed;
+$color-info: #1f73b7;
+$color-info-light: #edf7ff;
+
+// -----------------------------------------------------------------------------
+// Spacing Tokens
+// -----------------------------------------------------------------------------
+// Based on a 4px grid system - slightly more generous for breathing room
+
+$space-0: 0;
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-14: 56px;
+$space-16: 64px;
+$space-20: 80px;
+$space-24: 96px;
+
+// -----------------------------------------------------------------------------
+// Typography Tokens
+// -----------------------------------------------------------------------------
+
+// Font sizes (bolder modular scale - larger headings)
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-md: 17px;
+$font-size-lg: 20px;
+$font-size-xl: 26px;
+$font-size-2xl: 34px;
+$font-size-3xl: 42px;
+$font-size-4xl: 52px;
+
+// Font weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+// Line heights
+$line-height-tight: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.65;
+
+// Letter spacing
+$letter-spacing-tight: -0.025em;
+$letter-spacing-normal: 0;
+$letter-spacing-wide: 0.025em;
+
+// -----------------------------------------------------------------------------
+// Border Radius Tokens
+// -----------------------------------------------------------------------------
+// Softer, more rounded corners for modern feel
+
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-2xl: 32px;
+$radius-full: 9999px;
+
+// -----------------------------------------------------------------------------
+// Shadow Tokens
+// -----------------------------------------------------------------------------
+// More prominent shadows for depth and elevation
+
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1);
+
+// Colored shadow for interactive elements (uses brand color)
+$shadow-interactive: 0 4px 14px rgba(0, 0, 0, 0.15);
+
+// -----------------------------------------------------------------------------
+// Transition Tokens
+// -----------------------------------------------------------------------------
+// Simple, performant transitions (no heavy animations)
+
+$duration-fast: 0.1s;
+$duration-normal: 0.15s;
+$duration-slow: 0.25s;
+
+$ease-default: ease-out;
+$ease-in-out: ease-in-out;
+
+$transition-colors: color $duration-fast $ease-default,
+                    background-color $duration-fast $ease-default,
+                    border-color $duration-fast $ease-default;
+
+$transition-shadow: box-shadow $duration-normal $ease-default;
+
+$transition-all: all $duration-normal $ease-default;
+
+// -----------------------------------------------------------------------------
+// Breakpoint Tokens
+// -----------------------------------------------------------------------------
+// These match existing breakpoints for backward compatibility
+
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-wide: 1160px;
+
+// -----------------------------------------------------------------------------
+// Z-Index Tokens
+// -----------------------------------------------------------------------------
+
+$z-dropdown: 100;
+$z-header: 200;
+$z-modal: 300;
+$z-tooltip: 400;

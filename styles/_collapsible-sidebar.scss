@@ -1,4 +1,7 @@
-/* Sidebar navigation that collapses on mobile */
+// =============================================================================
+// Collapsible Sidebar
+// =============================================================================
+
 .collapsible-sidebar {
   @include desktop {
     max-height: none;
@@ -7,11 +10,12 @@
   flex: 1;
   max-height: 45px;
   overflow: hidden;
-  padding: 10px 0;
+  padding: var(--space-3) 0;
   position: relative;
 
   &-title {
     margin-top: 0;
+    color: var(--color-text-primary);
   }
 
   &-toggle {
@@ -25,7 +29,8 @@
     background: none;
     width: 25px;
     height: 25px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
+    color: var(--color-text-primary);
 
     [dir="rtl"] & {
       left: 0;
@@ -35,13 +40,13 @@
     &-icon {
       display: none;
     }
-  
+
     &[aria-expanded="false"] {
       .chevron-icon {
         display: inline-block;
       }
     }
-    
+
     &[aria-expanded="true"] {
       .x-icon {
         display: inline-block;
@@ -50,7 +55,7 @@
 
     &:focus {
       outline: none;
-      border: 1px solid $brand_color;
+      border: 1px solid var(--color-interactive);
     }
   }
 

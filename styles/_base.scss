@@ -1,14 +1,434 @@
-/***** Base *****/
+// =============================================================================
+// Base Styles
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// CSS Custom Properties (Design Tokens)
+// -----------------------------------------------------------------------------
+// These enable runtime theming and dark mode support.
+// Values are derived from SCSS tokens which tie into Zendesk's manifest settings.
+
+:root {
+  // Surface colors
+  --color-surface: #{$color-surface};
+  --color-surface-raised: #{$color-surface-raised};
+  --color-surface-sunken: #{$color-surface-sunken};
+  --color-surface-overlay: #{$color-surface-overlay};
+
+  // Text colors
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-inverse: #{$color-text-inverse};
+
+  // Interactive colors
+  --color-interactive: #{$color-interactive};
+  --color-interactive-hover: #{$color-interactive-hover};
+  --color-interactive-active: #{$color-interactive-active};
+
+  // Link colors
+  --color-link: #{$color-link};
+  --color-link-hover: #{$color-link-hover};
+  --color-link-visited: #{$color-link-visited};
+
+  // Border colors
+  --color-border-subtle: #{$color-border-subtle};
+  --color-border-default: #{$color-border-default};
+  --color-border-strong: #{$color-border-strong};
+  --color-border-interactive: #{$color-border-interactive};
+
+  // Status colors
+  --color-success: #{$color-success};
+  --color-success-light: #{$color-success-light};
+  --color-error: #{$color-error};
+  --color-error-light: #{$color-error-light};
+  --color-warning: #{$color-warning};
+  --color-warning-light: #{$color-warning-light};
+  --color-info: #{$color-info};
+  --color-info-light: #{$color-info-light};
+
+  // Spacing
+  --space-0: #{$space-0};
+  --space-1: #{$space-1};
+  --space-2: #{$space-2};
+  --space-3: #{$space-3};
+  --space-4: #{$space-4};
+  --space-5: #{$space-5};
+  --space-6: #{$space-6};
+  --space-8: #{$space-8};
+  --space-10: #{$space-10};
+  --space-12: #{$space-12};
+  --space-14: #{$space-14};
+  --space-16: #{$space-16};
+  --space-20: #{$space-20};
+  --space-24: #{$space-24};
+
+  // Typography
+  --font-size-xs: #{$font-size-xs};
+  --font-size-sm: #{$font-size-sm};
+  --font-size-base: #{$font-size-base};
+  --font-size-md: #{$font-size-md};
+  --font-size-lg: #{$font-size-lg};
+  --font-size-xl: #{$font-size-xl};
+  --font-size-2xl: #{$font-size-2xl};
+  --font-size-3xl: #{$font-size-3xl};
+
+  --font-weight-normal: #{$font-weight-normal};
+  --font-weight-medium: #{$font-weight-medium};
+  --font-weight-semibold: #{$font-weight-semibold};
+  --font-weight-bold: #{$font-weight-bold};
+  --font-weight-extrabold: #{$font-weight-extrabold};
+
+  --line-height-tight: #{$line-height-tight};
+  --line-height-normal: #{$line-height-normal};
+  --line-height-relaxed: #{$line-height-relaxed};
+
+  --letter-spacing-tight: #{$letter-spacing-tight};
+  --letter-spacing-normal: #{$letter-spacing-normal};
+  --letter-spacing-wide: #{$letter-spacing-wide};
+
+  // Border radius
+  --radius-sm: #{$radius-sm};
+  --radius-md: #{$radius-md};
+  --radius-lg: #{$radius-lg};
+  --radius-xl: #{$radius-xl};
+  --radius-2xl: #{$radius-2xl};
+  --radius-full: #{$radius-full};
+
+  // Shadows
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  --shadow-xl: #{$shadow-xl};
+
+  // Transitions
+  --duration-fast: #{$duration-fast};
+  --duration-normal: #{$duration-normal};
+  --duration-slow: #{$duration-slow};
+}
+
+// -----------------------------------------------------------------------------
+// Dark Mode
+// -----------------------------------------------------------------------------
+// Automatically activates based on system preference.
+// Inverts surface and text colors while preserving brand identity.
+//
+// FALLBACK BEHAVIOR: If dark mode manifest variables (e.g., $background_color_dark)
+// are not defined, they fall back to light mode values via !default in _tokens.scss.
+// This ensures the theme compiles and works even without dark mode settings.
+
+@include dark-mode {
+  :root {
+    // Surface colors - use manifest variable with smart darkening
+    --color-surface: #{$background_color_dark};
+    --color-surface-raised: #{zass-lighten($background_color_dark, 5%)};
+    --color-surface-sunken: #{zass-darken($background_color_dark, 5%)};
+    --color-surface-overlay: #{zass-lighten($background_color_dark, 15%)};
+
+    // Text colors - use manifest variable with variants
+    --color-text-primary: #{$text_color_dark};
+    --color-text-secondary: #{zass-darken($text_color_dark, 10%)};
+    --color-text-muted: #{zass-darken($text_color_dark, 25%)};
+    // Keep inverse text light for visibility on colored button backgrounds
+    --color-text-inverse: #ffffff;
+
+    // Interactive colors - use manifest dark brand color
+    --color-interactive: #{$brand_color_dark};
+    --color-interactive-hover: #{zass-lighten($brand_color_dark, 15%)};
+    --color-interactive-active: #{zass-darken($brand_color_dark, 10%)};
+
+    // Link colors - use manifest dark link colors
+    --color-link: #{$link_color_dark};
+    --color-link-hover: #{$hover_link_color_dark};
+    --color-link-visited: #{$visited_link_color_dark};
+
+    // Border colors (adjusted for dark backgrounds)
+    --color-border-subtle: #{zass-lighten($background_color_dark, 15%)};
+    --color-border-default: #{zass-lighten($background_color_dark, 22%)};
+    --color-border-strong: #{zass-lighten($background_color_dark, 30%)};
+    --color-border-interactive: #{$brand_color_dark};
+
+    // Status colors (adjusted for dark backgrounds)
+    --color-success: #34d399;
+    --color-success-light: #064e3b;
+    --color-error: #f87171;
+    --color-error-light: #450a0a;
+    --color-warning: #fbbf24;
+    --color-warning-light: #451a03;
+    --color-info: #{$brand_color_dark};
+    --color-info-light: #{zass-darken($brand_color_dark, 40%)};
+
+    // Shadows (deeper for dark mode visibility)
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+  }
+
+  // -------------------------------------------------------------------------
+  // Comprehensive dark mode overrides for elements using brand/theme colors
+  // -------------------------------------------------------------------------
+
+  // Elements that use $brand_color for text - override to lighter blue
+  .logo span,
+  .blocks-item-link,
+  .article-comment-count-icon,
+  .search-result-votes-icon,
+  .search-result-meta-count-icon,
+  .icon-star,
+  .share a,
+  .user-info a,
+  .recent-activity-item-parent a,
+  .recent-activity-response-owner,
+  .post-meta-votes,
+  .collapsible-nav-item.current > a,
+  .collapsible-nav-item.current > a:hover,
+  .user-callout a,
+  .striped-list-link {
+    color: var(--color-interactive) !important;
+  }
+
+  // Elements that use $text_color - ensure proper contrast
+  .section-tree-title a,
+  .article-list-item a,
+  .section-list-item a,
+  .collapsible-nav-item > a,
+  .recent-activity-item-link,
+  .attachments a,
+  .striped-list-title {
+    color: var(--color-text-primary) !important;
+
+    &:hover {
+      color: var(--color-interactive) !important;
+    }
+  }
+
+  // Ensure outline buttons remain visible (exclude filled button styles)
+  .button:not(.button-primary):not(.button-large):not(:hover):not(:focus) {
+    border-color: var(--color-interactive);
+    color: var(--color-interactive);
+  }
+
+  // Fix card hover states
+  .blocks-item:hover,
+  .blocks-item:focus {
+    background-color: var(--color-surface-raised);
+
+    .blocks-item-link,
+    .blocks-item-title {
+      color: var(--color-interactive) !important;
+    }
+  }
+
+  // Status labels - ensure visibility
+  .status-label {
+    &-official {
+      background-color: var(--color-interactive) !important;
+      color: var(--color-surface) !important;
+    }
+
+    &-pending,
+    &-hold {
+      background-color: var(--color-surface-overlay) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    &-open {
+      background-color: var(--color-info) !important;
+      color: var(--color-surface) !important;
+    }
+
+    &-solved,
+    &-answered {
+      background-color: var(--color-success) !important;
+      color: var(--color-surface) !important;
+    }
+
+    &-closed {
+      background-color: var(--color-text-muted) !important;
+      color: var(--color-surface) !important;
+    }
+  }
+
+  // Community badge
+  .community-badge {
+    background-color: var(--color-surface-overlay) !important;
+    color: var(--color-text-primary) !important;
+  }
+
+  // Content tags
+  .content-tag-title,
+  .meta-data-content-tags a {
+    color: var(--color-text-secondary) !important;
+  }
+
+  // User profile sections with hardcoded borders
+  .profile-info,
+  .profile-section,
+  .profile-stats,
+  .profile-stats-counter {
+    border-color: var(--color-border-subtle) !important;
+  }
+
+  // Split button
+  .split-button {
+    background-color: var(--color-interactive) !important;
+
+    &:hover {
+      background-color: var(--color-interactive-hover) !important;
+    }
+  }
+
+  // Collapsible nav borders
+  .collapsible-nav-item.current::before {
+    border-color: var(--color-interactive) !important;
+  }
+
+  .collapsible-nav-item a {
+    border-bottom-color: var(--color-border-subtle) !important;
+  }
+
+  // Summary/details elements
+  summary {
+    background-color: var(--color-surface-raised) !important;
+
+    &::before,
+    &::after {
+      border-color: var(--color-text-muted) !important;
+    }
+  }
+
+  // Request page elements
+  .request-details,
+  .request-info-item {
+    border-color: var(--color-border-subtle) !important;
+  }
+
+  // Form field colors
+  .form-field .nesty-input,
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    background-color: var(--color-surface) !important;
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border-default) !important;
+  }
+
+  // Make sure all links are visible
+  a {
+    color: var(--color-link);
+
+    &:visited {
+      color: var(--color-link-visited);
+    }
+
+    &:hover {
+      color: var(--color-link-hover);
+    }
+  }
+
+  // Ensure tables have good contrast
+  table {
+    th, td {
+      border-color: var(--color-border-subtle) !important;
+    }
+
+    th {
+      background-color: var(--color-surface-raised) !important;
+    }
+  }
+
+  // Code blocks
+  code, pre {
+    background-color: var(--color-surface-raised) !important;
+    color: var(--color-text-primary) !important;
+  }
+
+  // Placeholders
+  ::placeholder {
+    color: var(--color-text-muted) !important;
+  }
+
+  // Dropdown toggles - ensure text is visible
+  .dropdown-toggle {
+    color: var(--color-text-primary) !important;
+
+    &:hover {
+      color: var(--color-interactive) !important;
+    }
+  }
+
+  // Community page elements
+  .topic-header .dropdown-toggle,
+  .see-all-filters,
+  .see-all-articles,
+  .see-all-sections-trigger,
+  .comment-sorter .dropdown-toggle,
+  .profile-section-sorter .dropdown-toggle {
+    color: var(--color-text-primary) !important;
+
+    &:hover {
+      color: var(--color-interactive) !important;
+    }
+  }
+
+  // Community follow button text
+  .community-follow button {
+    color: var(--color-interactive) !important;
+
+    &[data-selected="true"] {
+      color: var(--color-text-inverse) !important;
+    }
+
+    &:hover {
+      color: var(--color-text-inverse) !important;
+    }
+  }
+
+  // Subscription/follow buttons
+  .subscriptions-subscribe button,
+  .article-subscribe button,
+  .section-subscribe button,
+  .organization-subscribe button {
+    &[data-selected="true"] {
+      color: var(--color-text-inverse) !important;
+    }
+  }
+
+  // My activities text
+  .no-activities,
+  .contributions-table td:last-child {
+    color: var(--color-text-secondary) !important;
+  }
+
+  // Metadata and secondary text
+  .meta-data,
+  .meta-group {
+    color: var(--color-text-muted) !important;
+
+    a {
+      color: var(--color-text-secondary) !important;
+
+      &:hover {
+        color: var(--color-interactive) !important;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Base Element Styles
+// -----------------------------------------------------------------------------
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  background-color: $background_color;
-  color: $text_color;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
   font-family: $text_font;
-  font-size: $font-size-base;
-  line-height: 1.5;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
   -webkit-font-smoothing: antialiased;
 
   > main {
@@ -18,6 +438,10 @@ body {
   }
 }
 
+// -----------------------------------------------------------------------------
+// Typography - Bold, modern hierarchy
+// -----------------------------------------------------------------------------
+
 h1,
 h2,
 h3,
@@ -26,110 +450,151 @@ h5,
 h6 {
   font-family: $heading_font;
   margin-top: 0;
+  color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 h1 {
-  font-size: 32px;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-tight);
 }
 
 h2 {
-  font-size: 22px;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 h3 {
-  font-size: 18px;
-  font-weight: $font-weight-semibold;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
 }
 
 h4 {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
 }
 
+h5 {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+// -----------------------------------------------------------------------------
+// Links
+// -----------------------------------------------------------------------------
+
 a {
-  color: $link_color;
+  color: var(--color-link);
   text-decoration: none;
+  transition: color var(--duration-fast) ease;
 
   &:visited {
-    color: $visited_link_color;
+    color: var(--color-link-visited);
   }
 
   &:hover,
   &:active,
   &:focus {
     text-decoration: underline;
+    color: var(--color-link-hover);
   }
 }
+
+// -----------------------------------------------------------------------------
+// Forms
+// -----------------------------------------------------------------------------
 
 .hbs-form, .search {
   input,
   textarea {
-    color: #000;
+    color: var(--color-text-primary);
     font-size: $input-font-size;
+    background-color: var(--color-surface);
   }
-  
+
   input {
     max-width: 100%;
     box-sizing: border-box;
-    transition: $input-transition;
-  
+    transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+
     /* We use the :where selector to not increase the specificity of the selector */
     &:where(:not([type="checkbox"])) {
       outline: none;
-  
+
       &:focus {
-        border: 1px solid $brand_color;
+        border-color: var(--color-interactive);
+        box-shadow: 0 0 0 2px var(--color-interactive);
       }
     }
   }
-  
+
   input[disabled] {
-    background-color: #ddd;
+    background-color: var(--color-surface-sunken);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
   }
-  
+
   select {
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23CCC' d='M0 0h10L5 6 0 0z'/%3E%3C/svg%3E%0A")
-      no-repeat #fff;
+    background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23848F99' d='M0 0h10L5 6 0 0z'/%3E%3C/svg%3E%0A")
+      no-repeat var(--color-surface);
     background-position: right 10px center;
-    border: 1px solid $high-contrast-border-color;
-    border-radius: 4px;
-    padding: 8px 30px 8px 10px;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) 30px var(--space-2) var(--space-3);
     outline: none;
-    color: $field-text-focus-color;
+    color: var(--color-text-primary);
     width: 100%;
-  
+    transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+
     &:focus {
-      border: 1px solid $brand_color;
+      border-color: var(--color-interactive);
+      box-shadow: 0 0 0 2px var(--color-interactive);
     }
-  
+
     &::-ms-expand {
       display: none;
     }
   }
-  
+
   textarea {
-    border: 1px solid $high-contrast-border-color;
-    border-radius: 2px;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm);
     resize: vertical;
     width: 100%;
     outline: none;
-    padding: 10px;
-  
+    padding: var(--space-3);
+    background-color: var(--color-surface);
+    transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+
     &:focus {
-      border: 1px solid $brand_color;
+      border-color: var(--color-interactive);
+      box-shadow: 0 0 0 2px var(--color-interactive);
     }
   }
 }
 
+// -----------------------------------------------------------------------------
+// Layout
+// -----------------------------------------------------------------------------
 
 .container {
   @include max-width-container;
 }
 
 .container-divider {
-  border-top: 1px solid $low-contrast-border-color;
-  margin-bottom: 20px;
+  border-top: 1px solid var(--color-border-subtle);
+  margin-bottom: var(--space-5);
 }
 
 ul {
@@ -138,10 +603,33 @@ ul {
   padding: 0;
 }
 
+// -----------------------------------------------------------------------------
+// Utility Classes
+// -----------------------------------------------------------------------------
+
 .error-page {
   @include max-width-container;
 }
 
 .visibility-hidden {
   @include visually-hidden;
+}
+
+// -----------------------------------------------------------------------------
+// Reduced Motion Support
+// -----------------------------------------------------------------------------
+// Global reduced motion styles for users with vestibular disorders or
+// motion sensitivity. Disables all animations and transitions when the
+// user has enabled "reduce motion" in their system preferences.
+// WCAG 2.3.3: Animation from Interactions (AAA)
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

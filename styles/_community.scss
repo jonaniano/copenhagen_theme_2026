@@ -1,8 +1,63 @@
 /***** Community *****/
 .community {
   &-hero {
-    background-image: url($community_background_image);
-    margin-bottom: 10px;
+    margin-bottom: var(--space-3);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+
+    // Light mode - brand-colored gradient on light background
+    background:
+      radial-gradient(ellipse at 25% 75%, color-mix(in srgb, var(--color-interactive) 15%, transparent) 0%, transparent 50%),
+      radial-gradient(ellipse at 75% 25%, color-mix(in srgb, var(--color-interactive) 12%, transparent) 0%, transparent 40%),
+      linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-raised) 100%);
+
+    // Decorative blurred shapes using brand color
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    &::before {
+      width: 350px;
+      height: 350px;
+      background: color-mix(in srgb, var(--color-interactive) 10%, transparent);
+      top: -150px;
+      right: -80px;
+      filter: blur(40px);
+    }
+
+    &::after {
+      width: 280px;
+      height: 280px;
+      background: color-mix(in srgb, var(--color-interactive) 8%, transparent);
+      bottom: -120px;
+      left: -40px;
+      filter: blur(30px);
+    }
+
+    // Dark mode - more vibrant brand colors on dark background
+    @include dark-mode {
+      background:
+        radial-gradient(ellipse at 25% 75%, color-mix(in srgb, var(--color-interactive) 25%, transparent) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 25%, color-mix(in srgb, var(--color-interactive) 20%, transparent) 0%, transparent 40%),
+        linear-gradient(135deg, var(--color-surface-raised) 0%, var(--color-surface) 100%);
+
+      &::before {
+        background: color-mix(in srgb, var(--color-interactive) 18%, transparent);
+      }
+
+      &::after {
+        background: color-mix(in srgb, var(--color-interactive) 15%, transparent);
+      }
+    }
   }
 
   &-footer {
@@ -57,21 +112,21 @@
 /* Community topic page */
 
 .topic-header {
-  @include tablet { padding-bottom: 10px; }
-  border-bottom: 1px solid $low-contrast-border-color;
-  font-size: $font-size-small;
+  @include tablet { padding-bottom: var(--space-3); }
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: var(--font-size-sm);
 
   .dropdown {
     @include tablet {
       border-top: 0;
       display: inline-block;
-      margin-right: 20px;
+      margin-right: var(--space-5);
       padding: 0;
     }
 
     display: block;
-    border-top: 1px solid $low-contrast-border-color;
-    padding: 10px 0;
+    border-top: 1px solid var(--color-border-subtle);
+    padding: var(--space-3) 0;
   }
 }
 
@@ -95,29 +150,29 @@
     @include tablet { width: auto;}
 
     line-height: 30px;
-    padding: 0 10px 0 15px;
+    padding: 0 var(--space-3) 0 var(--space-4);
     position: relative;
     width: 100%;
 
-    &:hover { background-color: $brand_color; }
+    &:hover { background-color: var(--color-interactive); }
 
     &:hover::after, &:focus::after {
-      border-color: $brand_text_color;
-      color: $brand_text_color;
+      border-color: var(--color-text-inverse);
+      color: var(--color-text-inverse);
     }
 
     &[data-selected="true"] {
-      background-color: $brand_color;
-      color: $brand_text_color;
+      background-color: var(--color-interactive);
+      color: var(--color-text-inverse);
 
       &::after {
-        border-left: 1px solid $brand_text_color;
-        color: $brand_text_color;
+        border-left: 1px solid var(--color-text-inverse);
+        color: var(--color-text-inverse);
       }
 
       &:hover {
-        background-color: $hover-button-color;
-        border-color: $hover-button-color;
+        background-color: var(--color-interactive-hover);
+        border-color: var(--color-interactive-hover);
       }
     }
 
@@ -126,21 +181,21 @@
         position: static;
       }
 
-      border-left: 1px solid $button-color;
+      border-left: 1px solid var(--color-interactive);
       content: attr(data-follower-count);
-      color: $button-color;
+      color: var(--color-interactive);
       display: inline-block;
       font-family: $heading_font;
-      margin-left: 15px;
-      padding-left: 10px;
+      margin-left: var(--space-4);
+      padding-left: var(--space-3);
       position: absolute;
-      right: 10px;
+      right: var(--space-3);
 
       [dir="rtl"] & {
         border-left: 0;
-        border-right: 1px solid $button-color;
-        margin: 0 10px 0 0;
-        padding: 0 10px 0 0;
+        border-right: 1px solid var(--color-interactive);
+        margin: 0 var(--space-3) 0 0;
+        padding: 0 var(--space-3) 0 0;
       }
     }
   }

@@ -1,4 +1,6 @@
-/***** Social share links *****/
+// =============================================================================
+// Social Share Links
+// =============================================================================
 
 .share {
   padding: 0;
@@ -15,15 +17,17 @@
 }
 
 .share a {
-  color: $secondary-text-color;
+  color: var(--color-text-secondary);
+  transition: color var(--duration-fast) ease;
+
   &:hover {
     text-decoration: none;
-    color: $brand_color;
+    color: var(--color-interactive);
   }
-  
+
   & svg {
     height: 18px;
     width: 18px;
-    display: block;  
+    display: block;
   }
 }

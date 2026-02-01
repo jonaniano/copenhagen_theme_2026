@@ -1,4 +1,7 @@
-/***** User info in header *****/
+// =============================================================================
+// User Info & Avatar
+// =============================================================================
+
 .user-info {
   display: inline-block;
 
@@ -9,23 +12,24 @@
 
   > button {
     border: 0;
-    color: $link_color;
+    color: var(--color-link);
     min-width: 0;
     padding: 0;
     white-space: nowrap;
+    transition: color var(--duration-fast) ease;
 
     &:hover,
     &:focus {
-      color: $link_color;
+      color: var(--color-link-hover);
       background-color: transparent;
     }
 
     &::after {
-      color: $link_color;
-      padding-right: 15px;
+      color: var(--color-link);
+      padding-right: var(--space-4);
 
       [dir="rtl"] & {
-        padding-left: 15px;
+        padding-left: var(--space-4);
         padding-right: 0;
       }
     }
@@ -36,7 +40,8 @@
 #user #user-name {
   @include tablet { display: inline-block; }
   display: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
 
   &:hover { text-decoration: underline; }
 }
@@ -45,7 +50,7 @@
 .user-avatar {
   height: 25px;
   width: 25px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: inline-block;
   vertical-align: middle;
 }
@@ -60,11 +65,11 @@
   }
 
   .icon-agent {
-    color: $brand_color;
-    border: 2px solid #fff;
-    border-radius: 50%;
+    color: var(--color-interactive);
+    border: 2px solid var(--color-surface);
+    border-radius: var(--radius-full);
     bottom: -4px;
-    background-color: $brand_text_color;
+    background-color: var(--color-text-inverse);
     font-size: 17px;
     height: 17px;
     line-height: 17px;

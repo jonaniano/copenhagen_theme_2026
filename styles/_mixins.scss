@@ -1,4 +1,34 @@
 // Mixins
+
+// -----------------------------------------------------------------------------
+// Dark Mode Mixin
+// -----------------------------------------------------------------------------
+// Conditionally includes dark mode styles based on the $enable_dark_mode setting.
+// When enabled, wraps content in a prefers-color-scheme media query.
+// When disabled, the dark mode styles are completely omitted from the CSS output.
+
+@mixin dark-mode {
+  @if $enable_dark_mode {
+    @media (prefers-color-scheme: dark) {
+      @content;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Reduced Motion Mixin
+// -----------------------------------------------------------------------------
+// Wraps styles that should only apply when user prefers reduced motion.
+// Use this to provide alternative, non-animated styles for users with
+// vestibular disorders or motion sensitivity.
+// WCAG 2.3.3: Animation from Interactions
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
 @mixin tablet {
   @media (min-width: #{$tablet-width}) {
     @content;
@@ -42,9 +72,24 @@
   word-wrap: break-word; //IE/Edge compatibility
 }
 
+// -----------------------------------------------------------------------------
+// Focus Ring Mixins
+// -----------------------------------------------------------------------------
+// Enhanced focus indicators for better accessibility.
+// WCAG 2.4.7: Focus Visible (AA), 2.4.11: Focus Appearance (AAA)
+// Requirements: 2px minimum indicator, 3:1 contrast ratio
+
 @mixin focus-ring {
-  outline: 0;
-  box-shadow: 0 0 0 3px $brand_color;
+  outline: 2px solid var(--color-interactive);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-interactive) 25%, transparent);
+}
+
+// Inset focus ring for form elements where outline-offset doesn't work well
+@mixin focus-ring-inset {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-interactive),
+              0 0 0 3px color-mix(in srgb, var(--color-interactive) 25%, transparent);
 }
 
 @mixin standalone-link {
