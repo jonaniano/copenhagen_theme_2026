@@ -5,7 +5,15 @@ window.addEventListener("DOMContentLoaded", () => {
   links.forEach((anchor) => {
     anchor.addEventListener("click", (event) => {
       event.preventDefault();
-      window.open(anchor.href, "", "height = 500, width = 500");
+      // Security: Validate URL protocol to prevent javascript: protocol attacks
+      try {
+        const url = new URL(anchor.href, window.location.origin);
+        if (url.protocol === "https:" || url.protocol === "http:") {
+          window.open(anchor.href, "", "height = 500, width = 500");
+        }
+      } catch {
+        // Invalid URL, ignore
+      }
     });
   });
 });

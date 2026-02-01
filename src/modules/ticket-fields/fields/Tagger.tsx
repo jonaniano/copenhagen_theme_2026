@@ -13,6 +13,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNestedOptions } from "./useNestedOptions";
 import { EmptyValueOption } from "./EmptyValueOption";
 import type { TicketFieldObject } from "../data-types/TicketFieldObject";
+import { sanitizeHtml } from "../../shared";
 
 interface TaggerProps {
   field: TicketFieldObject;
@@ -63,7 +64,7 @@ export function Tagger({ field, onChange }: TaggerProps): JSX.Element {
         {required && <Span aria-hidden="true">*</Span>}
       </Field.Label>
       {description && (
-        <Field.Hint dangerouslySetInnerHTML={{ __html: description }} />
+        <Field.Hint dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }} />
       )}
       <Combobox
         ref={wrapperRef}

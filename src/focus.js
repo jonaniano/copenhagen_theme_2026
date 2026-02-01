@@ -2,14 +2,19 @@ const key = "returnFocusTo";
 
 export function saveFocus() {
   const activeElementId = document.activeElement.getAttribute("id");
-  sessionStorage.setItem(key, "#" + activeElementId);
+  if (activeElementId) {
+    sessionStorage.setItem(key, activeElementId);
+  }
 }
 
 export function returnFocus() {
-  const returnFocusTo = sessionStorage.getItem(key);
-  if (returnFocusTo) {
-    sessionStorage.removeItem("returnFocusTo");
-    const returnFocusToEl = document.querySelector(returnFocusTo);
-    returnFocusToEl && returnFocusToEl.focus && returnFocusToEl.focus();
+  const elementId = sessionStorage.getItem(key);
+  if (elementId) {
+    sessionStorage.removeItem(key);
+    // Security: Use getElementById instead of querySelector to prevent CSS selector injection
+    const returnFocusToEl = document.getElementById(elementId);
+    if (returnFocusToEl && returnFocusToEl.focus) {
+      returnFocusToEl.focus();
+    }
   }
 }

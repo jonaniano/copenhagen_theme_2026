@@ -4,6 +4,7 @@ import { Span } from "@zendeskgarden/react-typography";
 import { useTranslation } from "react-i18next";
 import CreditCardIcon from "@zendeskgarden/svg-icons/src/16/credit-card-stroke.svg";
 import styled from "styled-components";
+import { sanitizeHtml } from "../../shared";
 
 interface CreditCardProps {
   field: TicketFieldObject;
@@ -44,7 +45,7 @@ export function CreditCard({ field, onChange }: CreditCardProps): JSX.Element {
         </DigitsHintSpan>
       </GardenField.Label>
       {description && (
-        <GardenField.Hint dangerouslySetInnerHTML={{ __html: description }} />
+        <GardenField.Hint dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }} />
       )}
       <MediaInput
         start={<CreditCardIcon />}

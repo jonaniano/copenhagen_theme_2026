@@ -9,6 +9,7 @@ import { Span } from "@zendeskgarden/react-typography";
 import { useState, useRef, useEffect } from "react";
 import { useNestedOptions } from "./useNestedOptions";
 import type { TicketFieldObject } from "../data-types/TicketFieldObject";
+import { sanitizeHtml } from "../../shared";
 
 interface MultiSelectProps {
   field: TicketFieldObject;
@@ -66,7 +67,7 @@ export function MultiSelect({
         {required && <Span aria-hidden="true">*</Span>}
       </Field.Label>
       {description && (
-        <Field.Hint dangerouslySetInnerHTML={{ __html: description }} />
+        <Field.Hint dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }} />
       )}
       <Combobox
         ref={wrapperRef}

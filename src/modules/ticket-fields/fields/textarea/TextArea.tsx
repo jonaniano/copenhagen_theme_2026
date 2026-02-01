@@ -3,6 +3,7 @@ import { Span } from "@zendeskgarden/react-typography";
 import { useWysiwyg } from "./useWysiwyg";
 import styled from "styled-components";
 import type { TicketFieldObject } from "../../data-types/TicketFieldObject";
+import { sanitizeHtml } from "../../../shared";
 
 interface TextAreaProps {
   field: TicketFieldObject;
@@ -51,7 +52,7 @@ export function TextArea({
         {required && <Span aria-hidden="true">*</Span>}
       </StyledField.Label>
       {description && (
-        <StyledField.Hint dangerouslySetInnerHTML={{ __html: description }} />
+        <StyledField.Hint dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }} />
       )}
       <Textarea
         ref={ref}
