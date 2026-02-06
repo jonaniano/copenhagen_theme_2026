@@ -1,5 +1,5 @@
 // =============================================================================
-// Search Field
+// Search Field - Zendesk.com style
 // =============================================================================
 
 $padding-left: 40px;
@@ -10,20 +10,19 @@ $padding-right: 20px;
 }
 
 .search {
-  border-color: var(--color-border-subtle);
+  border-color: var(--color-border-default);
   border-radius: var(--radius-full);
   border-style: solid;
-  border-width: 2px;
+  border-width: 1px;
   display: flex;
   position: relative;
   width: 100%;
-  transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-md);
+  transition: all var(--duration-normal) var(--ease-default);
   background-color: var(--color-surface);
 
   &:focus-within {
     border-color: var(--color-interactive);
-    box-shadow: var(--shadow-lg), 0 0 0 4px color-mix(in srgb, var(--color-interactive) 30%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 30%, transparent);
   }
 
   input[type="search"],
@@ -42,9 +41,9 @@ $padding-right: 20px;
     appearance: none;
     -webkit-appearance: none;
     box-sizing: border-box;
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
     flex: 1 1 auto;
-    height: 40px;
+    height: 44px;
     width: 100%;
     font-size: var(--font-size-base);
 
@@ -54,6 +53,7 @@ $padding-right: 20px;
 
     &:focus {
       color: var(--color-text-primary);
+      outline: none;
     }
 
     &::-webkit-search-decoration,
@@ -79,11 +79,10 @@ $padding-right: 20px;
     flex: none;
     justify-content: center;
     padding: 0 var(--space-4);
-    transition: background-color var(--duration-fast) ease, color var(--duration-fast) ease;
+    transition: color var(--duration-fast) var(--ease-default);
 
     &:hover {
-      background-color: var(--color-interactive);
-      color: var(--color-text-inverse);
+      color: var(--color-text-primary);
     }
 
     &:focus {

@@ -9568,9 +9568,16 @@ function createTheme(settings) {
                 },
             },
         },
+        borderRadii: {
+            ...DEFAULT_THEME.borderRadii,
+            sm: "4px",
+            md: "8px",
+            lg: "16px",
+        },
         components: {
             "buttons.anchor": Ne `
         color: ${normalizeColorForGarden(settings.link_color)};
+        text-decoration: underline;
 
         :hover,
         :active,
@@ -9583,9 +9590,19 @@ function createTheme(settings) {
         }
       `,
             "buttons.button": Ne `
+        border-radius: 16px;
+        transition: all 0.25s ease-in-out;
+
         ${(props) => props.isPrimary &&
                 Ne `
             color: ${normalizeColorForGarden(settings.brand_text_color)};
+            background-color: ${normalizeColorForGarden(settings.brand_color)};
+
+            &:hover,
+            &:focus,
+            &:active {
+              color: ${normalizeColorForGarden(settings.brand_text_color)};
+            }
           `}
       `,
             "forms.input": accessibleFormInputStyle,

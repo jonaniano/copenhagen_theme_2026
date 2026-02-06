@@ -1,160 +1,211 @@
 // =============================================================================
-// Footer - Bold, modern footer design
+// Footer - Zendesk.com style footer
 // =============================================================================
 
 .footer {
-  margin-top: var(--space-24);
-  padding: var(--space-16) 0 var(--space-12);
-  position: relative;
-  overflow: hidden;
+  background-color: #030302;
+  border-top: none;
+  padding: var(--space-16) 0 var(--space-8);
+  color: #fff;
+}
 
-  // Bold gradient background
-  background: linear-gradient(
-    135deg,
-    var(--color-surface-sunken) 0%,
-    var(--color-surface-overlay) 100%
-  );
+.footer-inner {
+  @include max-width-container;
+}
 
-  // Decorative top accent bar
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(
-      90deg,
-      var(--color-interactive) 0%,
-      color-mix(in srgb, var(--color-interactive) 60%, #8B5CF6) 50%,
-      var(--color-interactive) 100%
-    );
+// =============================================================================
+// Footer Columns Grid
+// =============================================================================
+
+.footer-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+
+  @include tablet {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
   }
 
-  // Subtle decorative circles in background
-  &::after {
-    content: "";
-    position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--color-interactive) 8%, transparent);
-    pointer-events: none;
-  }
-
-  // Footer container
-  &-inner {
-    @include max-width-container;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  @include desktop {
     gap: var(--space-8);
-    text-align: center;
-    position: relative;
-    z-index: 1;
+  }
+}
 
-    @include tablet {
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
+.footer-column {
+  min-width: 0;
+}
+
+.footer-column-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: #fff;
+  margin: 0 0 var(--space-4);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin-bottom: var(--space-2);
+  }
+
+  a {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    transition: color var(--duration-normal) var(--ease-default);
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      text-decoration: underline;
+    }
+  }
+}
+
+// =============================================================================
+// Footer Bottom Section
+// =============================================================================
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-top: var(--space-8);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  @include tablet {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+}
+
+// =============================================================================
+// Social Icons
+// =============================================================================
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius-full);
+    transition: color var(--duration-normal) var(--ease-default),
+                background-color var(--duration-normal) var(--ease-default);
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
     }
 
-    // Help center link - make it prominent
-    > a {
-      color: var(--color-text-primary);
-      font-size: var(--font-size-lg);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: var(--letter-spacing-tight);
-      padding: var(--space-3) var(--space-6);
-      border-radius: var(--radius-full);
-      background-color: var(--color-surface);
-      box-shadow: var(--shadow-md);
-      transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
 
-      // Hover glow effect
-      &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          135deg,
-          color-mix(in srgb, var(--color-interactive) 10%, transparent) 0%,
-          transparent 50%
-        );
-        opacity: 0;
-        transition: opacity var(--duration-normal) ease;
-      }
+// =============================================================================
+// Legal Links
+// =============================================================================
+
+.footer-legal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  @include tablet {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-6);
+  }
+}
+
+.footer-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+
+  a {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: var(--font-size-xs);
+    text-decoration: none;
+    transition: color var(--duration-normal) var(--ease-default);
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      text-decoration: underline;
+    }
+  }
+}
+
+.footer-copyright {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: var(--font-size-xs);
+}
+
+// =============================================================================
+// Language Selector
+// =============================================================================
+
+.footer-language-selector {
+  .language-selector {
+    position: relative;
+
+    .dropdown-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-md);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: border-color var(--duration-normal) var(--ease-default),
+                  color var(--duration-normal) var(--ease-default);
 
       &:hover,
       &:focus {
-        color: var(--color-interactive);
-        box-shadow: var(--shadow-lg);
-        transform: translateY(-2px);
-        text-decoration: none;
-
-        @include reduced-motion {
-          transform: none;
-        }
-
-        &::before {
-          opacity: 1;
-        }
+        border-color: rgba(255, 255, 255, 0.5);
+        color: #fff;
       }
-    }
-  }
 
-  // Language selector container
-  &-language-selector {
-    .dropdown {
-      position: relative;
-    }
-
-    // Bold dropdown toggle button
-    .dropdown-toggle {
-      color: var(--color-text-primary);
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-3);
-      padding: var(--space-3) var(--space-6);
-      border-radius: var(--radius-full);
-      font-size: var(--font-size-base);
-      font-weight: var(--font-weight-semibold);
-      background-color: var(--color-surface);
-      border: 2px solid var(--color-border-subtle);
-      cursor: pointer;
-      box-shadow: var(--shadow-sm);
-      transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+      svg {
+        flex-shrink: 0;
+      }
 
       .dropdown-chevron-icon {
-        width: 14px;
-        height: 14px;
-        transition: transform var(--duration-normal) ease;
+        width: 12px;
+        height: 12px;
+        transition: transform var(--duration-normal) var(--ease-default);
 
         @include reduced-motion {
           transition: none;
         }
       }
 
-      &:hover,
-      &:focus {
-        border-color: var(--color-interactive);
-        box-shadow: var(--shadow-md);
-        transform: translateY(-2px);
-
-        @include reduced-motion {
-          transform: none;
-        }
-      }
-
       &[aria-expanded="true"] {
         border-color: var(--color-interactive);
-        background-color: var(--color-interactive);
-        color: var(--color-text-inverse);
-        box-shadow: var(--shadow-lg);
 
         .dropdown-chevron-icon {
           transform: rotate(180deg);
@@ -162,66 +213,59 @@
       }
     }
 
-    // Dropdown menu - elevated and bold
     .dropdown-menu {
       position: absolute;
       bottom: 100%;
       right: 0;
-      margin-bottom: var(--space-3);
+      margin-bottom: var(--space-2);
       min-width: 180px;
-      background-color: var(--color-surface);
-      border: none;
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      padding: var(--space-3);
+      max-height: 300px;
+      overflow-y: auto;
+      background-color: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-2);
       z-index: $z-dropdown;
 
-      // Subtle top accent
-      &::before {
-        content: "";
-        position: absolute;
-        bottom: -4px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 40px;
-        height: 4px;
-        background: var(--color-interactive);
-        border-radius: var(--radius-full);
+      [dir="rtl"] & {
+        right: auto;
+        left: 0;
       }
 
       a {
         display: block;
-        padding: var(--space-3) var(--space-5);
-        color: var(--color-text-primary);
-        font-size: var(--font-size-base);
-        font-weight: var(--font-weight-medium);
-        border-radius: var(--radius-lg);
-        transition: all var(--duration-fast) ease;
+        padding: var(--space-2) var(--space-3);
+        color: #fff;
+        font-size: var(--font-size-sm);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        transition: background-color var(--duration-fast) var(--ease-default);
 
         &:hover,
         &:focus {
-          background-color: var(--color-surface-raised);
-          color: var(--color-interactive);
-          text-decoration: none;
-          padding-left: var(--space-6);
+          background-color: rgba(255, 255, 255, 0.1);
         }
       }
     }
   }
 }
 
-// Zendesk branding
+// =============================================================================
+// Zendesk Branding (if used)
+// =============================================================================
+
 .powered-by-zendesk {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  margin-top: var(--space-8);
+  margin-top: var(--space-6);
   text-align: center;
   width: 100%;
 
   a,
   a:visited {
     color: var(--color-text-muted);
-    transition: color var(--duration-fast) ease;
+    transition: color var(--duration-fast) var(--ease-default);
 
     &:hover {
       color: var(--color-text-secondary);
@@ -229,25 +273,6 @@
   }
 }
 
-// Dark mode enhancements
-@include dark-mode {
-  .footer {
-    background: linear-gradient(
-      135deg,
-      var(--color-surface-sunken) 0%,
-      color-mix(in srgb, var(--color-interactive) 8%, var(--color-surface-sunken)) 100%
-    );
-
-    &::after {
-      background: color-mix(in srgb, var(--color-interactive) 12%, transparent);
-    }
-
-    &-inner > a {
-      background-color: var(--color-surface-raised);
-    }
-
-    &-language-selector .dropdown-menu {
-      background-color: var(--color-surface-raised);
-    }
-  }
-}
+// =============================================================================
+// Dark Mode - Footer is always dark, no changes needed
+// =============================================================================

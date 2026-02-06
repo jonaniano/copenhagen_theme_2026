@@ -1,5 +1,5 @@
 // =============================================================================
-// Forms
+// Forms - Zendesk.com style
 // =============================================================================
 
 .form {
@@ -13,22 +13,21 @@
 .form-field label {
   display: block;
   font-size: var(--font-size-sm);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
   color: var(--color-text-primary);
   font-weight: var(--font-weight-medium);
 }
 
 .form-field input {
-  border: 2px solid var(--color-border-default);
+  border: 1px solid var(--color-border-default);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
   width: 100%;
-  min-height: 48px;
+  min-height: 44px;
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+  transition: border-color var(--duration-normal) var(--ease-default);
 
   &::placeholder {
     color: var(--color-text-muted);
@@ -36,9 +35,8 @@
 
   &:focus {
     border-color: var(--color-interactive);
-    outline: 2px solid var(--color-interactive);
-    outline-offset: -2px;
-    box-shadow: var(--shadow-md), 0 0 0 4px color-mix(in srgb, var(--color-interactive) 25%, transparent);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 30%, transparent);
   }
 }
 
@@ -58,22 +56,19 @@
 // Select box
 .form-field .nesty-input {
   border-radius: var(--radius-md);
-  border: 2px solid var(--color-border-default);
-  height: 48px;
-  line-height: 44px;
+  border: 1px solid var(--color-border-default);
+  height: 44px;
+  line-height: 42px;
   padding: 0 var(--space-4);
   outline: none;
   vertical-align: middle;
   background-color: var(--color-surface);
   color: var(--color-text-primary);
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+  transition: border-color var(--duration-normal) var(--ease-default);
 
   &:focus {
     border-color: var(--color-interactive);
-    outline: 2px solid var(--color-interactive);
-    outline-offset: -2px;
-    box-shadow: var(--shadow-md), 0 0 0 4px color-mix(in srgb, var(--color-interactive) 25%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 30%, transparent);
     text-decoration: none;
   }
 }
@@ -82,20 +77,34 @@
   &-toggle {
     border: 1px solid var(--color-border-default);
     background-color: var(--color-surface);
-    transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+    transition: border-color var(--duration-normal) var(--ease-default);
   }
 }
 
 .form-field .hc-multiselect-toggle:focus {
   border-color: var(--color-interactive);
-  outline: 2px solid var(--color-interactive);
-  outline-offset: -2px;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-interactive) 25%, transparent);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 30%, transparent);
   text-decoration: none;
 }
 
 .form-field textarea {
   vertical-align: middle;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  width: 100%;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: border-color var(--duration-normal) var(--ease-default);
+
+  &:focus {
+    border-color: var(--color-interactive);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 30%, transparent);
+  }
 }
 
 .form-field input[type="checkbox"] + label {
@@ -124,7 +133,7 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   margin-right: var(--space-4);
-  transition: color var(--duration-fast) ease;
+  transition: color var(--duration-fast) var(--ease-default);
 
   &:hover {
     color: var(--color-text-primary);
@@ -153,8 +162,6 @@
 // -----------------------------------------------------------------------------
 // Required Field Indicators
 // -----------------------------------------------------------------------------
-// Visual indicator for required form fields
-// WCAG 3.3.2: Labels or Instructions (A)
 
 .form-field.required label::after,
 .form-field[aria-required="true"] label::after {
@@ -164,7 +171,6 @@
 }
 
 // Error state for form fields
-// WCAG 3.3.1: Error Identification (A)
 
 .form-field.error input,
 .form-field input[aria-invalid="true"] {
@@ -172,8 +178,7 @@
 
   &:focus {
     border-color: var(--color-error);
-    outline-color: var(--color-error);
-    box-shadow: var(--shadow-md), 0 0 0 4px color-mix(in srgb, var(--color-error) 25%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 30%, transparent);
   }
 }
 
@@ -184,10 +189,4 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-
-  // Error icon placeholder
-  &::before {
-    content: "⚠";
-    font-size: var(--font-size-base);
-  }
 }

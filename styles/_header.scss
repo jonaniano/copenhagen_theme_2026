@@ -1,41 +1,15 @@
 // =============================================================================
-// Header - Bold, modern sticky header
+// Header - Zendesk.com style navigation
 // =============================================================================
 
-$header-height: 72px;
+$header-height: 64px;
 
-// Header wrapper for full-width background
 .header-wrapper {
-  background-color: var(--color-surface);
+  background-color: #fff;
   border-bottom: none;
-  box-shadow: var(--shadow-lg);
   position: sticky;
   top: 0;
   z-index: $z-header;
-
-  // Backdrop blur for modern glass effect
-  @supports (backdrop-filter: blur(16px)) {
-    background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-  }
-
-  // Subtle bottom accent line
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--color-border-subtle) 20%,
-      var(--color-border-subtle) 80%,
-      transparent 100%
-    );
-  }
 }
 
 .header {
@@ -48,96 +22,100 @@ $header-height: 72px;
   background-color: transparent;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.header-right {
+  display: none;
+
+  @include desktop {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+}
+
 // =============================================================================
-// Logo
+// Logo / Zendesk Wordmark
 // =============================================================================
 
 .logo {
   a {
     display: inline-flex;
     align-items: center;
-    padding: var(--space-2) var(--space-3);
-    margin: calc(var(--space-2) * -1) calc(var(--space-3) * -1);
-    border-radius: var(--radius-lg);
-    transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    padding: var(--space-2);
+    margin: calc(var(--space-2) * -1);
+    transition: opacity var(--duration-normal) var(--ease-default);
+    text-decoration: none;
 
     &:hover,
-    &:focus,
-    &:active {
+    &:focus {
+      opacity: 0.7;
       text-decoration: none;
-      background-color: var(--color-surface-raised);
-      transform: translateY(-1px);
-
-      @include reduced-motion {
-        transform: none;
-      }
     }
   }
 
-  img {
-    max-height: 40px;
-    vertical-align: middle;
-  }
-
-  // Brand name next to logo
-  span {
-    margin-left: var(--space-3);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
-    letter-spacing: var(--letter-spacing-tight);
-    transition: color var(--duration-fast) ease;
-
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: var(--space-3);
-    }
-  }
-
-  a:hover span {
-    color: var(--color-interactive);
+  .zendesk-logo {
+    width: 78.4px;
+    height: 56px;
+    transform: scale(1.15);
+    transform-origin: left center;
+    margin-top: -35px;
+    color: #11110D;
   }
 }
 
 // =============================================================================
-// Desktop Navigation
+// Main Navigation (Zendesk.com links)
+// =============================================================================
+
+.main-nav {
+  display: none;
+
+  @include desktop {
+    display: block;
+  }
+}
+
+.main-nav-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav-item {
+  display: inline-block;
+}
+
+.main-nav-link {
+  display: block;
+  padding: 8px 16px;
+  color: #11110D;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--duration-normal) var(--ease-default);
+
+  &:hover,
+  &:focus {
+    color: #11110D;
+    text-decoration: underline;
+  }
+}
+
+// =============================================================================
+// User Navigation (Help Center links)
 // =============================================================================
 
 .user-nav {
-  @include tablet { position: relative; }
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: var(--space-2);
-  position: absolute;
-  white-space: nowrap;
-
-  &[aria-expanded="true"] {
-    background-color: var(--color-surface);
-    box-shadow: var(--shadow-lg);
-    border: none;
-    border-radius: var(--radius-xl);
-    right: 0;
-    left: 0;
-    top: $header-height;
-    z-index: $z-dropdown;
-    padding: var(--space-4);
-
-    > a {
-      display: block;
-      margin: var(--space-2);
-    }
-
-    > .user-nav-list {
-      li {
-        display: block;
-      }
-
-      a {
-        display: block;
-        margin: var(--space-2);
-      }
-    }
-  }
 }
 
 .user-nav-list {
@@ -151,134 +129,129 @@ $header-height: 72px;
   > li {
     display: inline-block;
   }
+
+  a {
+    display: block;
+    padding: 8px 16px;
+    color: #11110D;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--duration-normal) var(--ease-default);
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+
+  .submit-a-request {
+    background-color: #D1F470;
+    color: #11110D !important;
+    border-radius: 9999px;
+    padding: 10px 20px;
+    font-weight: var(--font-weight-semibold);
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+      background-color: #bde05f;
+    }
+  }
 }
 
-.nav-wrapper-desktop {
-  @include mobile { display: none; }
-  @include tablet { display: none; }
-  @include desktop { display: inline-flex; }
-  align-items: center;
-  gap: var(--space-4);
+.nav-link {
+  display: block;
+  padding: 8px 16px;
+  color: #11110D;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--duration-normal) var(--ease-default);
 
-  // Regular nav links
-  a {
-    @include tablet {
-      display: inline-block;
-    }
-
-    border: 0;
-    color: var(--color-text-primary);
-    display: none;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-full);
-    width: auto;
-    transition: all var(--duration-normal) ease;
-    position: relative;
-
-    [dir="rtl"] & { padding: var(--space-2) var(--space-4); }
-
-    &:hover,
-    &:focus {
-      background-color: var(--color-surface-raised);
-      color: var(--color-interactive);
-      text-decoration: none;
-    }
-
-    &:active {
-      background-color: var(--color-surface-overlay);
-    }
-  }
-
-  // Submit a Request - Make it a CTA button
-  .submit-a-request {
-    background-color: var(--color-interactive);
-    color: var(--color-text-inverse) !important;
-    font-weight: var(--font-weight-semibold);
-    padding: var(--space-2) var(--space-5);
-    box-shadow: var(--shadow-sm);
-
-    &:hover,
-    &:focus {
-      background-color: var(--color-interactive-hover);
-      color: var(--color-text-inverse) !important;
-      box-shadow: var(--shadow-md);
-      transform: translateY(-1px);
-
-      @include reduced-motion {
-        transform: none;
-      }
-    }
-
-    &:active {
-      background-color: var(--color-interactive-active);
-      transform: translateY(0);
-    }
-  }
-
-  // Sign in link
-  .sign-in {
-    border: 2px solid var(--color-border-default);
-    font-weight: var(--font-weight-semibold);
-
-    &:hover,
-    &:focus {
-      border-color: var(--color-interactive);
-      color: var(--color-interactive);
-      background-color: transparent;
-    }
+  &:hover,
+  &:focus {
+    text-decoration: underline;
   }
 }
 
 // =============================================================================
-// User Info Dropdown (Desktop)
+// CTA Button
+// =============================================================================
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: #D1F470;
+  color: #11110D !important;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  border-radius: 9999px;
+  transition: background-color var(--duration-normal) var(--ease-default);
+
+  &:hover,
+  &:focus {
+    background-color: #bde05f;
+    text-decoration: none;
+  }
+}
+
+// =============================================================================
+// User Info Dropdown
 // =============================================================================
 
 .user-info {
   position: relative;
-  margin-left: var(--space-4);
+  margin-left: var(--space-2);
 
   [dir="rtl"] & {
     margin-left: 0;
-    margin-right: var(--space-4);
+    margin-right: var(--space-2);
   }
 
   .dropdown-toggle {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-2) var(--space-4);
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-full);
     background-color: transparent;
-    border: 2px solid transparent;
+    border: none;
     color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     cursor: pointer;
-    transition: all var(--duration-normal) ease;
+    transition: opacity var(--duration-normal) var(--ease-default);
 
     .user-avatar {
       width: 32px;
       height: 32px;
       border-radius: var(--radius-full);
       border: 2px solid var(--color-border-subtle);
-      transition: border-color var(--duration-fast) ease;
+    }
+
+    .user-name-text {
+      display: none;
+
+      @include desktop {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+      }
     }
 
     .dropdown-chevron-icon {
       width: 12px;
       height: 12px;
-      transition: transform var(--duration-normal) ease;
-
-      @include reduced-motion {
-        transition: none;
-      }
+      transition: transform var(--duration-normal) var(--ease-default);
     }
 
     &:hover,
     &:focus {
-      background-color: var(--color-surface-raised);
-      border-color: var(--color-border-subtle);
+      opacity: 0.8;
 
       .user-avatar {
         border-color: var(--color-interactive);
@@ -286,9 +259,6 @@ $header-height: 72px;
     }
 
     &[aria-expanded="true"] {
-      background-color: var(--color-surface-raised);
-      border-color: var(--color-interactive);
-
       .user-avatar {
         border-color: var(--color-interactive);
       }
@@ -306,39 +276,25 @@ $header-height: 72px;
     margin-top: var(--space-2);
     min-width: 200px;
     background-color: var(--color-surface);
-    border: none;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xl);
-    padding: var(--space-3);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-2);
     z-index: $z-dropdown;
-
-    // Top accent
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: var(--space-6);
-      right: var(--space-6);
-      height: 3px;
-      background: var(--color-interactive);
-      border-radius: 0 0 var(--radius-full) var(--radius-full);
-    }
 
     a {
       display: block;
       padding: var(--space-3) var(--space-4);
       color: var(--color-text-primary);
-      font-size: var(--font-size-base);
+      font-size: var(--font-size-sm);
       font-weight: var(--font-weight-medium);
-      border-radius: var(--radius-lg);
-      transition: all var(--duration-fast) ease;
+      border-radius: var(--radius-md);
+      transition: background-color var(--duration-fast) var(--ease-default);
 
       &:hover,
       &:focus {
         background-color: var(--color-surface-raised);
-        color: var(--color-interactive);
         text-decoration: none;
-        padding-left: var(--space-5);
       }
     }
 
@@ -362,12 +318,12 @@ $header-height: 72px;
     align-items: center;
     gap: var(--space-2);
     background: none;
-    border: 2px solid transparent;
+    border: none;
     padding: var(--space-2);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-md);
     cursor: pointer;
     color: var(--color-text-primary);
-    transition: all var(--duration-normal) ease;
+    transition: opacity var(--duration-normal) var(--ease-default);
 
     .user-avatar {
       width: 28px;
@@ -377,64 +333,34 @@ $header-height: 72px;
     }
 
     .icon-menu {
-      padding: var(--space-1);
-      width: 28px;
-      height: 28px;
-      border-radius: var(--radius-md);
-      transition: all var(--duration-fast) ease;
+      width: 24px;
+      height: 24px;
     }
 
     &:hover {
-      background-color: var(--color-surface-raised);
-      border-color: var(--color-border-subtle);
-
-      .icon-menu {
-        color: var(--color-interactive);
-      }
+      opacity: 0.8;
     }
 
     &[aria-expanded="true"] {
       background-color: var(--color-interactive);
-      border-color: var(--color-interactive);
-      color: var(--color-text-inverse);
-
-      .user-avatar {
-        border-color: var(--color-text-inverse);
-      }
-
-      .icon-menu {
-        color: var(--color-text-inverse);
-      }
+      color: var(--color-text-primary);
     }
   }
 
-  // Mobile menu dropdown
   .menu-list-mobile {
     position: absolute;
     background-color: var(--color-surface);
-    box-shadow: var(--shadow-xl);
-    border: none;
-    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border-subtle);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     right: 0;
     left: 0;
     top: $header-height;
     z-index: $z-dropdown;
     padding: var(--space-4) 0;
-
-    // Top accent bar
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(
-        90deg,
-        var(--color-interactive) 0%,
-        color-mix(in srgb, var(--color-interactive) 60%, #8B5CF6) 100%
-      );
-    }
+    max-height: calc(100vh - #{$header-height});
+    overflow-y: auto;
 
     &[aria-expanded="false"] {
       display: none;
@@ -443,6 +369,15 @@ $header-height: 72px;
     &[aria-expanded="true"] {
       display: block;
     }
+  }
+
+  .mobile-nav-section-title {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .menu-list-mobile-items {
@@ -478,14 +413,13 @@ $header-height: 72px;
       font-weight: var(--font-weight-medium);
       cursor: pointer;
       text-align: start;
-      border-radius: var(--radius-lg);
-      transition: all var(--duration-fast) ease;
+      border-radius: var(--radius-md);
+      transition: background-color var(--duration-fast) var(--ease-default);
 
       &:active,
       &:focus,
       &:hover {
         background-color: var(--color-surface-raised);
-        color: var(--color-interactive);
         text-decoration: none;
       }
     }
@@ -497,41 +431,39 @@ $header-height: 72px;
       color: var(--color-text-primary);
       font-size: var(--font-size-base);
       font-weight: var(--font-weight-medium);
-      border-radius: var(--radius-lg);
-      transition: all var(--duration-fast) ease;
+      border-radius: var(--radius-md);
+      transition: background-color var(--duration-fast) var(--ease-default);
 
       &:active,
       &:focus,
       &:hover {
         background-color: var(--color-surface-raised);
-        color: var(--color-interactive);
         text-decoration: none;
       }
     }
 
-    // Submit a request - CTA style in mobile too
     .submit-a-request {
       background-color: var(--color-interactive);
-      color: var(--color-text-inverse) !important;
+      color: var(--color-text-primary) !important;
       font-weight: var(--font-weight-semibold);
       text-align: center;
       margin-top: var(--space-2);
+      border-radius: var(--radius-lg);
 
       &:hover,
       &:focus {
-        background-color: var(--color-interactive-hover);
-        color: var(--color-text-inverse) !important;
+        background-color: color-mix(in srgb, var(--color-interactive) 85%, black);
+        color: var(--color-text-primary) !important;
       }
     }
 
-    // User profile section
     .my-profile {
       display: flex;
       align-items: center;
       gap: var(--space-3);
       padding: var(--space-4);
       background-color: var(--color-surface-raised);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       margin-bottom: var(--space-2);
 
       .menu-profile-avatar {
@@ -563,26 +495,25 @@ $header-height: 72px;
 }
 
 // =============================================================================
-// Skip Navigation (Accessibility)
+// Skip Navigation
 // =============================================================================
 
 .skip-navigation {
   align-items: center;
   background-color: var(--color-interactive);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   display: flex;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   justify-content: center;
   left: -999px;
   margin: var(--space-4);
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-3) var(--space-5);
   overflow: hidden;
   position: absolute;
   top: auto;
   z-index: -999;
-  border-radius: var(--radius-full);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
 
   [dir="rtl"] & {
     left: initial;
@@ -605,34 +536,46 @@ $header-height: 72px;
   }
 }
 
-// Disable the skip-navigation link when modals are open
 #zd-modal-container ~ .skip-navigation {
   display: none;
 }
 
 // =============================================================================
-// Dark Mode Enhancements
+// Dark Mode
 // =============================================================================
 
 @include dark-mode {
   .header-wrapper {
-    @supports (backdrop-filter: blur(16px)) {
-      background-color: color-mix(in srgb, var(--color-surface) 75%, transparent);
+    background-color: #11110D;
+  }
+
+  .logo .zendesk-logo {
+    color: #fff;
+  }
+
+  .main-nav-link,
+  .nav-link,
+  .user-nav-list a {
+    color: #fff;
+
+    &:hover,
+    &:focus {
+      color: #fff;
     }
   }
 
-  .nav-wrapper-desktop {
-    .submit-a-request {
-      box-shadow: 0 2px 8px color-mix(in srgb, var(--color-interactive) 30%, transparent);
-
-      &:hover {
-        box-shadow: 0 4px 16px color-mix(in srgb, var(--color-interactive) 40%, transparent);
-      }
-    }
+  .user-info .dropdown-toggle {
+    color: #fff;
   }
 
   .user-info .dropdown-menu,
   .menu-list-mobile {
-    background-color: var(--color-surface-raised);
+    background-color: #1a1a1a;
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .menu-list-mobile a,
+  .menu-list-mobile button {
+    color: #fff;
   }
 }

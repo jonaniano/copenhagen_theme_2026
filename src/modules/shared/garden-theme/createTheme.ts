@@ -72,9 +72,16 @@ export function createTheme(settings: Settings): IGardenTheme {
         },
       },
     },
+    borderRadii: {
+      ...DEFAULT_THEME.borderRadii,
+      sm: "4px",
+      md: "8px",
+      lg: "16px",
+    },
     components: {
       "buttons.anchor": css`
         color: ${normalizeColorForGarden(settings.link_color)};
+        text-decoration: underline;
 
         :hover,
         :active,
@@ -87,10 +94,20 @@ export function createTheme(settings: Settings): IGardenTheme {
         }
       `,
       "buttons.button": css`
+        border-radius: 16px;
+        transition: all 0.25s ease-in-out;
+
         ${(props: IButtonProps) =>
           props.isPrimary &&
           css`
             color: ${normalizeColorForGarden(settings.brand_text_color)};
+            background-color: ${normalizeColorForGarden(settings.brand_color)};
+
+            &:hover,
+            &:focus,
+            &:active {
+              color: ${normalizeColorForGarden(settings.brand_text_color)};
+            }
           `}
       `,
       "forms.input": accessibleFormInputStyle,

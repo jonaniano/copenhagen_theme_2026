@@ -37,6 +37,7 @@ $color-surface: $background_color;
 $color-surface-raised: zass-darken($background_color, 3%);
 $color-surface-sunken: zass-darken($background_color, 5%);
 $color-surface-overlay: zass-darken($background_color, 8%);
+$color-surface-warm: #F5F5F2; // Zendesk.com off-white
 
 // Text colors
 // Note: Contrast ratios calculated against white (#fff) background
@@ -56,10 +57,10 @@ $color-link: $link_color;
 $color-link-hover: $hover_link_color;
 $color-link-visited: $visited_link_color;
 
-// Border colors
-$color-border-subtle: zass-darken($background_color, 12%);
-$color-border-default: #848F99;
-$color-border-strong: zass-darken($background_color, 25%);
+// Border colors - Zendesk.com palette
+$color-border-subtle: #e5e5e0;
+$color-border-default: #3c3c2e;
+$color-border-strong: #2e2e23;
 $color-border-interactive: $brand_color;
 
 // Status colors (semantic)
@@ -96,16 +97,17 @@ $space-24: 96px;
 // Typography Tokens
 // -----------------------------------------------------------------------------
 
-// Font sizes (bolder modular scale - larger headings)
+// Font sizes - Zendesk.com scale (larger headings)
 $font-size-xs: 12px;
 $font-size-sm: 14px;
 $font-size-base: 16px;
-$font-size-md: 17px;
+$font-size-md: 18px;
 $font-size-lg: 20px;
-$font-size-xl: 26px;
-$font-size-2xl: 34px;
-$font-size-3xl: 42px;
-$font-size-4xl: 52px;
+$font-size-xl: 28px;
+$font-size-2xl: 36px;
+$font-size-3xl: 48px;
+$font-size-4xl: 64px;
+$font-size-5xl: 85px; // Zendesk.com hero size at wide breakpoints
 
 // Font weights
 $font-weight-normal: 400;
@@ -114,8 +116,8 @@ $font-weight-semibold: 600;
 $font-weight-bold: 700;
 $font-weight-extrabold: 800;
 
-// Line heights
-$line-height-tight: 1.2;
+// Line heights - Zendesk.com uses tighter for headings
+$line-height-tight: 1.1;
 $line-height-normal: 1.5;
 $line-height-relaxed: 1.65;
 
@@ -127,38 +129,38 @@ $letter-spacing-wide: 0.025em;
 // -----------------------------------------------------------------------------
 // Border Radius Tokens
 // -----------------------------------------------------------------------------
-// Softer, more rounded corners for modern feel
+// Zendesk.com uses 16px as standard button/card radius
 
-$radius-sm: 8px;
-$radius-md: 12px;
+$radius-sm: 4px;
+$radius-md: 8px;
 $radius-lg: 16px;
-$radius-xl: 24px;
-$radius-2xl: 32px;
+$radius-xl: 16px;
+$radius-2xl: 24px;
 $radius-full: 9999px;
 
 // -----------------------------------------------------------------------------
 // Shadow Tokens
 // -----------------------------------------------------------------------------
-// More prominent shadows for depth and elevation
+// Minimal, subtle shadows - Zendesk.com style
 
-$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
-$shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1);
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.08);
+$shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.1);
 
-// Colored shadow for interactive elements (uses brand color)
-$shadow-interactive: 0 4px 14px rgba(0, 0, 0, 0.15);
+// Focus shadow for interactive elements (uses lime accent)
+$shadow-interactive: 0 0 0 3px rgba(209, 244, 112, 0.4);
 
 // -----------------------------------------------------------------------------
 // Transition Tokens
 // -----------------------------------------------------------------------------
-// Simple, performant transitions (no heavy animations)
+// Zendesk.com uses 0.25s ease-in-out as standard
 
-$duration-fast: 0.1s;
-$duration-normal: 0.15s;
-$duration-slow: 0.25s;
+$duration-fast: 0.15s;
+$duration-normal: 0.25s;
+$duration-slow: 0.35s;
 
-$ease-default: ease-out;
+$ease-default: ease-in-out;
 $ease-in-out: ease-in-out;
 
 $transition-colors: color $duration-fast $ease-default,
@@ -172,11 +174,11 @@ $transition-all: all $duration-normal $ease-default;
 // -----------------------------------------------------------------------------
 // Breakpoint Tokens
 // -----------------------------------------------------------------------------
-// These match existing breakpoints for backward compatibility
+// Updated to match Zendesk.com breakpoints
 
 $breakpoint-tablet: 768px;
-$breakpoint-desktop: 1024px;
-$breakpoint-wide: 1160px;
+$breakpoint-desktop: 1120px;
+$breakpoint-wide: 1600px;
 
 // -----------------------------------------------------------------------------
 // Z-Index Tokens

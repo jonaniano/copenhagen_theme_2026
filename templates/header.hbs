@@ -1,101 +1,129 @@
 <a class="skip-navigation" tabindex="1" href="#main-content">{{t 'skip_navigation' }}</a>
 
-<header class="header">
-  <div class="logo">
-    {{#link 'help_center'}}
-      <img src="{{settings.logo}}" alt="{{t 'home_page' name=help_center.name}}" />
-      {{#if settings.show_brand_name}}
-        <span aria-hidden="true">{{help_center.name}}</span>
-      {{/if}}
-    {{/link}}
-  </div>
-
-  <div class="nav-wrapper-desktop">
-    <nav class="user-nav" id="user-nav" aria-label="{{t 'user_navigation'}}">
-      <ul class="user-nav-list">
-        <li>{{link 'community'}}</li>
-        <li>{{link 'service_catalog'}}</li>
-        <li>{{link 'new_request' class='submit-a-request'}}</li>
-        {{#unless signed_in}}
-          <li>
-            {{#link "sign_in" class="sign-in" role="link"}}
-              {{t 'sign_in'}}
-            {{/link}}
-          </li>
-        {{/unless}}
-      </ul>
-    </nav>
-    {{#if signed_in}}
-      <div class="user-info dropdown">
-        <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-          {{user_avatar class="user-avatar"}}
-          <span>
-            {{user_name}}
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12" class="dropdown-chevron-icon" aria-hidden="true">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" d="M3 4.5l2.6 2.6c.2.2.5.2.7 0L9 4.5"/>
-            </svg>
-          </span>
-        </button>
-        <div class="dropdown-menu" role="menu">
-          {{#my_profile role="menuitem"}}{{t 'profile'}}{{/my_profile}}
-          {{link "requests" role="menuitem"}}
-          {{#link "contributions" role="menuitem"}}{{t "activities"}}{{/link}}
-          {{link "approval_requests" role="menuitem"}}
-          {{contact_details role="menuitem"}}
-          {{change_password role="menuitem"}}
-          <div class="separator" role="separator"></div>
-          {{link "sign_out" role="menuitem"}}
-        </div>
+<div class="header-wrapper">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <a href="https://www.zendesk.com" aria-label="Zendesk">
+          <svg class="zendesk-logo" viewBox="0 0 78.4 56" fill="currentColor" aria-hidden="true">
+            <path d="M54.6 49.8c-.2-1.4-1.1-2.4-2.7-2.4-1.5 0-2.6.9-2.9 2.4zm-2.5 4.1c1.3 0 2.2-.5 2.8-1.1l1.4 1.5c-.9.9-2.2 1.6-4.2 1.6-3.4 0-5.6-2.2-5.6-5.3 0-3 2.3-5.3 5.2-5.3 3.4 0 5.2 2.6 5.1 6.1H49c.3 1.6 1.3 2.5 3.1 2.5M0 53.8l6.1-6.2h-6v-2h8.8v2l-6.1 6.2H9v2H0zm18.3-4c-.2-1.4-1.1-2.4-2.7-2.4-1.5 0-2.6.9-2.9 2.4zm-2.4 4.1c1.3 0 2.2-.5 2.8-1.1l1.4 1.5c-.9.9-2.2 1.6-4.2 1.6-3.4 0-5.6-2.2-5.6-5.3 0-3 2.3-5.3 5.2-5.3 3.4 0 5.2 2.6 5.1 6.1h-7.9c.4 1.6 1.4 2.5 3.2 2.5m26.6-3.2c0-1.8-1.4-3.3-3.2-3.3s-3.2 1.4-3.2 3.3 1.4 3.3 3.2 3.3 3.2-1.5 3.2-3.3m-8.6 0c0-3.3 2.4-5.3 5.1-5.3 1.3 0 2.6.6 3.4 1.5v-6h2.2v14.8h-2.2v-1.4c-.8 1-2.1 1.6-3.4 1.6-2.6.1-5.1-2-5.1-5.2m24.4 3 2-1c.6.9 1.4 1.5 2.6 1.5s1.9-.6 1.9-1.3c0-.8-1.2-1-2.5-1.3-1.7-.4-3.5-.9-3.5-3 0-1.6 1.5-3.1 3.9-3.1 1.9 0 3.3.7 4.1 2l-1.8 1c-.5-.7-1.3-1.2-2.3-1.2-1.2 0-1.8.6-1.8 1.2 0 .7.9.9 2.4 1.3 1.7.3 3.6.9 3.6 3 0 1.4-1.2 3.3-4.1 3.3q-3.15-.15-4.5-2.4m14.5-2.4-1.7 1.9v2.6h-2.2V41h2.2v9.7l4.6-5h2.6l-4 4.3 4.1 5.8h-2.5zm-45.4-5.9c-2.6 0-4.7 1.7-4.7 4.4v5.9h2.2v-5.6c0-1.7.9-2.7 2.6-2.7s2.4 1 2.4 2.7v5.6h2.2v-5.9c0-2.7-2.2-4.4-4.7-4.4"/>
+          </svg>
+        </a>
       </div>
-    {{/if}}
-  </div>
 
-  <div class="nav-wrapper-mobile">
-    <button class="menu-button-mobile" aria-controls="user-nav-mobile" aria-expanded="false" aria-label="{{t 'toggle_navigation'}}">
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul class="main-nav-list">
+          <li class="main-nav-item">
+            <a href="https://www.zendesk.com/service/" class="main-nav-link">Products</a>
+          </li>
+          <li class="main-nav-item">
+            <a href="https://www.zendesk.com/industries/" class="main-nav-link">Solutions</a>
+          </li>
+          <li class="main-nav-item">
+            <a href="https://www.zendesk.com/pricing/" class="main-nav-link">Pricing</a>
+          </li>
+          <li class="main-nav-item">
+            <a href="https://www.zendesk.com/blog/" class="main-nav-link">Resources</a>
+          </li>
+          <li class="main-nav-item">
+            <a href="https://www.zendesk.com/company/" class="main-nav-link">Company</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <nav class="user-nav" id="user-nav" aria-label="{{t 'user_navigation'}}">
+        <ul class="user-nav-list">
+          <li>{{link 'community'}}</li>
+          <li>{{link 'new_request' class='submit-a-request'}}</li>
+          {{#unless signed_in}}
+            <li>
+              <a href="https://www.zendesk.com/login/" class="nav-link">Log in</a>
+            </li>
+          {{/unless}}
+        </ul>
+      </nav>
+
       {{#if signed_in}}
-        {{user_avatar class="user-avatar"}}
+        <div class="user-info dropdown">
+          <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            {{user_avatar class="user-avatar"}}
+            <span class="user-name-text">
+              {{user_name}}
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12" class="dropdown-chevron-icon" aria-hidden="true">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" d="M3 4.5l2.6 2.6c.2.2.5.2.7 0L9 4.5"/>
+              </svg>
+            </span>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            {{#my_profile role="menuitem"}}{{t 'profile'}}{{/my_profile}}
+            {{link "requests" role="menuitem"}}
+            {{#link "contributions" role="menuitem"}}{{t "activities"}}{{/link}}
+            {{link "approval_requests" role="menuitem"}}
+            {{contact_details role="menuitem"}}
+            {{change_password role="menuitem"}}
+            <div class="separator" role="separator"></div>
+            {{link "sign_out" role="menuitem"}}
+          </div>
+        </div>
+      {{else}}
+        <a href="https://www.zendesk.com/register/" class="cta-button">Start free trial</a>
       {{/if}}
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 16 16" class="icon-menu">
-        <path fill="none" stroke="currentColor" stroke-linecap="round" d="M1.5 3.5h13m-13 4h13m-13 4h13"/>
-      </svg>
-    </button>
-    <nav class="menu-list-mobile" id="user-nav-mobile" aria-expanded="false">
-      <ul class="menu-list-mobile-items">
-        {{#if signed_in}}
-          <li class="user-avatar-item item">
-            {{#my_profile class="my-profile"}}
-              {{user_avatar class="menu-profile-avatar"}}
-              <div class="menu-profile-name">
-                <div>{{user_name}}</div>
-                <div class="my-profile-tooltip">{{t 'profile'}}</div>
-              </div>
-            {{/my_profile}}
-          </li>
-          <li class="item">{{link "requests"}}</li>
-          <li class="item">{{#link "contributions"}}{{t "activities"}}{{/link}}</li>
-          <li class="item">{{link "approval_requests"}}</li>
-          <li class="item">{{contact_details}}</li>
-          <li class="item">{{change_password class='change-password'}}</li>
-          <li class="nav-divider"></li>
-        {{else}}
-          <li class="item">
-            {{#link "sign_in" role="link"}}
-              {{t 'sign_in'}}
-            {{/link}}
-          </li>
-          <li class="nav-divider"></li>
-        {{/if}}
-        <li class="item">{{link 'community'}}</li>
-        <li class="item">{{link 'new_request' class='submit-a-request'}}</li>
-        <li class="item">{{link 'service_catalog'}}</li>
-        <li class="nav-divider"></li>
-        {{#if signed_in}}
-          <li class="item">
-            {{link "sign_out"}}
-          </li>
-        {{/if}}
-      </ul>
-    </nav>
-  </div>
+    </div>
 
-</header>
+    <div class="nav-wrapper-mobile">
+      <button class="menu-button-mobile" aria-controls="user-nav-mobile" aria-expanded="false" aria-label="{{t 'toggle_navigation'}}">
+        {{#if signed_in}}
+          {{user_avatar class="user-avatar"}}
+        {{/if}}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" focusable="false" viewBox="0 0 16 16" class="icon-menu">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" d="M1.5 3.5h13m-13 4h13m-13 4h13"/>
+        </svg>
+      </button>
+      <nav class="menu-list-mobile" id="user-nav-mobile" aria-expanded="false">
+        <ul class="menu-list-mobile-items">
+          {{#if signed_in}}
+            <li class="user-avatar-item item">
+              {{#my_profile class="my-profile"}}
+                {{user_avatar class="menu-profile-avatar"}}
+                <div class="menu-profile-name">
+                  <div>{{user_name}}</div>
+                  <div class="my-profile-tooltip">{{t 'profile'}}</div>
+                </div>
+              {{/my_profile}}
+            </li>
+            <li class="item">{{link "requests"}}</li>
+            <li class="item">{{#link "contributions"}}{{t "activities"}}{{/link}}</li>
+            <li class="item">{{link "approval_requests"}}</li>
+            <li class="item">{{contact_details}}</li>
+            <li class="item">{{change_password class='change-password'}}</li>
+            <li class="nav-divider"></li>
+          {{else}}
+            <li class="item">
+              <a href="https://www.zendesk.com/login/">Log in</a>
+            </li>
+            <li class="nav-divider"></li>
+          {{/if}}
+          <li class="mobile-nav-section-title">Zendesk</li>
+          <li class="item"><a href="https://www.zendesk.com/service/">Products</a></li>
+          <li class="item"><a href="https://www.zendesk.com/industries/">Solutions</a></li>
+          <li class="item"><a href="https://www.zendesk.com/pricing/">Pricing</a></li>
+          <li class="item"><a href="https://www.zendesk.com/blog/">Resources</a></li>
+          <li class="item"><a href="https://www.zendesk.com/company/">Company</a></li>
+          <li class="nav-divider"></li>
+          <li class="mobile-nav-section-title">Help Center</li>
+          <li class="item">{{link 'community'}}</li>
+          <li class="item">{{link 'new_request' class='submit-a-request'}}</li>
+          <li class="item">{{link 'service_catalog'}}</li>
+          <li class="nav-divider"></li>
+          {{#if signed_in}}
+            <li class="item">
+              {{link "sign_out"}}
+            </li>
+          {{/if}}
+        </ul>
+      </nav>
+    </div>
+  </header>
+</div>

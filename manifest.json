@@ -25,42 +25,42 @@
           "type": "color",
           "description": "brand_color_description",
           "label": "brand_color_label",
-          "value": "#17494D"
+          "value": "#D1F470"
         },
         {
           "identifier": "brand_text_color",
           "type": "color",
           "description": "brand_text_color_description",
           "label": "brand_text_color_label",
-          "value": "#FFFFFF"
+          "value": "#11110D"
         },
         {
           "identifier": "text_color",
           "type": "color",
           "description": "text_color_description",
           "label": "text_color_label",
-          "value": "#2F3941"
+          "value": "#11110D"
         },
         {
           "identifier": "link_color",
           "type": "color",
           "description": "link_color_description",
           "label": "link_color_label",
-          "value": "#1F73B7"
+          "value": "#11110D"
         },
         {
           "identifier": "hover_link_color",
           "type": "color",
           "description": "hover_link_color_description",
           "label": "hover_link_color_label",
-          "value": "#0F3554"
+          "value": "#3c3c2e"
         },
         {
           "identifier": "visited_link_color",
           "type": "color",
           "description": "visited_link_color_description",
           "label": "visited_link_color_label",
-          "value": "#9358B0"
+          "value": "#3c3c2e"
         },
         {
           "identifier": "background_color",
@@ -79,35 +79,35 @@
           "type": "color",
           "description": "brand_color_dark_description",
           "label": "brand_color_dark_label",
-          "value": "#60A5FA"
+          "value": "#D1F470"
         },
         {
           "identifier": "link_color_dark",
           "type": "color",
           "description": "link_color_dark_description",
           "label": "link_color_dark_label",
-          "value": "#60A5FA"
+          "value": "#FAFAFA"
         },
         {
           "identifier": "hover_link_color_dark",
           "type": "color",
           "description": "hover_link_color_dark_description",
           "label": "hover_link_color_dark_label",
-          "value": "#93C5FD"
+          "value": "#D1F470"
         },
         {
           "identifier": "visited_link_color_dark",
           "type": "color",
           "description": "visited_link_color_dark_description",
           "label": "visited_link_color_dark_label",
-          "value": "#C4B5FD"
+          "value": "#FAFAFA"
         },
         {
           "identifier": "background_color_dark",
           "type": "color",
           "description": "background_color_dark_description",
           "label": "background_color_dark_label",
-          "value": "#18181B"
+          "value": "#11110D"
         },
         {
           "identifier": "text_color_dark",
@@ -128,71 +128,35 @@
           "label": "heading_font_label",
           "options": [
             {
+              "label": "DM Sans",
+              "value": "'DM Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
+            },
+            {
               "label": "System",
               "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+            },
+            {
+              "label": "Inter",
+              "value": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
             },
             {
               "label": "Arial",
               "value": "Arial, 'Helvetica Neue', Helvetica, sans-serif"
             },
             {
-              "label": "Arial Black",
-              "value": "'Arial Black', Arial, 'Helvetica Neue', Helvetica, sans-serif"
-            },
-            {
-              "label": "Baskerville",
-              "value": "Baskerville, 'Times New Roman', Times, serif"
-            },
-            {
-              "label": "Century Gothic",
-              "value": "'Century Gothic', sans-serif"
-            },
-            {
-              "label": "Copperplate Light",
-              "value": "'Copperplate Light', 'Copperplate Gothic Light', serif"
-            },
-            {
-              "label": "Courier New",
-              "value": "'Courier New', Courier, monospace"
-            },
-            {
-              "label": "Futura",
-              "value": "Futura, 'Century Gothic', sans-serif"
-            },
-            {
-              "label": "Garamond",
-              "value": "Garamond, 'Hoefler Text', 'Times New Roman', Times, serif"
-            },
-            {
-              "label": "Geneva",
-              "value": "Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif"
+              "label": "Helvetica Neue",
+              "value": "'Helvetica Neue', Arial, Helvetica, sans-serif"
             },
             {
               "label": "Georgia",
               "value": "Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif"
             },
             {
-              "label": "Helvetica",
-              "value": "Helvetica, Arial, sans-serif"
-            },
-            {
-              "label": "Helvetica Neue",
-              "value": "'Helvetica Neue', Arial, Helvetica, sans-serif"
-            },
-            {
-              "label": "Impact",
-              "value": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
-            },
-            {
-              "label": "Lucida Grande",
-              "value": "'Lucida Grande', 'Lucida Sans', 'Lucida Sans Unicode', sans-serif"
-            },
-            {
-              "label": "Trebuchet MS",
-              "value": "'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif"
+              "label": "Garamond",
+              "value": "Garamond, 'Hoefler Text', 'Times New Roman', Times, serif"
             }
           ],
-          "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+          "value": "'DM Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
         },
         {
           "identifier": "text_font",
@@ -201,71 +165,35 @@
           "label": "text_font_label",
           "options": [
             {
+              "label": "DM Sans",
+              "value": "'DM Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
+            },
+            {
               "label": "System",
               "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+            },
+            {
+              "label": "Inter",
+              "value": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
             },
             {
               "label": "Arial",
               "value": "Arial, 'Helvetica Neue', Helvetica, sans-serif"
             },
             {
-              "label": "Arial Black",
-              "value": "'Arial Black', Arial, 'Helvetica Neue', Helvetica, sans-serif"
-            },
-            {
-              "label": "Baskerville",
-              "value": "Baskerville, 'Times New Roman', Times, serif"
-            },
-            {
-              "label": "Century Gothic",
-              "value": "'Century Gothic', sans-serif"
-            },
-            {
-              "label": "Copperplate Light",
-              "value": "'Copperplate Light', 'Copperplate Gothic Light', serif"
-            },
-            {
-              "label": "Courier New",
-              "value": "'Courier New', Courier, monospace"
-            },
-            {
-              "label": "Futura",
-              "value": "Futura, 'Century Gothic', sans-serif"
-            },
-            {
-              "label": "Garamond",
-              "value": "Garamond, 'Hoefler Text', 'Times New Roman', Times, serif"
-            },
-            {
-              "label": "Geneva",
-              "value": "Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif"
+              "label": "Helvetica Neue",
+              "value": "'Helvetica Neue', Arial, Helvetica, sans-serif"
             },
             {
               "label": "Georgia",
               "value": "Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif"
             },
             {
-              "label": "Helvetica",
-              "value": "Helvetica, Arial, sans-serif"
-            },
-            {
-              "label": "Helvetica Neue",
-              "value": "'Helvetica Neue', Arial, Helvetica, sans-serif"
-            },
-            {
-              "label": "Impact",
-              "value": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
-            },
-            {
-              "label": "Lucida Grande",
-              "value": "'Lucida Grande', 'Lucida Sans', 'Lucida Sans Unicode', sans-serif"
-            },
-            {
-              "label": "Trebuchet MS",
-              "value": "'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif"
+              "label": "Garamond",
+              "value": "Garamond, 'Hoefler Text', 'Times New Roman', Times, serif"
             }
           ],
-          "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+          "value": "'DM Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
         }
       ]
     },

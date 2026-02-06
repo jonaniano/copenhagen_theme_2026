@@ -82,14 +82,14 @@
 @mixin focus-ring {
   outline: 2px solid var(--color-interactive);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-interactive) 25%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 30%, transparent);
 }
 
 // Inset focus ring for form elements where outline-offset doesn't work well
 @mixin focus-ring-inset {
   outline: none;
   box-shadow: inset 0 0 0 2px var(--color-interactive),
-              0 0 0 3px color-mix(in srgb, var(--color-interactive) 25%, transparent);
+              0 0 0 3px color-mix(in srgb, var(--color-interactive) 30%, transparent);
 }
 
 @mixin standalone-link {
