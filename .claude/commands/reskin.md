@@ -222,6 +222,9 @@ curl -s -A "Mozilla/5.0..." "<url>" | grep -oE 'data-animation-type="lottie"'
 - [ ] Button border-radius (exact px or 9999px for pill)
 - [ ] Button padding (exact values)
 - [ ] Hover effects (underline? opacity? background change?)
+- [ ] Card border-radius (usually 8px for flat, 16-24px for elevated)
+- [ ] Card shadows (often none/subtle for flat, heavy for elevated)
+- [ ] Card borders (often `1px solid #ddd` for flat, none for elevated)
 
 ---
 
@@ -478,98 +481,58 @@ FOOTER:
 
 // CORRECT - Using exact extracted values
 .header-wrapper {
-  background-color: #FFFFFF;  // Exact value from target
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);  // Exact value from target
+  background-color: [extracted-header-bg];     // e.g., #FFFFFF or #0f172a
+  box-shadow: [extracted-header-shadow];       // e.g., 0 1px 0 rgba(0,0,0,0.08)
 }
 ```
 
 ### SCSS Patterns by Category
 
-**Light header:**
+**Header:**
 ```scss
 .header-wrapper {
-  background-color: #FFFFFF;  // Extract exact value
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);  // Or border-bottom - extract exact
+  background-color: [extracted-header-bg];
+  box-shadow: [extracted-header-shadow];  // Or border-bottom
 }
 
 .main-nav-link {
-  color: #000000;  // Extract exact value
-  // Hover effect - extract exact style from target
+  color: [extracted-nav-link-color];
+  &:hover {
+    [extracted-hover-effect]  // Could be color change, underline, background, etc.
+  }
 }
 ```
 
-**Dark header:**
-```scss
-.header-wrapper {
-  background-color: #000000;  // Extract exact value
-}
-
-.main-nav-link {
-  color: rgba(255, 255, 255, 0.7);  // Extract exact value
-  &:hover { color: #FFFFFF; }
-}
-```
-
-**Dark footer:**
+**Footer:**
 ```scss
 .footer {
-  background-color: #000000;  // Extract exact value - is it pure black or near-black?
+  background-color: [extracted-footer-bg];
+  border-top: [extracted-footer-border];  // If applicable
 }
 
 .footer-column-title {
-  color: rgba(255, 255, 255, 0.6);  // Extract exact value
+  color: [extracted-footer-heading];
 }
 
 .footer-links a {
-  color: #FFFFFF;  // Extract exact value
-  &:hover { opacity: 0.7; }  // Extract exact hover effect
-}
-```
-
-**Light footer:**
-```scss
-.footer {
-  background-color: #FFFFFF;
-  border-top: 1px solid #E5E7EB;  // Extract exact value
-}
-
-.footer-links a {
-  color: #666666;  // Extract exact value
-  &:hover { color: #000000; }
+  color: [extracted-footer-link];
+  &:hover {
+    [extracted-footer-hover]  // Could be opacity, color change, underline, etc.
+  }
 }
 ```
 
 ### Common Hover Effect Patterns
 
-Extract the exact hover effect from the target:
+Extract the exact hover effect from the target. Common patterns include:
 
-```scss
-// Animated underline
-&::after {
-  content: '';
-  position: absolute;
-  bottom: 4px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: currentColor;
-  transform: scaleX(0);
-  transition: transform 0.15s ease;
-}
-&:hover::after { transform: scaleX(1); }
+- **Animated underline** - `::after` pseudo-element with `transform: scaleX()`
+- **Background change** - `background-color` on hover
+- **Opacity change** - `opacity` on hover
+- **Simple underline** - `text-decoration: underline`
+- **Color change** - Different `color` on hover
 
-// Background change
-&:hover { background-color: rgba(0, 0, 0, 0.05); }
-
-// Opacity change
-&:hover { opacity: 0.7; }
-
-// Simple underline
-&:hover { text-decoration: underline; }
-
-// Color change
-&:hover { color: #000000; }
-```
+Apply whatever pattern the target site uses.
 
 ### Logo Sizing
 
@@ -587,6 +550,121 @@ Extract the exact hover effect from the target:
 
   color: [extracted-color];
 }
+```
+
+---
+
+## Phase 5b: Card & Container Styles
+
+### Extract Card Styling from Target
+
+Most modern sites (Figma, Stripe, Zendesk) use **flat, minimal card styling**. Copenhagen 2026 defaults are heavier than most sites need.
+
+**Extract these values:**
+```
+"Extract card/container styling:
+1. Card border-radius (exact px value - usually 8px)
+2. Card shadows (exact CSS or 'none')
+3. Card borders (exact CSS - often '1px solid #ddd')
+4. Card background colors
+5. Hover effects on cards"
+```
+
+### Common Patterns
+
+**Flat/Minimal pattern:**
+- Consistent border-radius (often 8px)
+- Subtle or no shadows
+- Visible borders (e.g., `1px solid [border-color]`)
+- Minimal hover effects
+
+**Elevated pattern:**
+- Larger border-radius (12-24px)
+- Heavy shadows for depth
+- No borders (shadow provides definition)
+- Lift/transform on hover
+
+**Apply extracted values:**
+```scss
+// Update _tokens.scss with extracted values
+$radius-sm: [extracted-radius-sm];
+$radius-md: [extracted-radius-md];
+$radius-lg: [extracted-radius-lg];
+
+$shadow-sm: [extracted-shadow-sm];
+$shadow-md: [extracted-shadow-md];
+$shadow-lg: [extracted-shadow-lg];
+
+// Apply to card components
+.blocks-item {
+  background-color: [extracted-card-bg];
+  border: [extracted-card-border];      // e.g., "1px solid #ddd" or "none"
+  border-radius: [extracted-card-radius];
+  box-shadow: [extracted-card-shadow];  // e.g., "none" or shadow value
+
+  &:hover {
+    box-shadow: [extracted-hover-shadow];
+    border-color: [extracted-hover-border];
+  }
+}
+```
+
+### Files to Update for Card Styles
+
+| File | Components | What to change |
+|------|------------|----------------|
+| `_tokens.scss` | All | `$radius-*` and `$shadow-*` values |
+| `_blocks.scss` | Home page category cards | border, shadow, radius, hover |
+| `_category.scss` | Section tree cards | `.section-tree .section` styling |
+| `_section.scss` | Section list items, sub-nav | border, shadow, radius |
+| `_article.scss` | Article content, votes, related | border, shadow, radius |
+| `_recent-activity.scss` | Activity cards | border, shadow, radius |
+
+### Removing Decorative Elements
+
+Copenhagen 2026 includes accent bars, gradient decorations, and animated hovers. Most target sites don't have these.
+
+**Things to remove for flat styling:**
+```scss
+// REMOVE: Top accent bars
+&::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 4px;
+  background: var(--color-interactive);
+  // DELETE THIS ENTIRE BLOCK
+}
+
+// REMOVE: Decorative underlines
+&::after {
+  width: 40px;
+  height: 2px;
+  background: var(--color-interactive);
+  // DELETE THIS ENTIRE BLOCK
+}
+
+// REMOVE: Heavy transform on hover
+&:hover {
+  transform: translateY(-6px);  // DELETE
+  box-shadow: var(--shadow-xl);  // CHANGE to shadow-md or none
+}
+
+// REMOVE: Gradient backgrounds
+background: linear-gradient(...);  // CHANGE to solid color
+```
+
+### Quick Reference: Figma-style Card Fixes
+
+```bash
+# Find all accent bars to remove
+grep -rn "::before\|::after" styles/*.scss | grep -i "accent\|height: 4px\|height: 2px"
+
+# Find all heavy shadows to reduce
+grep -rn "shadow-lg\|shadow-xl" styles/*.scss
+
+# Find all transform hovers to remove
+grep -rn "translateY\|translateX" styles/*.scss | grep hover
 ```
 
 ---
@@ -627,6 +705,13 @@ TYPOGRAPHY:
 [ ] Page heading weights match (H1, H2)
 [ ] Card title weights match (home page cards, category cards)
 [ ] Body text weight looks correct
+
+CARDS & CONTAINERS:
+[ ] Card border-radius matches (flat: 8px, elevated: 16-24px)
+[ ] Card shadows match (flat: none/subtle, elevated: heavy)
+[ ] Card borders match (flat: 1px solid #ddd, elevated: none)
+[ ] Card hover effects match (flat: subtle, elevated: lift)
+[ ] No unwanted accent bars or decorations
 ```
 
 ### Iterative Refinement
@@ -703,6 +788,518 @@ Tell the user the preview URL so they can verify.
 
 Search: `grep -rn "font-weight.*bold" styles/*.scss | grep -i title`
 
+### Cards look too elevated/heavy
+**Solution:** Copenhagen 2026 uses large border-radius (16-24px) and heavy shadows. Most sites (Figma, Zendesk, etc.) use flat styling:
+
+1. Update `_tokens.scss`: Set all `$radius-*` to 8px, reduce `$shadow-*` values
+2. Update card components: Add `border: 1px solid #ddd`, remove `box-shadow`
+3. Remove accent decorations: Delete `::before` and `::after` blocks with accent bars/underlines
+4. Simplify hover effects: Remove `transform: translateY()`, use subtle shadow only
+
+**Files to update:**
+- `_tokens.scss` - radius and shadow values
+- `_blocks.scss` - home page category cards
+- `_category.scss` - section tree cards
+- `_section.scss` - section list items, sub-nav, page headers
+- `_article.scss` - article content, votes, related articles
+- `_recent-activity.scss` - activity section and items
+
+Search: `grep -rn "radius-xl\|radius-2xl\|shadow-lg\|shadow-xl" styles/*.scss`
+
+### Buttons look too rounded/pill-shaped
+**Solution:** Copenhagen 2026 uses pill buttons (`border-radius: 9999px`). Extract the target site's button radius and apply it.
+
+Update `_buttons.scss`:
+```scss
+border-radius: [extracted-button-radius];  // Could be 4px, 8px, or 9999px
+
+// If target doesn't use transform hover, remove it:
+&:hover {
+  // DELETE: transform: translateY(-2px);
+}
+```
+
+### Button styling inconsistent across pages
+**Solution:** Button styles are defined in multiple component files, not just `_buttons.scss`. After updating button styles, search for ALL button/link instances:
+
+```bash
+# Find all pill-shaped elements (need flat styling)
+grep -rn "radius-full\|9999px" styles/*.scss
+
+# Find all CTA-style links
+grep -rn "link\|cta\|action" styles/*.scss | grep -v "//\|color-link"
+
+# Find transform hover effects (often need removal)
+grep -rn "translateY\|translateX" styles/*.scss | grep hover
+```
+
+**Files that commonly have button-like elements:**
+
+| File | Elements | What to check |
+|------|----------|---------------|
+| `_buttons.scss` | `.button`, `.button-primary` | Main button styles |
+| `_home-page.scss` | `.community-link` | CTA button in community section |
+| `_recent-activity.scss` | `.recent-activity-controls a` | "See all activity" link |
+| `_header.scss` | `.header-cta`, nav buttons | Header action buttons |
+| `_footer.scss` | Social links, CTA buttons | Footer action elements |
+| `_article.scss` | `.article-vote`, action buttons | Article interaction buttons |
+| `_forms.scss` | Submit buttons | Form buttons |
+
+**IMPORTANT:** After updating `_buttons.scss`, always check these component files for:
+- `border-radius: var(--radius-full)` → Change to `[extracted-button-radius]`
+- `box-shadow: var(--shadow-lg)` → Change to `[extracted-button-shadow]`
+- `transform: translateY(-Xpx)` on hover → Keep only if target uses it
+- Arrow icons with animation → Keep only if target uses them
+
+### Search box too rounded or has heavy shadow
+**Solution:** Extract the target site's search box styling and apply it.
+
+Update `_search.scss`:
+```scss
+.search {
+  border-radius: [extracted-search-radius];
+  border: [extracted-search-border];
+  box-shadow: [extracted-search-shadow];
+
+  &:focus-within {
+    border-color: [extracted-focus-color];
+    box-shadow: [extracted-focus-ring];
+  }
+}
+```
+
+### Hero styling doesn't match target
+**Solution:** Extract the target site's hero styling and apply it.
+
+Update `_hero.scss`:
+```scss
+.hero {
+  background-color: [extracted-hero-bg];
+  // If target has gradient: background: [extracted-gradient];
+  // If target has no gradient: DELETE the &::after block
+
+  &-inner {
+    color: [extracted-hero-text];
+
+    h1, h2 {
+      color: [extracted-hero-heading];
+      // If target has no text-shadow: DELETE text-shadow
+    }
+  }
+}
+```
+
+### Home page has too much whitespace
+**Solution:** Copenhagen 2026 uses generous spacing. Most target sites are more compact.
+
+**Files to check:**
+
+| File | Element | Default | Tighter |
+|------|---------|---------|---------|
+| `_hero.scss` | `.hero` min-height | 220px/280px | 160px/200px |
+| `_hero.scss` | `.hero` padding | space-10/space-12 | space-6/space-8 |
+| `_home-page.scss` | `.section` margin-bottom | space-12/space-16 | space-8/space-10 |
+| `_home-page.scss` | `.home-section h2` margin-bottom | space-8 | space-5 |
+| `_home-page.scss` | `.community` padding | space-14 | space-8 |
+| `_home-page.scss` | `.activity` padding | space-10 | space-6 |
+
+**Extraction prompt:**
+```
+"Analyze the spacing on the target site:
+1. Hero section height and padding
+2. Gap between major sections
+3. Section heading spacing
+4. Overall density (compact vs airy)"
+```
+
+Apply values that match the target's density. Most modern sites favor tighter layouts.
+
+### Form inputs have heavy styling
+**Solution:** Extract the target site's input styling and apply it.
+
+Update `_forms.scss`:
+```scss
+.form-field input {
+  border: [extracted-input-border];
+  border-radius: [extracted-input-radius];
+  box-shadow: [extracted-input-shadow];
+
+  &:focus {
+    border-color: [extracted-focus-border];
+    box-shadow: [extracted-focus-ring];
+  }
+}
+```
+
+### Empty box appearing on search results page
+**Solution:** The generative answers section uses an overly broad CSS selector.
+
+**NEVER use broad selectors like this:**
+```scss
+// ❌ BAD - matches ANY first child, including empty containers
+.search-results-column {
+  > :first-child:not(.search-results-subheading):not(.search-results-list) {
+    background-color: #f9f9f9;
+    // This will style empty elements too!
+  }
+}
+```
+
+**ALWAYS use specific class-based selectors:**
+```scss
+// ✅ GOOD - only matches elements with specific class names
+[class*="generative-answer"],
+[class*="ai-answer"],
+[class*="instant-answer"],
+[class*="quick-answer"] {
+  background-color: [extracted-card-bg];
+  border: [extracted-card-border];
+  border-radius: [extracted-card-radius];
+  padding: var(--space-8);
+}
+```
+
+**Key principle:** When styling dynamic/optional content (like AI answers), only target elements with specific class names. Avoid `:first-child`, `:last-child`, or other structural selectors that might match empty or placeholder elements.
+
+---
+
+## Additional Style Categories
+
+### Hero/Search Section
+
+**Extract these values:**
+```
+"Analyze the hero/search section:
+1. Hero background color or gradient
+2. Search box border-radius (usually 8px)
+3. Search box border (e.g., '1px solid #ddd')
+4. Search box shadow (often none or subtle)
+5. Search focus state styling"
+```
+
+**Apply extracted values:**
+
+```scss
+.hero {
+  background-color: [extracted-hero-bg];
+  // If gradient: background: [extracted-gradient];
+
+  h1, h2 {
+    color: [extracted-hero-text];
+    font-weight: [extracted-heading-weight];
+  }
+
+  .search {
+    border: [extracted-search-border];
+    border-radius: [extracted-search-radius];
+    box-shadow: [extracted-search-shadow];
+
+    &:focus-within {
+      border-color: [extracted-focus-color];
+      box-shadow: [extracted-focus-ring];
+    }
+  }
+}
+```
+
+**Files to update:**
+- `_hero.scss` - Hero section styling
+- `_search.scss` - Search box styling
+
+---
+
+### Buttons
+
+**Extract these values:**
+```
+"Analyze button styling:
+1. Border-radius (4px for square, 8px for rounded, 9999px for pill)
+2. Border width and color
+3. Background color (primary and secondary)
+4. Text color
+5. Padding
+6. Hover effects (color change? shadow? transform?)"
+```
+
+**Apply extracted values:**
+
+```scss
+.button {
+  border: [extracted-button-border];
+  border-radius: [extracted-button-radius];
+  background-color: [extracted-button-bg];
+  color: [extracted-button-text];
+  padding: [extracted-button-padding];
+  font-size: [extracted-button-font-size];
+  font-weight: [extracted-button-weight];
+  box-shadow: [extracted-button-shadow];
+
+  &:hover {
+    background-color: [extracted-button-hover-bg];
+    color: [extracted-button-hover-text];
+    // Only include transform if target uses it
+  }
+}
+
+.button-primary {
+  background-color: [extracted-primary-bg];
+  color: [extracted-primary-text];
+
+  &:hover {
+    background-color: [extracted-primary-hover-bg];
+  }
+}
+```
+
+**Files to update:**
+- `_buttons.scss` - All button styles
+
+---
+
+### Forms/Inputs
+
+**Extract these values:**
+```
+"Analyze form input styling:
+1. Border-radius (usually 4px)
+2. Border color and width
+3. Background color
+4. Focus state (border color, ring/shadow)
+5. Padding"
+```
+
+**Apply extracted values:**
+
+```scss
+.form-field input {
+  border: [extracted-input-border];
+  border-radius: [extracted-input-radius];
+  padding: [extracted-input-padding];
+  box-shadow: [extracted-input-shadow];
+
+  &:focus {
+    border-color: [extracted-focus-border];
+    outline: none;
+    box-shadow: [extracted-focus-ring];
+  }
+}
+```
+
+**Files to update:**
+- `_forms.scss` - Form field styling
+- `_search.scss` - Search input (may differ from forms)
+
+---
+
+### Breadcrumbs
+
+**Extract these values:**
+```
+"Analyze breadcrumb styling:
+1. Separator character (/, >, chevron icon)
+2. Text color
+3. Link hover color
+4. Background (often transparent)"
+```
+
+**Apply extracted values:**
+
+```scss
+.breadcrumbs {
+  background-color: [extracted-breadcrumb-bg];  // Often transparent
+  padding: [extracted-breadcrumb-padding];
+
+  li {
+    color: [extracted-breadcrumb-text];
+
+    + li::before {
+      content: "[extracted-separator]";  // "/" or ">" or chevron
+      color: [extracted-separator-color];
+    }
+
+    a {
+      color: [extracted-breadcrumb-link];
+
+      &:hover {
+        color: [extracted-breadcrumb-hover];
+      }
+    }
+
+    &:last-child {
+      color: [extracted-breadcrumb-current];
+    }
+  }
+}
+```
+
+**Files to update:**
+- `_breadcrumbs.scss`
+
+---
+
+### Search Results
+
+**Extract these values:**
+```
+"Analyze search result cards:
+1. Card border-radius
+2. Card border or shadow
+3. Highlight color for search matches
+4. Hover effects"
+```
+
+**Files to update:**
+- `_search_results.scss` - Result cards and generative answers section
+
+---
+
+### Article Body Content
+
+**Extract these values:**
+```
+"Analyze article content styling:
+1. Code block background and border
+2. Code block border-radius (usually 6-8px)
+3. Blockquote border and color
+4. Table styling (borders, border-radius)
+5. Image styling (border, border-radius)"
+```
+
+**Apply extracted values:**
+
+```scss
+@mixin content-body {
+  :not(pre) > code {
+    background: [extracted-code-bg];
+    border: [extracted-code-border];
+    border-radius: [extracted-code-radius];
+    padding: [extracted-code-padding];
+  }
+
+  pre {
+    background: [extracted-pre-bg];
+    border: [extracted-pre-border];
+    border-radius: [extracted-pre-radius];
+    padding: [extracted-pre-padding];
+  }
+
+  blockquote {
+    border-left: [extracted-blockquote-border];
+    color: [extracted-blockquote-color];
+    padding: [extracted-blockquote-padding];
+  }
+
+  table {
+    border: [extracted-table-border];
+    border-radius: [extracted-table-radius];
+
+    th, td {
+      padding: [extracted-cell-padding];
+    }
+  }
+
+  img {
+    border: [extracted-img-border];
+    border-radius: [extracted-img-radius];
+  }
+}
+```
+
+**Files to update:**
+- `_mixins.scss` - The `content-body` mixin
+
+---
+
+## CSS Best Practices
+
+### Avoid Broad Structural Selectors
+
+When styling optional or dynamic content, **never** use structural selectors that might match empty elements:
+
+```scss
+// ❌ AVOID - these can match empty/placeholder elements
+> :first-child
+> :last-child
+> :nth-child(n)
+> *:not(.specific-class)
+
+// ✅ PREFER - specific class-based selectors
+[class*="pattern"]
+.specific-class-name
+```
+
+### Use Attribute Selectors for Dynamic Content
+
+For content that may or may not exist (like AI answers, notifications, etc.):
+
+```scss
+// Target by class name pattern
+[class*="generative-answer"] { }
+[class*="notification"] { }
+
+// Target by data attribute
+[data-type="answer"] { }
+```
+
+### Test with Empty States
+
+Always verify styling works correctly when:
+- Content containers are empty
+- Optional features are disabled
+- API responses return no data
+
+---
+
+## Quick Style Extraction Checklist
+
+When analyzing a target site, extract ALL of these:
+
+```markdown
+## Style Extraction Checklist
+
+### Colors
+- [ ] Header background
+- [ ] Footer background
+- [ ] Body background
+- [ ] Primary text color
+- [ ] Secondary/muted text color
+- [ ] Link color and hover
+- [ ] Accent/brand color
+
+### Typography
+- [ ] Font family
+- [ ] Heading weights (H1, H2, H3)
+- [ ] Body text weight
+
+### Border Radius
+- [ ] Cards (usually 8px or 16-24px)
+- [ ] Buttons (4px, 8px, or pill)
+- [ ] Inputs (4px or 8px)
+- [ ] Search box (8px typical)
+- [ ] Code blocks (6-8px)
+
+### Borders & Shadows
+- [ ] Card borders (`1px solid #ddd` or none)
+- [ ] Card shadows (none, subtle, or heavy)
+- [ ] Input borders
+- [ ] Input focus ring style
+
+### Hero Section
+- [ ] Background (white, dark, gradient, image)
+- [ ] Text color
+- [ ] Search box style
+
+### Buttons
+- [ ] Primary style (filled)
+- [ ] Secondary style (outline)
+- [ ] Hover effects
+
+### Spacing & Density
+- [ ] Hero height and padding (compact vs airy)
+- [ ] Section gaps (tight vs generous)
+- [ ] Overall page density
+```
+
 ---
 
 ## Output Format
@@ -743,6 +1340,11 @@ When running `/reskin analyze`, output:
 - Columns: [count and headings]
 - Background: [dark/light, exact color]
 - Social links: [which platforms]
+
+### Spacing & Density
+- Overall feel: [compact / moderate / airy]
+- Hero: [tall with padding / compact]
+- Section gaps: [tight / generous]
 
 Ready to proceed with `/reskin apply`?
 ```
