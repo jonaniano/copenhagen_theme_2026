@@ -298,26 +298,26 @@ These are accent bars/underlines. DELETE the entire `&::before` or `&::after` bl
 
 Edit `styles/_hero.scss`:
 - Adjust hero `min-height` and `padding` to match target spacing
+- **Typical flat site values:** `min-height: 180px`, `padding: space-8` (mobile), `space-10` (tablet)
 - Remove any gradient overlays (`::after` with radial-gradient)
-- Match the overall height/density of target's hero area
 
 Edit `styles/_home-page.scss`:
-- Update `.section` margins for spacing between sections
+- **Reduce section margins** - Copenhagen defaults are too large for most sites:
+  - `.section` margin-bottom: `space-16` → `space-10` (tablet), `space-12` → `space-8` (mobile)
+  - `.home-section h2` margin-bottom: `space-8` → `space-6`
 - Update `.community` section:
-  - Background color (often matches page background or has accent)
-  - Padding/spacing
-  - CTA button styling (radius, colors)
-- Update `.promoted-articles` styling
+  - Padding: `space-14` → `space-8` (typically)
+  - Remove transform effects on CTA button
+- Update `.activity` padding: `space-10` → `space-6`
 
 Edit `styles/_recent-activity.scss`:
-- Update `.recent-activity` container:
-  - Background color (remove gradients if target is flat)
-  - Remove decorative `::before` and `::after` elements
-  - Adjust padding
-- Update `.recent-activity-item` cards:
-  - Background color
-  - Border/shadow styling
-  - Remove left accent bars if target doesn't have them
+- Reduce container padding: `space-8` → `space-6`
+- Reduce header margin: `space-6` → `space-4`
+- Reduce controls padding-top: `space-8` → `space-4`
+- Remove gradients and decorative `::before`/`::after` elements
+- Simplify item cards (border instead of shadow)
+
+**Spacing rule of thumb:** If Copenhagen uses `space-12` to `space-16`, most modern sites use `space-8` to `space-10`.
 
 **Quick check for remaining gradients/decorations:**
 ```bash
@@ -413,12 +413,14 @@ Tell the user: **"Preview running at http://localhost:4567 - please compare with
 - [ ] `_home-page.scss` - community section and spacing
 
 ### Home Page Sections (Critical)
-- [ ] Hero spacing matches target (min-height, padding)
+- [ ] Hero spacing reduced (typically space-8 padding, not space-10/12)
 - [ ] Hero gradients/overlays removed if target is flat
-- [ ] Community section background updated
-- [ ] Community CTA button styled correctly
-- [ ] Recent activity container background updated (remove gradients)
-- [ ] Recent activity cards styled (background, borders, remove accent bars)
+- [ ] Section margins reduced (space-8 to space-10, not space-12 to space-16)
+- [ ] Community section padding reduced (space-8, not space-14)
+- [ ] Community CTA button styled correctly (no transforms)
+- [ ] Activity section padding reduced (space-6, not space-10)
+- [ ] Recent activity container padding reduced and gradients removed
+- [ ] Recent activity cards styled (borders, no heavy shadows/accents)
 
 ### Verification Commands Passed
 - [ ] Heavy shadow/radius grep returns 0 (outside _tokens.scss)
