@@ -292,13 +292,45 @@ grep -rn "::before\|::after" styles/*.scss | grep -E "height:\s*[24]px|width:\s*
 
 These are accent bars/underlines. DELETE the entire `&::before` or `&::after` blocks if target doesn't have decorations.
 
+### 4.7 Home Page Sections (CRITICAL - Often Missed)
+
+**These sections have their own backgrounds and spacing that MUST be updated:**
+
+Edit `styles/_hero.scss`:
+- Adjust hero `min-height` and `padding` to match target spacing
+- Remove any gradient overlays (`::after` with radial-gradient)
+- Match the overall height/density of target's hero area
+
+Edit `styles/_home-page.scss`:
+- Update `.section` margins for spacing between sections
+- Update `.community` section:
+  - Background color (often matches page background or has accent)
+  - Padding/spacing
+  - CTA button styling (radius, colors)
+- Update `.promoted-articles` styling
+
+Edit `styles/_recent-activity.scss`:
+- Update `.recent-activity` container:
+  - Background color (remove gradients if target is flat)
+  - Remove decorative `::before` and `::after` elements
+  - Adjust padding
+- Update `.recent-activity-item` cards:
+  - Background color
+  - Border/shadow styling
+  - Remove left accent bars if target doesn't have them
+
+**Quick check for remaining gradients/decorations:**
+```bash
+grep -rn "linear-gradient\|radial-gradient" styles/_hero.scss styles/_home-page.scss styles/_recent-activity.scss | grep -v "//"
+```
+
 ---
 
 ## ══════════════════════════════════════════════════════════════════════════════
 ## GATE 4: SCSS Verification (MANDATORY)
 ## ══════════════════════════════════════════════════════════════════════════════
 
-**Run ALL THREE verification commands. Each should return 0 (or near-0) matches:**
+**Run ALL FOUR verification commands. Each should return 0 (or near-0) matches:**
 
 ```bash
 # Heavy shadows/radius - should return 0 outside _tokens.scss
@@ -318,7 +350,13 @@ grep -rn "font-weight.*extrabold" styles/*.scss | grep -v "//" | wc -l
 ```
 **Expected: 0**
 
-**DO NOT PROCEED** until all three commands return expected values.
+```bash
+# Gradients in home page sections - should return 0 for flat sites
+grep -rn "linear-gradient\|radial-gradient" styles/_hero.scss styles/_home-page.scss styles/_recent-activity.scss | grep -v "//" | wc -l
+```
+**Expected: 0 for flat sites** (If not 0, remove gradient backgrounds in 4.7)
+
+**DO NOT PROCEED** until all four commands return expected values.
 
 ---
 
@@ -364,20 +402,29 @@ Tell the user: **"Preview running at http://localhost:4567 - please compare with
 - [ ] `_base.scss` - heading weights
 - [ ] `_header.scss` - header styling
 - [ ] `_footer.scss` - footer styling
-- [ ] `_hero.scss` - hero and search area
+- [ ] `_hero.scss` - hero background, spacing, and search area
 - [ ] `_search.scss` - search box styling
 - [ ] `_buttons.scss` - button styling
 - [ ] `_blocks.scss` - home page cards
 - [ ] `_category.scss` - category page cards
 - [ ] `_section.scss` - section page styling
 - [ ] `_article.scss` - article page styling
-- [ ] `_recent-activity.scss` - activity section
-- [ ] `_home-page.scss` - home page sections
+- [ ] `_recent-activity.scss` - activity section background and cards
+- [ ] `_home-page.scss` - community section and spacing
+
+### Home Page Sections (Critical)
+- [ ] Hero spacing matches target (min-height, padding)
+- [ ] Hero gradients/overlays removed if target is flat
+- [ ] Community section background updated
+- [ ] Community CTA button styled correctly
+- [ ] Recent activity container background updated (remove gradients)
+- [ ] Recent activity cards styled (background, borders, remove accent bars)
 
 ### Verification Commands Passed
 - [ ] Heavy shadow/radius grep returns 0 (outside _tokens.scss)
 - [ ] Pill radius grep returns 0 (for flat sites)
 - [ ] Extrabold heading grep returns 0
+- [ ] Gradients grep returns 0 for flat sites
 - [ ] `yarn build` passes
 
 ### Quality Checks
