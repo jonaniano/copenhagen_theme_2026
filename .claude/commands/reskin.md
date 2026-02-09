@@ -73,10 +73,13 @@ Phase 1: Analysis → Phase 2: Tokens → Phase 3: Fonts
               VALIDATION GATE 1
               (yarn build - check for errors)
                       ↓
-Phase 4: Templates → VALIDATION GATE 2 → Phase 5: SCSS
+Phase 4: Templates → VALIDATION GATE 2 → Phase 5: SCSS (ALL FILES)
                      (yarn build)              ↓
                                         VALIDATION GATE 3
                                         (yarn build)
+                                              ↓
+                                    COMPLETION CHECKLIST
+                                    (verify ALL files updated)
                                               ↓
                                     START PREVIEW SERVER
                                     (zcli themes:preview)
@@ -84,7 +87,25 @@ Phase 4: Templates → VALIDATION GATE 2 → Phase 5: SCSS
                                     Phase 6: Iterative Refinement
 ```
 
-**Key Principle:** Validate early, validate often. Don't proceed past a gate with errors.
+### Key Principles
+
+1. **Validate early, validate often.** Don't proceed past a gate with errors.
+
+2. **NEVER skip parts.** A partial reskin is worse than no reskin - it creates visual inconsistency.
+
+3. **Update ALL relevant files.** Typography, cards, and buttons are defined in MULTIPLE files. Updating only `_base.scss` or `_buttons.scss` leaves inconsistent styling.
+
+4. **Extract, don't fabricate.** Logos and design values MUST come from the target site. Never create logos or guess at values.
+
+5. **Preserve working patterns.** When modifying templates, keep Zendesk helpers and conditional blocks intact.
+
+### What "Complete" Means
+
+A reskin is complete when:
+- All 9 checklist sections are verified (see MANDATORY Completion Checklist)
+- Visual comparison shows consistent styling across all pages
+- `yarn build` passes without errors
+- Preview server is running for user verification
 
 ---
 
@@ -174,24 +195,107 @@ curl -s "<url>" | grep -oE 'data-wf-domain|data-wf-site' | head -3
 | `rounded-xl` | `12px` |
 | `rounded-full` | `9999px` |
 
-### Logo Extraction
+### Logo Extraction - MANDATORY
 
-Try multiple methods:
+**CRITICAL:** The logo MUST be extracted from the target website. NEVER fabricate or create your own logo SVG.
+
+#### Logo Extraction Strategy (Try ALL Until Success)
+
+**Strategy 1: Direct SVG from HTML**
 ```bash
-# aria-label SVG
-curl -s -A "Mozilla/5.0..." "<url>" | grep -oE '<svg[^>]*aria-label="[^"]*"[^>]*>.*?</svg>'
+# aria-label SVG (most common)
+curl -s -A "Mozilla/5.0..." "<url>" | grep -oE '<svg[^>]*aria-label="[^"]*"[^>]*>.*?</svg>' | head -1
 
 # Logo class SVG
-curl -s -A "Mozilla/5.0..." "<url>" | grep -oE '<svg[^>]*class="[^"]*logo[^"]*"[^>]*>.*?</svg>'
+curl -s -A "Mozilla/5.0..." "<url>" | grep -oE '<svg[^>]*class="[^"]*logo[^"]*"[^>]*>.*?</svg>' | head -1
 
-# Image logo
-curl -s -A "Mozilla/5.0..." "<url>" | grep -oE 'src="[^"]*logo[^"]*\.(svg|png|webp)"'
-
-# Check for Lottie (animated) - need static fallback
-curl -s -A "Mozilla/5.0..." "<url>" | grep -oE 'data-animation-type="lottie"'
+# Any SVG in header area (extract first few and inspect)
+curl -s -A "Mozilla/5.0..." "<url>" | grep -oE '<svg[^>]*>.*?</svg>' | head -5
 ```
 
-**If logo is Lottie animation:** Check favicon, press/brand page, or og:image for static version.
+**Strategy 2: Image Logo URL**
+```bash
+# Find logo image
+curl -s -A "Mozilla/5.0..." "<url>" | grep -oE 'src="[^"]*logo[^"]*\.(svg|png|webp|jpg)"' | head -3
+
+# Find favicon (fallback)
+curl -s -A "Mozilla/5.0..." "<url>" | grep -oE 'href="[^"]*favicon[^"]*"' | head -1
+
+# Find og:image
+curl -s -A "Mozilla/5.0..." "<url>" | grep -oE 'content="[^"]*og:image[^"]*"|og:image.*?content="[^"]*"' | head -1
+```
+
+**Strategy 3: WebFetch for JS-Heavy Sites**
+```
+"Extract the company logo:
+1. Is there an inline SVG logo? If so, provide the COMPLETE SVG markup including all paths
+2. If image, provide the EXACT src URL
+3. What are the dimensions of the logo?
+4. What color is the logo? (single color, multicolor, gradient)"
+```
+
+**Strategy 4: Brand/Press Page**
+```bash
+# Check for brand assets page
+curl -s -A "Mozilla/5.0..." "<url>/press"
+curl -s -A "Mozilla/5.0..." "<url>/brand"
+curl -s -A "Mozilla/5.0..." "<url>/about" | grep -i logo
+```
+
+**Strategy 5: GitHub/CDN (for tech companies)**
+```bash
+# Many companies host logos on GitHub or CDN
+curl -s -A "Mozilla/5.0..." "<url>" | grep -oE 'https://[^"]*\.(svg|png)' | grep -i logo
+```
+
+#### Logo Decision Tree
+
+```
+1. Found inline SVG in HTML?
+   → Use it directly (preserve complete markup including viewBox)
+
+2. Found logo image URL?
+   → Use <img> tag with extracted URL
+
+3. Site uses Lottie animation?
+   → Check favicon, press page, or og:image for static version
+
+4. All extraction methods failed?
+   → ASK THE USER for:
+     a. Screenshot of the logo
+     b. Direct link to logo file
+     c. Brand page URL
+   → NEVER fabricate a logo
+```
+
+#### Logo Implementation
+
+**For SVG logos:**
+```handlebars
+{{#link 'help_center' class='logo-link'}}
+  <!-- PASTE COMPLETE EXTRACTED SVG HERE - DO NOT MODIFY PATHS -->
+  <svg viewBox="[extracted]" fill="currentColor" aria-hidden="true">
+    [extracted paths - copy EXACTLY]
+  </svg>
+  <span class="logo-text">Help Center</span>
+{{/link}}
+```
+
+**For image logos:**
+```handlebars
+{{#link 'help_center' class='logo-link'}}
+  <img src="[extracted-url]" alt="Company Logo" class="logo-image" />
+  <span class="logo-text">Help Center</span>
+{{/link}}
+```
+
+**NEVER DO THIS:**
+```handlebars
+<!-- ❌ WRONG - Fabricated logo -->
+<svg viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="40"/>  <!-- Made up! -->
+</svg>
+```
 
 ---
 
@@ -312,6 +416,17 @@ grep -rn "font-weight.*extrabold\|font-weight.*bold" styles/*.scss | grep -i "ti
 
 ## Phase 4: Template Generation
 
+### BEFORE MODIFYING TEMPLATES
+
+**MANDATORY:** Read the existing template files BEFORE making ANY changes:
+```bash
+# Read current templates
+cat templates/header.hbs
+cat templates/footer.hbs
+```
+
+This ensures you understand the working structure and don't accidentally break it.
+
 ### CRITICAL TEMPLATE RULES
 
 **Valid Zendesk helpers:**
@@ -382,47 +497,166 @@ docs.{domain}.com
 
 ### Header Template Structure
 
+**CRITICAL: Read the existing header.hbs FIRST before making ANY changes.**
+
+The Copenhagen theme header has specific Zendesk patterns that MUST be preserved. Breaking these causes template errors or broken functionality.
+
+#### Safe Header Modification Rules
+
+**MUST PRESERVE (Do NOT remove or restructure):**
+```handlebars
+{{!-- 1. Skip navigation link --}}
+<a class="skip-navigation" tabindex="1" href="#main-content">{{t 'skip_navigation'}}</a>
+
+{{!-- 2. User navigation section - KEEP THE EXACT STRUCTURE --}}
+<nav class="user-nav" aria-label="{{t 'user_navigation'}}">
+  {{#if signed_in}}
+    {{!-- Avatar/dropdown for signed-in users --}}
+  {{else}}
+    {{!-- Sign in link for anonymous users --}}
+  {{/if}}
+</nav>
+
+{{!-- 3. Mobile menu toggle --}}
+<button type="button" class="header-nav-toggle" aria-label="{{t 'toggle_navigation'}}" aria-expanded="false">
+```
+
+**CAN MODIFY SAFELY:**
+- Logo (replace SVG/image, but keep link structure)
+- Main navigation items (add/remove links)
+- CTA button text and styling classes
+- Header wrapper classes
+- Visual layout (left/center/right sections)
+
+#### Safe Header Template Pattern
+
 ```handlebars
 <a class="skip-navigation" tabindex="1" href="#main-content">{{t 'skip_navigation'}}</a>
 
 <div class="header-wrapper">
   <header class="header">
+    {{!-- LEFT SECTION: Logo + Nav --}}
     <div class="header-left">
       <div class="logo">
-        {{#link 'help_center' class='logo-link' aria-label='Company Help Center'}}
-          <!-- Inline SVG logo - MUST include viewBox -->
-          <svg class="company-logo" viewBox="0 0 WIDTH HEIGHT" fill="currentColor" aria-hidden="true">
-            <path d="..."/>
+        {{#link 'help_center' class='logo-link' aria-label='Help Center'}}
+          {{!-- REPLACE WITH EXTRACTED LOGO --}}
+          <svg class="company-logo" viewBox="[extracted]" fill="currentColor" aria-hidden="true">
+            [extracted paths]
           </svg>
           <span class="logo-text">Help Center</span>
         {{/link}}
       </div>
 
+      {{!-- CAN ADD MAIN NAV HERE --}}
       <nav class="main-nav" aria-label="Main navigation">
         <ul class="main-nav-list">
-          <!-- External links to main site OK -->
           <li><a href="https://www.targetsite.com/products/" class="main-nav-link">Products</a></li>
-          <!-- Zendesk helpers for help center links -->
           <li>{{link 'community' class='main-nav-link'}}</li>
         </ul>
       </nav>
     </div>
 
+    {{!-- RIGHT SECTION: User Nav + CTA --}}
     <div class="header-right">
-      <!-- User navigation, dropdowns, CTA button -->
+      {{!-- MOBILE TOGGLE - PRESERVE STRUCTURE --}}
+      <button type="button" class="header-nav-toggle" aria-label="{{t 'toggle_navigation'}}" aria-expanded="false">
+        <svg class="icon-menu">...</svg>
+      </button>
+
+      {{!-- USER NAV - PRESERVE ENTIRE BLOCK --}}
+      <nav class="user-nav" aria-label="{{t 'user_navigation'}}">
+        {{#if signed_in}}
+          <div class="dropdown">
+            <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
+              {{current_user.avatar}}
+              <span class="dropdown-caret"></span>
+            </span>
+            <ul class="dropdown-menu" role="menu">
+              <li role="menuitem">{{link 'profile'}}</li>
+              <li role="menuitem">{{link 'requests'}}</li>
+              <li role="menuitem">{{link 'contributions'}}</li>
+              <li role="separator"></li>
+              <li role="menuitem">{{link 'sign_out'}}</li>
+            </ul>
+          </div>
+        {{else}}
+          {{link 'sign_in' class='sign-in-link'}}
+        {{/if}}
+      </nav>
+
+      {{!-- CTA BUTTON - CAN MODIFY TEXT/CLASSES --}}
+      {{link 'new_request' class='header-cta button-primary'}}
     </div>
   </header>
 </div>
 ```
 
+#### Common Header Mistakes to AVOID
+
+```handlebars
+{{!-- ❌ WRONG: Removing user nav signed_in conditional --}}
+<nav class="user-nav">
+  <a href="{{link 'sign_in'}}">Sign In</a>  {{!-- Broken: shows even when signed in --}}
+</nav>
+
+{{!-- ❌ WRONG: Using invalid helpers --}}
+<nav aria-label="{{t 'global_navigation'}}">  {{!-- 400 error: helper doesn't exist --}}
+
+{{!-- ❌ WRONG: Removing mobile toggle --}}
+{{!-- Missing toggle = broken mobile nav --}}
+
+{{!-- ❌ WRONG: Breaking dropdown structure --}}
+<div class="dropdown">
+  {{current_user.avatar}}  {{!-- Missing toggle/menu = broken dropdown --}}
+</div>
+
+{{!-- ✅ CORRECT: Keep structure, change styling --}}
+<nav class="user-nav" aria-label="{{t 'user_navigation'}}">
+  {{#if signed_in}}
+    <div class="dropdown">
+      {{!-- Keep ALL dropdown elements --}}
+    </div>
+  {{else}}
+    {{link 'sign_in' class='sign-in-link'}}
+  {{/if}}
+</nav>
+```
+
+#### Header Modification Workflow
+
+1. **Read existing header.hbs** - Understand current structure
+2. **Identify what to change** - Usually just logo, nav items, styling classes
+3. **Copy the full template** - Start from working template, not from scratch
+4. **Make targeted edits** - Change only what needs changing
+5. **Validate immediately** - Run `yarn build` after header changes
+
 ### Footer Template Structure
+
+**Read the existing footer.hbs FIRST before making changes.**
+
+Footers are more flexible than headers, but still need to preserve Zendesk functionality.
+
+#### Safe Footer Modification Rules
+
+**CAN MODIFY FREELY:**
+- Column structure and content
+- Visual layout (columns, grid)
+- Social links
+- Copyright text
+- Styling classes
+
+**SHOULD PRESERVE (if present in original):**
+- Language selector dropdown
+- Any Zendesk helpers for dynamic content
+
+#### Footer Template Pattern
 
 ```handlebars
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-columns">
-      <!-- Copy column structure from target site -->
-      <!-- Use Zendesk helpers for help center links -->
+      {{!-- Copy column structure from target site --}}
+      {{!-- Use Zendesk helpers for help center links --}}
       <div class="footer-column">
         <h4 class="footer-column-title">Support</h4>
         <ul class="footer-links">
@@ -431,14 +665,40 @@ docs.{domain}.com
           <li>{{link 'new_request'}}</li>
         </ul>
       </div>
+
+      <div class="footer-column">
+        <h4 class="footer-column-title">Company</h4>
+        <ul class="footer-links">
+          {{!-- External links to main site OK --}}
+          <li><a href="https://www.targetsite.com/about">About</a></li>
+          <li><a href="https://www.targetsite.com/careers">Careers</a></li>
+        </ul>
+      </div>
     </div>
 
     <div class="footer-bottom">
-      <!-- Social links, language selector, copyright -->
+      {{!-- Social links with extracted icons --}}
+      <div class="footer-social">
+        <a href="https://twitter.com/company" aria-label="Twitter">
+          <svg>...</svg>
+        </a>
+      </div>
+
+      {{!-- Copyright - hardcode, don't use {{current_year}} --}}
       <div class="footer-copyright">&copy; Company Name 2025</div>
     </div>
   </div>
 </footer>
+```
+
+#### Footer Mistakes to AVOID
+
+```handlebars
+{{!-- ❌ WRONG: Using invalid helper --}}
+&copy; {{current_year}}  {{!-- 400 error --}}
+
+{{!-- ✅ CORRECT: Hardcode the year --}}
+&copy; 2025
 ```
 
 ---
@@ -726,9 +986,121 @@ CARDS & CONTAINERS:
 
 ---
 
+## MANDATORY Completion Checklist
+
+**CRITICAL: A reskin is NOT complete until ALL items are checked.**
+
+Before starting the preview server, verify EVERY item below. Do not skip ANY section.
+
+### Phase Completion Gates
+
+```markdown
+## Reskin Completion Checklist
+
+### 1. Analysis Complete
+- [ ] Colors extracted (all hex values documented)
+- [ ] Typography extracted (font family, weights)
+- [ ] Logo extracted (NOT fabricated)
+- [ ] Header structure analyzed
+- [ ] Footer structure analyzed
+- [ ] Spacing/density analyzed
+
+### 2. Tokens & Fonts Applied
+- [ ] `manifest.json` - All color settings updated
+- [ ] `manifest.json` - Font families updated
+- [ ] `document_head.hbs` - Google Font loaded
+- [ ] `yarn build` passes
+
+### 3. Templates Updated
+- [ ] `header.hbs` - Logo replaced with EXTRACTED logo
+- [ ] `header.hbs` - Structure preserved (user nav, mobile toggle)
+- [ ] `footer.hbs` - Structure matches target
+- [ ] `yarn build` passes (NO 400 errors)
+
+### 4. Typography Updated (ALL FILES)
+- [ ] `_base.scss` - h1, h2, h3, h4, h5, h6 weights
+- [ ] `_hero.scss` - .hero h1, h2 weights
+- [ ] `_article.scss` - .article-title weight
+- [ ] `_section.scss` - .page-header h1 weight
+- [ ] `_home-page.scss` - section heading weights
+- [ ] `_blocks.scss` - .blocks-item-title weight
+- [ ] `_category.scss` - .section-tree-title weight
+- [ ] `_recent-activity.scss` - heading weights
+
+### 5. Cards & Containers Updated (ALL FILES)
+- [ ] `_tokens.scss` - border-radius values
+- [ ] `_tokens.scss` - shadow values
+- [ ] `_blocks.scss` - card borders, shadows, hover
+- [ ] `_category.scss` - section tree cards
+- [ ] `_section.scss` - section list items
+- [ ] `_article.scss` - article containers
+- [ ] `_recent-activity.scss` - activity cards
+
+### 6. Buttons Updated (ALL FILES)
+- [ ] `_buttons.scss` - main button styles
+- [ ] `_home-page.scss` - .community-link CTA
+- [ ] `_header.scss` - header CTA
+- [ ] `_forms.scss` - submit buttons
+
+### 7. Hero & Search Updated
+- [ ] `_hero.scss` - background, padding, height
+- [ ] `_search.scss` - search box styling
+
+### 8. Spacing Updated
+- [ ] `_hero.scss` - compact hero if target is compact
+- [ ] `_home-page.scss` - section margins reduced if needed
+- [ ] Overall page density matches target
+
+### 9. Final Validation
+- [ ] `yarn build` passes
+- [ ] Preview server started
+- [ ] Visual comparison with target site done
+```
+
+### File Update Quick Reference
+
+**Typography files to update:**
+```bash
+grep -rn "font-weight" styles/*.scss | grep -E "extrabold|bold" | grep -v "//"
+```
+
+**Card/shadow files to update:**
+```bash
+grep -rn "shadow-lg\|shadow-xl\|radius-xl\|radius-2xl" styles/*.scss | grep -v "//"
+```
+
+**Button files to update:**
+```bash
+grep -rn "radius-full\|9999px" styles/*.scss | grep -v "//"
+```
+
+### Incomplete Reskin Warning Signs
+
+If ANY of these are true, the reskin is NOT complete:
+
+1. **Only `_base.scss` was updated for typography** - INCOMPLETE
+   - Component files override base styles - they MUST be updated too
+
+2. **Logo was created/fabricated instead of extracted** - INCOMPLETE
+   - Go back and extract the actual logo
+
+3. **Header structure was rewritten from scratch** - LIKELY BROKEN
+   - Should have modified existing structure, not replaced it
+
+4. **Card styles were not touched** - INCOMPLETE
+   - Cards are a major visual element
+
+5. **Only one button file was updated** - INCOMPLETE
+   - Buttons exist in multiple component files
+
+6. **Spacing was not adjusted** - POTENTIALLY INCOMPLETE
+   - Compare hero height and section gaps to target
+
+---
+
 ## Final Step: Start Preview Server
 
-After all changes pass `yarn build`:
+After ALL checklist items are verified and `yarn build` passes:
 
 ```bash
 # Kill any existing preview
@@ -765,6 +1137,21 @@ Tell the user the preview URL so they can verify.
 
 ### Site blocked by Cloudflare/CAPTCHA
 **Solution:** Ask user for screenshot, DevTools colors, or brand page
+
+### Logo extraction failed completely
+**Solution:** NEVER fabricate a logo. Ask the user to provide:
+1. Direct URL to logo file (SVG or PNG)
+2. Screenshot of the logo
+3. Link to brand/press page
+4. Permission to use text-only logo as fallback
+
+```handlebars
+{{!-- Text-only logo fallback (ONLY if user approves) --}}
+{{#link 'help_center' class='logo-link'}}
+  <span class="logo-text-only">Company Name</span>
+  <span class="logo-text">Help Center</span>
+{{/link}}
+```
 
 ### Search has double border
 **Solution:** Style `.search` wrapper only, not the input element
