@@ -63,28 +63,111 @@ If result is minimal (<1000 bytes), use WebFetch instead:
 - Type: SVG / Image URL / Text-only fallback
 - Source: [paste SVG or URL here - NEVER fabricate]
 
-### Footer Content (CRITICAL - Extract Actual Structure)
-- Company name/brand link: ______
-- Social media links: [list each with URL]
+### Footer Content (CRITICAL - Extract ALL Links)
+- Column 1 title: ______ Links: ______
+- Column 2 title: ______ Links: ______
+- Column 3 title: ______ Links: ______
+- Column 4 title: ______ Links: ______
+- Social media: [platform] → [URL] for each
 - Copyright text (exact): ______
-- Column structure: ______ columns with titles: ______
-- Additional links: ______
+- Legal/bottom links: ______
+
+### Footer Typography (CRITICAL - Extract AND RESOLVE exact values)
+- Footer background: #______
+- Footer padding: ______rem (top/bottom)
+- Column gap: ______rem
+- Column title font size: ______rem = ______px (RESOLVE variables!)
+- Column title font weight: ______ (400/500/600/700)
+- Column title margin-bottom: ______rem
+- Link font size: ______rem = ______px
+- Link font weight: ______
+- Link letter-spacing: ______em (often negative!)
+- Link line-height: ______
+- Item padding: top ______rem, bottom ______rem
+- Hover effect: color change / underline / both?
+
+**IMPORTANT:** If CSS uses variables like `var(--font-size--detail-m)`, you MUST trace them to actual values. Don't assume "detail" or "small" means small sizes!
+
+**You MUST list every link text + URL AND resolved typography values. These will be used in template and SCSS.**
 ```
 
 ### 1.3 Extract Footer Structure
 
-**CRITICAL:** Run this extraction for the footer:
+**CRITICAL:** Run this extraction for the footer. You will replicate the ENTIRE footer content.
 
+#### Step A: Extract Footer Content via WebFetch
 ```
-WebFetch: "Extract the COMPLETE footer structure from this page:
-1. What sections/columns are there? List each with its title.
-2. What links are in each section?
-3. What is the exact copyright text?
-4. Are there social media links? Which platforms and their URLs?
-5. What is the overall layout?"
+WebFetch: "Extract the COMPLETE footer from this page. I need EVERY link.
+
+1. List ALL footer columns/sections with their titles
+2. For EACH column, list EVERY link with exact text and full URL
+3. List ALL social media icons with their platform URLs
+4. What is the exact copyright text?
+5. Is there a LOGO in the footer? If yes, describe it (SVG, image, position)
+6. Are there any other elements (legal links, language selector)?
+
+Format as:
+COLUMN: [Title]
+- [Link Text] → [URL]
+
+SOCIAL:
+- [Platform] → [URL]
+
+BOTTOM:
+- Copyright: [exact text]
+- Logo: [yes/no, description]
+"
 ```
 
-Document the footer structure - you will replicate this in the template.
+#### Step B: Extract Footer Class Names
+```bash
+curl -s "<TARGET_URL>" | grep -oE 'class="[^"]*footer[^"]*"' | sort | uniq
+```
+This reveals the actual HTML structure (e.g., `footer_grid_logo`, `footer_group_title`).
+
+#### Step C: Extract Logo SVG (if present)
+```bash
+curl -s "<TARGET_URL>" | grep -oE '<svg[^>]*footer[^>]*>.*?</svg>' | head -1
+# Or search near footer classes:
+curl -s "<TARGET_URL>" | grep -oE 'footer[^<]*<svg[^>]*>.*?</svg>' | head -1
+```
+
+#### Step D: Extract Actual CSS (CRITICAL for accurate styling)
+```bash
+# Find the CSS file
+curl -s "<TARGET_URL>" | grep -oE 'href="[^"]*\.css[^"]*"' | head -3
+
+# Extract footer-specific styles from CSS file
+curl -s "<CSS_FILE_URL>" | grep -oE '\.footer_[a-z_]+[^}]+\}' | head -40
+```
+
+#### Step E: Resolve CSS Variables (CRITICAL - Don't Skip!)
+The CSS will likely use variables like `var(--spacing--4)`. You MUST resolve these:
+
+```bash
+# Extract typography variables
+curl -s "<CSS_FILE_URL>" | grep -oE '\-\-_typography[^:]+:[^;]+' | head -30
+
+# Extract spacing variables
+curl -s "<CSS_FILE_URL>" | grep -oE '\-\-_spacing[^:]+:[^;]+' | head -20
+
+# Extract size variables (these define the actual values)
+curl -s "<CSS_FILE_URL>" | grep -oE '\-\-size[^:]+:[^;]+' | head -20
+```
+
+**Common variable patterns:**
+- `--size--1rem` = 16px
+- `--size--0-75rem` = 12px
+- `--spacing--space--4` often = `var(--size--1rem)` = 16px
+- `--typography---font-size--detail-m` often = 16px (NOT 12px!)
+
+**IMPORTANT:** Don't assume small names mean small sizes. Always trace:
+1. Class uses `font-size: var(--text-style--font-size)`
+2. Which equals `var(--typography--font-size--detail-m)`
+3. Which equals `var(--size--1rem)`
+4. Which equals `16px`
+
+**Document the RESOLVED values** (in px or rem), not just variable names.
 
 ### 1.4 Verify Logo Extraction
 
@@ -120,7 +203,11 @@ grep -oE 'src="[^"]*logo[^"]*\.(svg|png|webp)"' /tmp/target-site.html | head -3
 - [ ] Card border-radius (exact px)
 - [ ] Card shadow/border style identified
 - [ ] Logo extracted OR user asked for help
-- [ ] Footer structure extracted (columns, links, social icons, copyright text)
+- [ ] Footer columns identified with titles
+- [ ] **ALL footer links extracted** (every link text + URL in each column)
+- [ ] Social media platforms and URLs extracted
+- [ ] Copyright text extracted (exact)
+- [ ] **Footer typography extracted** (title/link font size and weight)
 
 ---
 
@@ -202,29 +289,83 @@ cat templates/footer.hbs
    - Column structure if applicable
 
 **Adaptation rules:**
-- Use `{{link 'help_center'}}` for support/help center links
-- External links to main site are OK and expected
+- External links to target site are expected - include them all
+- Use `{{link 'help_center'}}` ONLY for help center specific links
 - Social icons: Use SVG icons from the Reference section at bottom of this file
+- Hardcode the year in copyright ({{current_year}} doesn't exist)
 
-**Example footer structure:**
+**Example multi-column footer (use this pattern):**
 ```handlebars
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-links">
-      <a href="https://www.targetsite.com" class="footer-brand">Company Name</a>
-      <span class="footer-separator">·</span>
-      {{#link 'help_center'}}Support Center{{/link}}
-    </div>
-    <div class="footer-social">
-      <!-- Include actual social links from target site -->
+    <div class="footer-columns">
+      <div class="footer-column">
+        <h4 class="footer-column-title">Products</h4>
+        <ul class="footer-column-links">
+          <li><a href="https://targetsite.com/product-1">Product 1</a></li>
+          <li><a href="https://targetsite.com/product-2">Product 2</a></li>
+          <li><a href="https://targetsite.com/pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4 class="footer-column-title">Company</h4>
+        <ul class="footer-column-links">
+          <li><a href="https://targetsite.com/about">About</a></li>
+          <li><a href="https://targetsite.com/careers">Careers</a></li>
+          <li><a href="https://targetsite.com/news">News</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4 class="footer-column-title">Resources</h4>
+        <ul class="footer-column-links">
+          <li><a href="https://targetsite.com/docs">Documentation</a></li>
+          <li>{{#link 'help_center'}}Support{{/link}}</li>
+          <li>{{#link 'community'}}Community{{/link}}</li>
+        </ul>
+      </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copyright">© 2025 Company Name</span>
-      <!-- Language selector -->
+      <div class="footer-social">
+        <a href="https://twitter.com/company" aria-label="Twitter" target="_blank" rel="noopener">
+          <!-- Twitter SVG -->
+        </a>
+        <a href="https://linkedin.com/company/company" aria-label="LinkedIn" target="_blank" rel="noopener">
+          <!-- LinkedIn SVG -->
+        </a>
+      </div>
+      <div class="footer-legal">
+        <span class="footer-copyright">© 2025 Company Name</span>
+        <a href="https://targetsite.com/privacy">Privacy</a>
+        <a href="https://targetsite.com/terms">Terms</a>
+      </div>
+      <div class="footer-language-selector">
+        {{#with help_center.language}}
+          <span class="dropdown">
+            <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
+              {{name}}
+              <span class="dropdown-caret"></span>
+            </span>
+            {{#if ../help_center.alternate_locales}}
+              <ul class="dropdown-menu dropdown-menu-end" role="menu">
+                {{#each ../help_center.alternate_locales}}
+                  <li role="menuitem"><a href="{{url}}">{{name}}</a></li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          </span>
+        {{/with}}
+      </div>
     </div>
   </div>
 </footer>
 ```
+
+**IMPORTANT:** Replace the example links above with the ACTUAL links extracted in Step 1.3. Every link from the target footer should appear in the template.
+
+**Verification:** After writing footer.hbs, count your links vs target:
+- Target footer link count: ____
+- Your template link count: ____
+- If different, go back and add missing links
 
 ---
 
@@ -466,12 +607,19 @@ Tell the user: **"Preview running at http://localhost:4567 - please compare with
 - [ ] `_recent-activity.scss` - activity section background and cards
 - [ ] `_home-page.scss` - community section and spacing
 
-### Footer Content (CRITICAL)
-- [ ] Footer template rewritten to match target structure
-- [ ] Brand/company link included
+### Footer Content (CRITICAL - Must Match Target)
+- [ ] Footer template rewritten with multi-column structure (if target has columns)
+- [ ] ALL navigation columns from target included with correct titles
+- [ ] ALL links from each column included with correct text and URLs
 - [ ] Social media icons match target (correct platforms and URLs)
 - [ ] Copyright text matches target exactly
-- [ ] Footer SCSS updated to style new structure
+- [ ] Legal/policy links included (Privacy, Terms, etc.)
+- [ ] Footer SCSS updated to style new structure (columns, spacing)
+- [ ] **Footer typography matches** (font size and weight for titles/links)
+
+**Footer Verification:**
+- Count links: target vs template should match
+- Check typography: font-size and font-weight should match extracted values
 
 ### Home Page Sections (Critical)
 - [ ] Hero spacing reduced (typically space-8 padding, not space-10/12)
@@ -670,33 +818,92 @@ curl -s -A "Mozilla/5.0..." "<url>/brand"
 <button type="button" class="header-nav-toggle" aria-label="{{t 'toggle_navigation'}}" aria-expanded="false">
 ```
 
-### Footer Pattern
+### Footer Pattern (Multi-Column with Full Content)
 
 ```handlebars
 <footer class="footer">
   <div class="footer-inner">
+    {{!-- Navigation columns - replicate ALL columns from target --}}
     <div class="footer-columns">
       <div class="footer-column">
-        <h4 class="footer-column-title">Support</h4>
-        <ul class="footer-links">
-          <li>{{link 'help_center'}}</li>
-          <li>{{link 'community'}}</li>
-          <li>{{link 'new_request'}}</li>
+        <h4 class="footer-column-title">Products</h4>
+        <ul class="footer-column-links">
+          {{!-- Include EVERY link from target's Products column --}}
+          <li><a href="https://targetsite.com/product-a">Product A</a></li>
+          <li><a href="https://targetsite.com/product-b">Product B</a></li>
+          <li><a href="https://targetsite.com/enterprise">Enterprise</a></li>
+          <li><a href="https://targetsite.com/api">API</a></li>
+          <li><a href="https://targetsite.com/pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4 class="footer-column-title">Resources</h4>
+        <ul class="footer-column-links">
+          <li><a href="https://targetsite.com/docs">Documentation</a></li>
+          <li><a href="https://targetsite.com/blog">Blog</a></li>
+          <li>{{#link 'help_center'}}Support{{/link}}</li>
+          <li>{{#link 'community'}}Community{{/link}}</li>
         </ul>
       </div>
       <div class="footer-column">
         <h4 class="footer-column-title">Company</h4>
-        <ul class="footer-links">
-          <li><a href="https://www.targetsite.com/about">About</a></li>
+        <ul class="footer-column-links">
+          <li><a href="https://targetsite.com/about">About</a></li>
+          <li><a href="https://targetsite.com/careers">Careers</a></li>
+          <li><a href="https://targetsite.com/news">News</a></li>
+          <li><a href="https://targetsite.com/contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4 class="footer-column-title">Legal</h4>
+        <ul class="footer-column-links">
+          <li><a href="https://targetsite.com/privacy">Privacy Policy</a></li>
+          <li><a href="https://targetsite.com/terms">Terms of Service</a></li>
+          <li><a href="https://targetsite.com/security">Security</a></li>
         </ul>
       </div>
     </div>
+
+    {{!-- Bottom section with social, copyright, language --}}
     <div class="footer-bottom">
-      <div class="footer-copyright">&copy; Company Name 2025</div>
+      <div class="footer-social">
+        <a href="https://twitter.com/company" aria-label="Twitter" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><!-- X icon --></svg>
+        </a>
+        <a href="https://linkedin.com/company/company" aria-label="LinkedIn" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><!-- LinkedIn icon --></svg>
+        </a>
+        <a href="https://github.com/company" aria-label="GitHub" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><!-- GitHub icon --></svg>
+        </a>
+      </div>
+      <div class="footer-copyright">&copy; 2025 Company Name. All rights reserved.</div>
+      <div class="footer-language-selector">
+        {{#with help_center.language}}
+          <span class="dropdown">
+            <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
+              {{name}}<span class="dropdown-caret"></span>
+            </span>
+            {{#if ../help_center.alternate_locales}}
+              <ul class="dropdown-menu dropdown-menu-end" role="menu">
+                {{#each ../help_center.alternate_locales}}
+                  <li role="menuitem"><a href="{{url}}">{{name}}</a></li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          </span>
+        {{/with}}
+      </div>
     </div>
   </div>
 </footer>
 ```
+
+**Key points:**
+- Replicate ALL columns from target footer
+- Include EVERY link from each column (not just 1-2 examples)
+- External links to main site are expected and correct
+- Only use Zendesk helpers ({{link}}) for actual help center pages
 
 ---
 
@@ -780,6 +987,9 @@ curl -s -A "Mozilla/5.0..." "<url>/brand"
 | Buttons too rounded | Update ALL files (see 4.5) |
 | Search double border | Style `.search` wrapper only |
 | Wrong help center links | Use Zendesk helpers |
+| Font size wrong | Resolve CSS variables! `detail-m` often = 16px, not 12px |
+| Spacing too tight | Trace `space--4` etc to actual rem/px values |
+| Footer looks cramped | Check padding (often 5rem), gaps (often 2-3rem) |
 
 ---
 
