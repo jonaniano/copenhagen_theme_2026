@@ -62,9 +62,31 @@ If result is minimal (<1000 bytes), use WebFetch instead:
 ### Logo
 - Type: SVG / Image URL / Text-only fallback
 - Source: [paste SVG or URL here - NEVER fabricate]
+
+### Footer Content (CRITICAL - Extract Actual Structure)
+- Company name/brand link: ______
+- Social media links: [list each with URL]
+- Copyright text (exact): ______
+- Column structure: ______ columns with titles: ______
+- Additional links: ______
 ```
 
-### 1.3 Verify Logo Extraction
+### 1.3 Extract Footer Structure
+
+**CRITICAL:** Run this extraction for the footer:
+
+```
+WebFetch: "Extract the COMPLETE footer structure from this page:
+1. What sections/columns are there? List each with its title.
+2. What links are in each section?
+3. What is the exact copyright text?
+4. Are there social media links? Which platforms and their URLs?
+5. What is the overall layout?"
+```
+
+Document the footer structure - you will replicate this in the template.
+
+### 1.4 Verify Logo Extraction
 
 **MANDATORY:** The logo MUST be extracted, not fabricated.
 
@@ -98,6 +120,7 @@ grep -oE 'src="[^"]*logo[^"]*\.(svg|png|webp)"' /tmp/target-site.html | head -3
 - [ ] Card border-radius (exact px)
 - [ ] Card shadow/border style identified
 - [ ] Logo extracted OR user asked for help
+- [ ] Footer structure extracted (columns, links, social icons, copyright text)
 
 ---
 
@@ -165,12 +188,43 @@ cat templates/footer.hbs
 - CTA button text/styling
 - Wrapper classes for styling
 
-### 3.3 Update Footer
+### 3.3 Update Footer (COPY Target Structure)
 
-Footers are more flexible. Match the target structure but:
-- Use Zendesk helpers for help center links: `{{link 'help_center'}}`, `{{link 'community'}}`
-- Hardcode year (do NOT use `{{current_year}}` - it doesn't exist)
-- External links to main site are OK
+**CRITICAL:** The footer template MUST be rewritten to match the target site's footer structure. This is NOT optional styling - you must copy the actual content and layout.
+
+**Steps:**
+1. Review the footer structure extracted in Step 1.3
+2. Rewrite `templates/footer.hbs` to match that structure
+3. Include these elements from the target:
+   - Brand/company link to main site
+   - Social media icons with correct URLs (use SVGs from reference section)
+   - Exact copyright text (hardcode year - `{{current_year}}` doesn't exist)
+   - Column structure if applicable
+
+**Adaptation rules:**
+- Use `{{link 'help_center'}}` for support/help center links
+- External links to main site are OK and expected
+- Social icons: Use SVG icons from the Reference section at bottom of this file
+
+**Example footer structure:**
+```handlebars
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="https://www.targetsite.com" class="footer-brand">Company Name</a>
+      <span class="footer-separator">·</span>
+      {{#link 'help_center'}}Support Center{{/link}}
+    </div>
+    <div class="footer-social">
+      <!-- Include actual social links from target site -->
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copyright">© 2025 Company Name</span>
+      <!-- Language selector -->
+    </div>
+  </div>
+</footer>
+```
 
 ---
 
@@ -397,11 +451,11 @@ Tell the user: **"Preview running at http://localhost:4567 - please compare with
 - [ ] `manifest.json` - colors and fonts
 - [ ] `document_head.hbs` - Google Font loaded
 - [ ] `header.hbs` - logo and structure
-- [ ] `footer.hbs` - structure and links
+- [ ] `footer.hbs` - **REWRITTEN** to match target footer (links, social icons, copyright)
 - [ ] `_tokens.scss` - radius and shadow values
 - [ ] `_base.scss` - heading weights
 - [ ] `_header.scss` - header styling
-- [ ] `_footer.scss` - footer styling
+- [ ] `_footer.scss` - footer styling (must match new footer.hbs structure)
 - [ ] `_hero.scss` - hero background, spacing, and search area
 - [ ] `_search.scss` - search box styling
 - [ ] `_buttons.scss` - button styling
@@ -411,6 +465,13 @@ Tell the user: **"Preview running at http://localhost:4567 - please compare with
 - [ ] `_article.scss` - article page styling
 - [ ] `_recent-activity.scss` - activity section background and cards
 - [ ] `_home-page.scss` - community section and spacing
+
+### Footer Content (CRITICAL)
+- [ ] Footer template rewritten to match target structure
+- [ ] Brand/company link included
+- [ ] Social media icons match target (correct platforms and URLs)
+- [ ] Copyright text matches target exactly
+- [ ] Footer SCSS updated to style new structure
 
 ### Home Page Sections (Critical)
 - [ ] Hero spacing reduced (typically space-8 padding, not space-10/12)
