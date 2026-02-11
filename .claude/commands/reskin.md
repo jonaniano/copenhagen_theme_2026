@@ -59,6 +59,32 @@ If result is minimal (<1000 bytes), use WebFetch instead:
 - Card shadow: ______ (often "none" or subtle)
 - Card border: ______ (often "1px solid #ddd")
 
+### Card/Box Styling (CRITICAL - Often Missed!)
+- Card background color: #______ (often SAME as page bg, NOT white!)
+- Card border color: #______ or rgba(______)
+- Card hover state: ______ (border-color change? subtle shadow? none?)
+- Page background color: #______ (cards should usually match this)
+
+### Search Bar Styling (CRITICAL - Often Missed!)
+- Search bar background: #______ (often same as page bg)
+- Search bar border: ______ (e.g., "1px solid rgba(0,0,0,0.15)")
+- Search bar border-radius: ______px (often 8px for flat sites, NOT pill!)
+- Search bar shadow: ______ (often "none" for flat sites)
+- Search bar height: ______px (often 48-56px)
+
+### Breadcrumbs Styling
+- Breadcrumbs background: ______ (often "transparent" for flat sites)
+- Breadcrumbs text color: #______
+- Breadcrumbs separator style: ______ (/, >, →, etc.)
+
+### Page Spacing (CRITICAL - Often Missed!)
+- Hero padding: top ______px, bottom ______px (often 32-48px - COMPACT!)
+- Hero min-height: ______px (often 180-220px - NOT tall)
+- Section gap (between hero/content/footer): ______px (often 32-48px - TIGHT!)
+- Container max-width: ______px
+
+**NOTE:** Copenhagen's defaults are ALREADY spacious. Most reskins require REDUCING spacing, not increasing it!
+
 ### Logo
 - Type: SVG / Image URL / Text-only fallback
 - Source: [paste SVG or URL here - NEVER fabricate]
@@ -431,12 +457,16 @@ Files to update:
 - `_category.scss` - .section-tree-title weight
 - `_recent-activity.scss` - heading weights
 
-### 4.4 Cards & Containers (ALL FILES)
+### 4.4 Cards & Containers (ALL FILES) - CRITICAL
 
-**MANDATORY:** Run this command and fix EVERY result:
+**MANDATORY:** Run these commands and fix EVERY result:
 
 ```bash
+# Find heavy shadows/radius
 grep -rn "shadow-lg\|shadow-xl\|radius-xl\|radius-2xl" styles/*.scss | grep -v "//"
+
+# Find white/surface backgrounds on cards (should match page bg for flat sites)
+grep -rn "background-color: var(--color-surface)" styles/_blocks.scss styles/_category.scss styles/_section.scss styles/_article.scss styles/_recent-activity.scss
 ```
 
 **Expected result after fixes: 0 matches** (or only in _tokens.scss definitions)
@@ -449,16 +479,30 @@ Files to update with flat styling:
 - `_recent-activity.scss` - activity cards
 - `_search_results.scss` - result cards
 
-**For each card component:**
+**For each card component, update ALL THREE properties:**
 ```scss
-// REMOVE or reduce these:
-box-shadow: var(--shadow-lg);     // → none or shadow-sm
-border-radius: var(--radius-xl);  // → radius-md (8px)
-transform: translateY(-4px);      // → remove
+// 1. BACKGROUND - Use extracted card bg color (often SAME as page bg!)
+//    For flat sites like Anthropic: cards blend into page, NOT white
+background-color: #faf9f0;  // ← extracted card bg (NOT var(--color-surface)!)
 
-// ADD if target uses borders:
-border: 1px solid var(--color-border-default);
+// 2. BORDER - Add explicit border for flat sites
+border: 1px solid rgba(0, 0, 0, 0.08);  // ← subtle border
+
+// 3. SHADOW - Remove entirely for flat sites
+box-shadow: none;  // ← NOT shadow-sm, but NONE
+
+// 4. RADIUS - Use extracted value
+border-radius: 8px;  // ← usually 8px for flat
+
+// 5. HOVER - Subtle border change, NOT lift effect
+&:hover {
+  border-color: rgba(0, 0, 0, 0.15);  // ← subtle darkening
+  // NO transform: translateY()
+  // NO box-shadow on hover
+}
 ```
+
+**Common mistake:** Reducing shadows but leaving white backgrounds. For flat sites, cards should blend into the page background, not pop out with white backgrounds.
 
 ### 4.5 Buttons (ALL FILES)
 
@@ -519,39 +563,182 @@ Edit `styles/_recent-activity.scss`:
 grep -rn "linear-gradient\|radial-gradient" styles/_hero.scss styles/_home-page.scss styles/_recent-activity.scss | grep -v "//"
 ```
 
+### 4.8 Search Bar (CRITICAL - Often Missed!)
+
+**MANDATORY:** Run these commands:
+```bash
+# Check for pill shape and shadows in ALL files with search styles
+grep -rn "radius-full" styles/_search.scss styles/_section.scss styles/_sub-nav.scss | grep -v "//"
+
+# Check for remaining color variables in search files
+grep -rn "var(--color" styles/_search.scss styles/_section.scss | grep -i search
+```
+
+**Expected: 0 for both commands**
+
+**WARNING:** Search styles exist in MULTIPLE files! You must update ALL of them:
+- `_search.scss` - main search styles
+- `_section.scss` - interior page search (often has conflicting pill shape!)
+- `_sub-nav.scss` - sub-navigation search container
+- `_hero.scss` - hero search override
+
+**IMPORTANT:** You must update ALL color instances in `_search.scss`, not just the main container! The file has colors for:
+- Main `.search` container
+- `.search-full` variant
+- `input[type="search"]` text and placeholder
+- `-webkit-autofill` background (often missed!)
+- `.clear-button` colors
+- `.search-icon` color
+- Focus border colors in `[dir="ltr"]` and `[dir="rtl"]` sections
+
+Update `styles/_search.scss`:
+```scss
+.search {
+  border-radius: 8px;
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #faf9f0;
+
+  &:focus-within {
+    border-color: #d97757;
+    box-shadow: none;
+  }
+
+  &-full input[type="search"],
+  &-full .clear-button {
+    border-color: #faf9f0;  // NOT var(--color-surface)!
+  }
+
+  input[type="search"] {
+    background-color: transparent;
+    color: #191919;
+
+    &::placeholder {
+      color: rgba(25, 25, 25, 0.5);
+    }
+
+    &:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px #faf9f0 inset;  // MUST match bg!
+    }
+  }
+
+  .clear-button {
+    color: rgba(25, 25, 25, 0.5);
+    &:hover { background-color: #d97757; color: #fff; }
+  }
+}
+
+.search-icon {
+  color: rgba(25, 25, 25, 0.5);
+}
+```
+
+Also update focus border colors in the `[dir="ltr"]` and `[dir="rtl"]` sections!
+
+### 4.9 Breadcrumbs (Often Missed!)
+
+Update `styles/_breadcrumbs.scss`:
+```scss
+.breadcrumbs {
+  background-color: transparent;  // NOT surface-raised for flat sites
+  padding: var(--space-2) 0;      // minimal padding
+  border-radius: 0;               // no rounded container
+
+  li {
+    color: rgba(25, 25, 25, 0.6);  // muted text
+
+    a {
+      color: rgba(25, 25, 25, 0.6);
+
+      &:hover {
+        color: #d97757;  // accent color
+      }
+    }
+
+    &:last-child {
+      color: #191919;  // current page darker
+    }
+  }
+}
+```
+
+### 4.10 Page Spacing (CRITICAL - Often Missed!)
+
+**Copenhagen's defaults are SPACIOUS. Most sites need TIGHTER spacing.**
+
+**IMPORTANT:** You almost always need to REDUCE spacing, not increase it!
+
+Update `styles/_hero.scss`:
+```scss
+.hero {
+  padding: var(--space-8) var(--space-5);  // 32px - COMPACT
+  min-height: 180px;                        // shorter hero
+
+  @include tablet {
+    padding: var(--space-10) var(--space-6);  // 40px on desktop
+    min-height: 220px;
+  }
+}
+```
+
+Update `styles/_home-page.scss`:
+```scss
+.section {
+  margin-bottom: var(--space-10);  // 40px between sections - TIGHT
+
+  @include tablet {
+    margin-bottom: var(--space-12);  // 48px on desktop
+  }
+}
+```
+
+**Rule of thumb:** If Copenhagen uses `space-16` (64px), most sites use `space-10` (40px) or less.
+
+**Verification:**
+```bash
+# Check hero padding values
+grep -n "padding:" styles/_hero.scss | head -5
+```
+
 ---
 
 ## ══════════════════════════════════════════════════════════════════════════════
 ## GATE 4: SCSS Verification (MANDATORY)
 ## ══════════════════════════════════════════════════════════════════════════════
 
-**Run ALL FOUR verification commands. Each should return 0 (or near-0) matches:**
+**Run ALL SEVEN verification commands. Each should return 0 (or near-0) matches:**
 
 ```bash
-# Heavy shadows/radius - should return 0 outside _tokens.scss
+# 1. Heavy shadows/radius - should return 0 outside _tokens.scss
 grep -rn "shadow-lg\|shadow-xl\|radius-xl\|radius-2xl" styles/*.scss | grep -v "_tokens.scss" | grep -v "//" | wc -l
 ```
 **Expected: 0** (If not 0, you missed files. Go back to 4.4)
 
 ```bash
-# Pill shapes - should return 0 for flat sites
-grep -rn "radius-full\|9999px" styles/*.scss | grep -v "//" | wc -l
+# 2. Pill shapes in search bar - should return 0 for flat sites
+grep -rn "radius-full" styles/_search.scss | grep -v "//" | wc -l
 ```
-**Expected: 0 for flat sites, or only in intentional places**
+**Expected: 0 for flat sites** (If not 0, go back to 4.8)
 
 ```bash
-# Heavy heading weights - should return 0
+# 3. Heavy heading weights - should return 0
 grep -rn "font-weight.*extrabold" styles/*.scss | grep -v "//" | wc -l
 ```
 **Expected: 0**
 
 ```bash
-# Gradients in home page sections - should return 0 for flat sites
+# 4. Gradients in home page sections - should return 0 for flat sites
 grep -rn "linear-gradient\|radial-gradient" styles/_hero.scss styles/_home-page.scss styles/_recent-activity.scss | grep -v "//" | wc -l
 ```
 **Expected: 0 for flat sites** (If not 0, remove gradient backgrounds in 4.7)
 
-**DO NOT PROCEED** until all four commands return expected values.
+```bash
+# 5. White card backgrounds - should return 0 for flat sites where cards match page bg
+grep -rn "background-color: var(--color-surface)" styles/_blocks.scss styles/_category.scss styles/_section.scss styles/_recent-activity.scss | grep -v "//" | wc -l
+```
+**Expected: 0 for flat sites** (If not 0, update card backgrounds to match extracted page bg color)
+
+**DO NOT PROCEED** until all five commands return expected values.
 
 ---
 
@@ -984,7 +1171,14 @@ curl -s -A "Mozilla/5.0..." "<url>/brand"
 | Colors don't match | Re-extract exact hex values |
 | Headings too bold | Update ALL files (see 4.3) |
 | Cards too elevated | Update ALL files (see 4.4) |
+| Cards look "popped out" | Change background-color from white to page bg color (e.g., #faf9f0) |
+| Cards still have shadow | Set `box-shadow: none` not just `shadow-sm` for flat sites |
 | Buttons too rounded | Update ALL files (see 4.5) |
+| Search bar pill-shaped | Change `border-radius: var(--radius-full)` to `8px` (see 4.8) |
+| Search bar has shadow | Set `box-shadow: none` in `_search.scss` |
+| Breadcrumbs have background | Set `background-color: transparent` (see 4.9) |
+| Page feels too spread out | REDUCE hero padding and section margins (see 4.10) - Copenhagen defaults are spacious |
+| Too much whitespace | Reduce `min-height`, padding, and margins - most sites are COMPACT |
 | Search double border | Style `.search` wrapper only |
 | Wrong help center links | Use Zendesk helpers |
 | Font size wrong | Resolve CSS variables! `detail-m` often = 16px, not 12px |
