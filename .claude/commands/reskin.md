@@ -22,6 +22,45 @@ Reskin a Zendesk Copenhagen Help Center theme to match a target website's visual
 
 ---
 
+## STEP 0: SESSION CHECK (ALWAYS DO THIS FIRST!)
+
+### 0.1 Check for Compacted/Resumed Session
+
+**CRITICAL:** If this conversation was resumed from a previous session (you see "conversation was compacted" or similar), you MUST NOT trust summarized context for visual decisions!
+
+**Signs you're in a resumed session:**
+- Message mentions "conversation was compacted" or "continued from previous"
+- You see a summary of previous work but don't have actual WebFetch results
+- You're being asked to "continue where you left off"
+
+**If ANY of these are true, execute the Session Resumption Protocol:**
+
+### 0.2 Session Resumption Protocol (MANDATORY if resumed)
+
+```markdown
+## Session Resumption Checklist
+
+- [ ] I am in a resumed/compacted session
+- [ ] I will NOT trust summary context for visual decisions
+- [ ] I will re-fetch the target site NOW before any other work
+- [ ] I will re-extract ALL design values fresh
+- [ ] I will verify current theme state against target
+```
+
+**Actions:**
+1. **IMMEDIATELY run WebFetch** on the target URL (even if summary says analysis was done)
+2. **Re-extract** colors, fonts, structure - do NOT use values from summary
+3. **Read current template/SCSS files** to see actual state
+4. **Compare** current state to fresh target analysis
+5. **Only then** continue with remaining steps
+
+**WHY THIS MATTERS:**
+Compacted summaries lose visual context. You cannot accurately match a site's design from text descriptions alone. Previous sessions may have made incorrect assumptions that carried into the summary. Fresh eyes on the actual site are REQUIRED.
+
+**DO NOT SKIP THIS.** Proceeding without fresh analysis after session resumption WILL result in a failed reskin.
+
+---
+
 ## STEP 1: ANALYSIS (Required First)
 
 ### 1.0 Visual Structure Analysis (CRITICAL - DO THIS FIRST!)
@@ -95,7 +134,7 @@ Before extracting tokens, understand the site's VISUAL STRUCTURE and classify it
 - Type C → Will need custom templates for unique sections
 ```
 
-**CRITICAL:** If site is Type A (minimal), you MUST simplify the Copenhagen header. Do NOT keep full navigation if target has logo-only header!
+**CRITICAL:** If site is Type A (minimal), you should SIMPLIFY the Copenhagen header's VISUAL APPEARANCE. However, see the FUNCTIONALITY PRESERVATION rule below - you cannot remove working features!
 
 ---
 
@@ -475,86 +514,89 @@ cat templates/header.hbs
 cat templates/footer.hbs
 ```
 
-### 3.2 Update Header (MATCH TARGET STRUCTURE!)
+### 3.2 Update Header (STYLE, Don't Remove Functionality!)
 
-**FIRST: Check your Site Classification from Step 1.0**
+# ═══════════════════════════════════════════════════════════════════════════════
+# CRITICAL CONSTRAINT: FUNCTIONALITY PRESERVATION
+# ═══════════════════════════════════════════════════════════════════════════════
 
-#### For Type A (MINIMAL) Sites - 0-2 nav items
+**YOU CANNOT REMOVE FUNCTIONALITY WHEN RESKINNING.**
 
-If target has logo-only or minimal header, you MUST simplify Copenhagen:
+A reskin changes the VISUAL APPEARANCE, not the FEATURES. All of these MUST continue to work:
 
-```handlebars
-<a class="skip-navigation" tabindex="1" href="#main-content">{{t 'skip_navigation'}}</a>
+**MUST PRESERVE (in ALL header types):**
+- ✅ Skip navigation link for accessibility
+- ✅ Sign in / Sign out functionality
+- ✅ User profile access when signed in
+- ✅ My requests link when signed in
+- ✅ User avatar dropdown when signed in
+- ✅ Mobile menu toggle and navigation
+- ✅ All dropdown open/close behavior
 
-<div class="header-wrapper">
-<header class="header">
-  <div class="logo">
-    {{!-- Logo links to MAIN SITE if that's what target does --}}
-    <a href="https://maincompanysite.com">
-      <img src="{{settings.logo}}" alt="Company Logo" />
-    </a>
-  </div>
+**YOU CAN:**
+- ✅ Change colors, fonts, spacing, borders, shadows
+- ✅ Simplify visual styling (remove decorative elements)
+- ✅ Hide non-essential nav links via CSS (display: none)
+- ✅ Rearrange layout within reason
+- ✅ Change the logo
 
-  {{!-- Minimal nav - only sign-in/user dropdown --}}
-  <div class="nav-wrapper-desktop">
-    {{#unless signed_in}}
-      {{#link "sign_in" class="sign-in"}}{{t 'sign_in'}}{{/link}}
-    {{/unless}}
-    {{#if signed_in}}
-      <div class="user-info dropdown">
-        <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-          {{user_avatar class="user-avatar"}}
-        </button>
-        <div class="dropdown-menu" role="menu">
-          {{#my_profile role="menuitem"}}{{t 'profile'}}{{/my_profile}}
-          {{link "requests" role="menuitem"}}
-          {{link "sign_out" role="menuitem"}}
-        </div>
-      </div>
-    {{/if}}
-  </div>
-
-  {{!-- Mobile menu also simplified --}}
-  <div class="nav-wrapper-mobile">
-    <button class="menu-button-mobile" aria-controls="user-nav-mobile" aria-expanded="false" aria-label="{{t 'toggle_navigation'}}">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="icon-menu">
-        <path fill="none" stroke="currentColor" stroke-linecap="round" d="M1.5 3.5h13m-13 4h13m-13 4h13"/>
-      </svg>
-    </button>
-    <nav class="menu-list-mobile" id="user-nav-mobile" aria-expanded="false">
-      <ul class="menu-list-mobile-items">
-        {{#if signed_in}}
-          <li class="item">{{link "requests"}}</li>
-          <li class="item">{{link "sign_out"}}</li>
-        {{else}}
-          <li class="item">{{#link "sign_in"}}{{t 'sign_in'}}{{/link}}</li>
-        {{/if}}
-      </ul>
-    </nav>
-  </div>
-</header>
-</div>
-```
-
-**DO NOT keep community links, service catalog, etc. if target doesn't have them!**
+**YOU CANNOT:**
+- ❌ Remove sign in/out links
+- ❌ Remove user dropdown menu items (profile, requests, sign out)
+- ❌ Remove mobile navigation functionality
+- ❌ Remove the mobile menu toggle button
+- ❌ Break accessibility features (skip nav, aria labels)
 
 ---
 
-#### For Type B/C (STANDARD/CUSTOM) Sites - 4+ nav items
+#### Approach: STYLE the existing header, don't rewrite it
 
-Keep standard Copenhagen structure but update styling.
+**FIRST: Read the current header.hbs**
+```bash
+cat templates/header.hbs
+```
 
-**PRESERVE these elements (DO NOT remove):**
-- Skip navigation link: `{{t 'skip_navigation'}}`
-- User nav conditional: `{{#if signed_in}}...{{/if}}`
-- Mobile toggle button
-- Dropdown structure for signed-in users
+**THEN: Make TARGETED edits to style it, preserving all functionality.**
 
-**CAN MODIFY:**
-- Logo (replace with extracted logo)
-- Main navigation items
-- CTA button text/styling
-- Wrapper classes for styling
+For Type A (MINIMAL) sites where target has simple visual header:
+1. Keep ALL functional elements in the template
+2. Use SCSS to simplify the visual appearance:
+   - Hide extra nav links: `.nav-link-extra { display: none; }`
+   - Simplify styling: remove shadows, reduce padding
+   - Clean up visual clutter
+
+For Type B/C (STANDARD) sites:
+1. Keep the full template structure
+2. Update SCSS for colors, fonts, spacing
+
+**Example: Simplifying header VISUALLY via SCSS (not template removal):**
+```scss
+// Hide community/catalog links for minimal look
+.nav-wrapper-desktop .community-link,
+.nav-wrapper-desktop .service-catalog-link {
+  display: none;
+}
+
+// Simplify header visual styling
+.header-wrapper {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  box-shadow: none;  // Remove shadow for flat look
+}
+
+// But ALL functional elements remain in template and work!
+```
+
+**Template changes should be LIMITED to:**
+- Changing logo link destination (main site vs help center)
+- Updating alt text
+- Adding/changing wrapper classes for styling hooks
+
+**Template changes should NOT:**
+- Remove any `{{#if signed_in}}` blocks
+- Remove dropdown menu items
+- Remove mobile nav elements
+- Remove accessibility elements
 
 ### 3.3 Update Footer (COPY Target Structure)
 
@@ -1739,9 +1781,10 @@ If ANY of these are true, the reskin is NOT complete:
    - Many sites have DIFFERENT brand vs link colors (e.g., Blue Bottle: teal brand, blue links)
    - Always extract link color from actual `<a>` styles in CSS
 
-8. **Header has full nav when target has minimal** → WRONG STRUCTURE
-   - Did you classify the site type in Step 1.0?
-   - Type A sites need simplified header (logo + sign-in only)
+8. **Header functionality was removed** → BROKEN
+   - You can STYLE the header to look minimal
+   - You CANNOT remove sign-in, user dropdown, profile, requests, mobile nav
+   - Use CSS to hide non-essential links, don't delete template elements
 
 9. **Footer is light but target's is dark** → VISUALLY WRONG
    - Footer background is one of the most visible differences
@@ -1769,6 +1812,17 @@ If ANY of these are true, the reskin is NOT complete:
     - A proper reskin touches 15+ SCSS files
     - If your count is low, you skipped sections
 
+15. **Resumed from compacted session without re-fetching target** → LIKELY WRONG
+    - Compacted summaries lose visual context
+    - If you see "conversation was compacted", you MUST re-fetch the target site
+    - Do NOT trust summary descriptions for visual decisions
+    - Always run Step 0 (Session Check) first!
+
+16. **Used generic "flat styling" without extracting actual design values** → INCOMPLETE
+    - Every site has specific colors, fonts, spacing
+    - "Make it flat" is not a design system - you need actual values
+    - Re-run extraction to get real design tokens from target CSS
+
 ---
 
 ## Files That Define Heading Weights
@@ -1792,6 +1846,10 @@ grep -rn "font-weight.*extrabold\|font-weight.*bold" styles/*.scss | grep -i "ti
 ---
 
 ## Common Header Mistakes to AVOID
+
+**RULE: STYLE the header, don't REMOVE functionality!**
+
+A "minimal" look should be achieved through CSS (hiding elements, simplifying styling), NOT by deleting functional template elements. Users still need to sign in, access their profile, view requests, etc.
 
 ```handlebars
 {{!-- ❌ WRONG: Removing user nav signed_in conditional --}}
