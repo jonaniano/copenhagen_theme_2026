@@ -2,7 +2,6 @@ import type { ServiceCatalogItem } from "../../data-types/ServiceCatalogItem";
 import styled from "styled-components";
 import { getColor } from "@zendeskgarden/react-theming";
 import { ItemThumbnail } from "../item-thumbnail/ItemThumbnail";
-import { sanitizeHtml } from "../../../shared";
 
 const ItemContainer = styled.a`
   display: flex;
@@ -68,7 +67,7 @@ const ServiceCatalogListItem = ({
       <TextContainer>
         <ItemTitle>{serviceItem.name}</ItemTitle>
         <ItemDescription
-          dangerouslySetInnerHTML={{ __html: sanitizeHtml(serviceItem.description) }}
+          dangerouslySetInnerHTML={{ __html: serviceItem.description }}
         />
       </TextContainer>
     </ItemContainer>

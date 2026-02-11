@@ -4,7 +4,6 @@ import { Span } from "@zendeskgarden/react-typography";
 import type { TicketFieldObject } from "../data-types/TicketFieldObject";
 import type { ChangeEventHandler } from "react";
 import { useCallback, useState } from "react";
-import { sanitizeHtml } from "../../shared";
 
 interface DatePickerProps {
   field: TicketFieldObject;
@@ -82,7 +81,7 @@ export function DatePicker({
         {required && <Span aria-hidden="true">*</Span>}
       </GardenField.Label>
       {description && (
-        <GardenField.Hint dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }} />
+        <GardenField.Hint dangerouslySetInnerHTML={{ __html: description }} />
       )}
       <GardenDatePicker
         value={date}

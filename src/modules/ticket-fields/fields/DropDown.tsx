@@ -4,7 +4,6 @@ import { Span } from "@zendeskgarden/react-typography";
 import type { TicketFieldObject } from "../data-types/TicketFieldObject";
 import { useRef, useEffect } from "react";
 import { EmptyValueOption } from "./EmptyValueOption";
-import { sanitizeHtml } from "../../shared";
 
 interface DropDownProps {
   field: TicketFieldObject;
@@ -30,7 +29,7 @@ export function DropDown({ field, onChange }: DropDownProps): JSX.Element {
         {required && <Span aria-hidden="true">*</Span>}
       </Field.Label>
       {description && (
-        <Field.Hint dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }} />
+        <Field.Hint dangerouslySetInnerHTML={{ __html: description }} />
       )}
       <Combobox
         ref={wrapperRef}

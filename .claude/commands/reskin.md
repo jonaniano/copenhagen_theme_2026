@@ -24,6 +24,81 @@ Reskin a Zendesk Copenhagen Help Center theme to match a target website's visual
 
 ## STEP 1: ANALYSIS (Required First)
 
+### 1.0 Visual Structure Analysis (CRITICAL - DO THIS FIRST!)
+
+Before extracting tokens, understand the site's VISUAL STRUCTURE and classify its type.
+
+**Run this WebFetch prompt:**
+```
+"Describe the visual structure of this help center/support page:
+
+1. HEADER:
+   - How many navigation items are visible? (0, 1-3, 4+)
+   - Is there just a logo, or full navigation with multiple links?
+   - Does the logo link to main company site or help center home?
+   - Any CTA button in header?
+
+2. ALERT/BANNERS:
+   - Is there an announcement/alert bar at the top? What color background?
+   - Position: above header or below?
+
+3. HERO SECTION:
+   - Background: solid color, gradient, or image?
+   - What color is the background?
+   - Height: short (<200px), medium (200-300px), tall (>300px)?
+
+4. CUSTOM SECTIONS (not standard help center elements):
+   - Is there a 'Still have questions?' or 'Need help?' callout section?
+   - Quick action cards or links?
+   - Any promotional or announcement sections?
+
+5. FOOTER:
+   - Background color: LIGHT (white/gray) or DARK (black/navy/brand color)?
+   - If dark, what's the approximate color?
+   - How many columns?
+   - Are there social media icons?
+
+6. OVERALL FEEL:
+   - Minimal/simple or feature-rich/complex?
+   - Corporate/professional or casual/friendly?"
+```
+
+**Document structure:**
+```markdown
+## Site Structure Analysis
+
+### Site Classification
+- [ ] Type A: MINIMAL (logo-only header, simple layout, few sections)
+- [ ] Type B: STANDARD (full nav, typical help center sections)
+- [ ] Type C: CUSTOM (many unique sections, heavily branded)
+
+### Header
+- Navigation items: ______ (0-1 = logo only, 2-3 = minimal, 4+ = full)
+- Logo links to: main site / help center
+- CTA button present: yes / no
+
+### Custom Sections Present
+- [ ] Alert/announcement banner (color: #______)
+- [ ] Request callout ("Still have questions?" etc.)
+- [ ] Quick actions section
+- [ ] Other: ______
+
+### Footer
+- Background: LIGHT / DARK
+- If dark, color: #______
+- Columns: ______
+- Social icons: yes / no
+
+### Implications
+- Type A → SIMPLIFY header significantly, may need minimal nav
+- Type B → Standard reskin approach
+- Type C → Will need custom templates for unique sections
+```
+
+**CRITICAL:** If site is Type A (minimal), you MUST simplify the Copenhagen header. Do NOT keep full navigation if target has logo-only header!
+
+---
+
 ### 1.1 Fetch Target Site
 
 ```bash
@@ -42,12 +117,38 @@ If result is minimal (<1000 bytes), use WebFetch instead:
 ```markdown
 ## Extracted Design System
 
-### Colors
-- Header BG: #______
-- Footer BG: #______
+### Colors (CRITICAL: These are often DIFFERENT - extract each separately!)
+
+**Brand vs Link colors (OFTEN DIFFERENT!):**
+- Brand/accent color: #______ (used on buttons, CTAs, backgrounds)
+- Link color: #______ (text links - CHECK if different from brand!)
+- Hover link color: #______
+- Visited link color: #______ (often purple like #9358B0, NOT gray!)
+
+**Text colors:**
 - Primary text: #______
-- Accent/CTA: #______
-- Link color: #______
+- Secondary/muted text: #______
+
+**Section backgrounds:**
+- Header BG: #______
+- Hero BG: #______ (solid color? or image?)
+- Page/content BG: #______
+
+**Footer colors (CRITICAL - often inverted!):**
+- Footer BG: #______ (LIGHT=#fff-#f5f5f5 or DARK=#333-#000?)
+- Footer text: #______ (must contrast with footer bg!)
+- Footer link: #______ (if dark footer, usually light/white)
+
+**Verification - find actual link colors in CSS:**
+```bash
+curl -s "<CSS_URL>" | grep -oE '(^a |\.link|:link|:visited)[^}]+' | head -20
+```
+
+**WARNING:** Blue Bottle example of different colors:
+- Brand: #17494D (teal) - used on buttons
+- Links: #1F73B7 (blue) - used on text links
+- Visited: #9358B0 (purple) - NOT gray!
+If you use brand color for links, the reskin will look wrong!
 
 ### Typography
 - Font family: ______ → Google Font: ______
@@ -195,7 +296,56 @@ curl -s "<CSS_FILE_URL>" | grep -oE '\-\-size[^:]+:[^;]+' | head -20
 
 **Document the RESOLVED values** (in px or rem), not just variable names.
 
-### 1.4 Verify Logo Extraction
+### 1.4 Detect Custom Sections (NEW - CRITICAL!)
+
+Many sites have custom sections NOT part of standard Copenhagen. You MUST identify these.
+
+**Run these commands:**
+```bash
+# Find custom section classes
+curl -s "<TARGET_URL>" | grep -oE 'class="[^"]*(callout|cta|action|banner|alert|quick|promo)[^"]*"' | sort | uniq
+
+# Look for "Still have questions" or contact prompts
+curl -s "<TARGET_URL>" | grep -i "still have\|need help\|contact us\|chat with\|email us"
+
+# Find non-standard sections
+curl -s "<TARGET_URL>" | grep -oE '<section[^>]*class="[^"]*"' | grep -v "hero\|categories\|blocks\|search" | head -10
+```
+
+**Document custom sections found:**
+```markdown
+## Custom Sections to Implement
+
+### Alert/Announcement Banner
+- Present: yes / no
+- Background color: #______
+- Text content: "______"
+- Link URL: ______
+- Position: above header / below header
+
+### Request Callout (e.g., "Still have questions?")
+- Present: yes / no
+- Background color: #______
+- Heading text: "______"
+- Buttons/links: [ ] Chat [ ] Email [ ] Other: ______
+
+### Quick Actions
+- Present: yes / no
+- Number of items: ______
+- Items: ______
+
+### Other Custom Sections
+- ______
+```
+
+**CRITICAL:** If custom sections exist:
+1. You MUST create new template partials for them
+2. You MUST add corresponding SCSS
+3. Standard Copenhagen templates won't have these - they need to be ADDED
+
+---
+
+### 1.5 Verify Logo Extraction
 
 **MANDATORY:** The logo MUST be extracted, not fabricated.
 
@@ -220,9 +370,34 @@ grep -oE 'src="[^"]*logo[^"]*\.(svg|png|webp)"' /tmp/target-site.html | head -3
 ## ══════════════════════════════════════════════════════════════════════════════
 
 **DO NOT PROCEED** until you have documented:
-- [ ] Header background color (exact hex)
-- [ ] Footer background color (exact hex)
-- [ ] Accent/CTA color (exact hex)
+
+### Site Classification (from Step 1.0)
+- [ ] Site type identified: A (minimal) / B (standard) / C (custom)
+- [ ] Header nav count: ______ (0-1, 2-3, or 4+)
+- [ ] If Type A: Plan to SIMPLIFY header
+
+### Colors (VERIFY each is extracted separately!)
+- [ ] Brand/accent color: #______ (buttons, CTAs)
+- [ ] Link color: #______
+- [ ] **Link color DIFFERENT from brand?** yes / no (if same, double-check!)
+- [ ] Visited link color: #______ (often purple, NOT gray)
+- [ ] Header background: #______
+- [ ] Page background: #______
+
+### Footer Background (CRITICAL!)
+- [ ] Footer background: #______
+- [ ] Footer is: LIGHT / DARK
+- [ ] **If DARK footer:** Footer text color: #______ (must be light!)
+- [ ] **If DARK footer:** Footer link color: #______ (must be light!)
+- [ ] **If DARK footer:** Social icon color noted (usually white)
+
+### Custom Sections (from Step 1.4)
+- [ ] Alert banner: present / not present
+- [ ] Request callout: present / not present
+- [ ] Quick actions: present / not present
+- [ ] If any present: Plan to CREATE custom templates
+
+### Standard Checks
 - [ ] Font family identified
 - [ ] Heading font weight identified
 - [ ] Button border-radius (exact px)
@@ -300,7 +475,74 @@ cat templates/header.hbs
 cat templates/footer.hbs
 ```
 
-### 3.2 Update Header
+### 3.2 Update Header (MATCH TARGET STRUCTURE!)
+
+**FIRST: Check your Site Classification from Step 1.0**
+
+#### For Type A (MINIMAL) Sites - 0-2 nav items
+
+If target has logo-only or minimal header, you MUST simplify Copenhagen:
+
+```handlebars
+<a class="skip-navigation" tabindex="1" href="#main-content">{{t 'skip_navigation'}}</a>
+
+<div class="header-wrapper">
+<header class="header">
+  <div class="logo">
+    {{!-- Logo links to MAIN SITE if that's what target does --}}
+    <a href="https://maincompanysite.com">
+      <img src="{{settings.logo}}" alt="Company Logo" />
+    </a>
+  </div>
+
+  {{!-- Minimal nav - only sign-in/user dropdown --}}
+  <div class="nav-wrapper-desktop">
+    {{#unless signed_in}}
+      {{#link "sign_in" class="sign-in"}}{{t 'sign_in'}}{{/link}}
+    {{/unless}}
+    {{#if signed_in}}
+      <div class="user-info dropdown">
+        <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+          {{user_avatar class="user-avatar"}}
+        </button>
+        <div class="dropdown-menu" role="menu">
+          {{#my_profile role="menuitem"}}{{t 'profile'}}{{/my_profile}}
+          {{link "requests" role="menuitem"}}
+          {{link "sign_out" role="menuitem"}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+
+  {{!-- Mobile menu also simplified --}}
+  <div class="nav-wrapper-mobile">
+    <button class="menu-button-mobile" aria-controls="user-nav-mobile" aria-expanded="false" aria-label="{{t 'toggle_navigation'}}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="icon-menu">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" d="M1.5 3.5h13m-13 4h13m-13 4h13"/>
+      </svg>
+    </button>
+    <nav class="menu-list-mobile" id="user-nav-mobile" aria-expanded="false">
+      <ul class="menu-list-mobile-items">
+        {{#if signed_in}}
+          <li class="item">{{link "requests"}}</li>
+          <li class="item">{{link "sign_out"}}</li>
+        {{else}}
+          <li class="item">{{#link "sign_in"}}{{t 'sign_in'}}{{/link}}</li>
+        {{/if}}
+      </ul>
+    </nav>
+  </div>
+</header>
+</div>
+```
+
+**DO NOT keep community links, service catalog, etc. if target doesn't have them!**
+
+---
+
+#### For Type B/C (STANDARD/CUSTOM) Sites - 4+ nav items
+
+Keep standard Copenhagen structure but update styling.
 
 **PRESERVE these elements (DO NOT remove):**
 - Skip navigation link: `{{t 'skip_navigation'}}`
@@ -427,6 +669,48 @@ yarn build
 
 **CRITICAL:** This step requires updating 15-20 SCSS files. Updating only 2-3 files is INCOMPLETE.
 
+## ══════════════════════════════════════════════════════════════════════════════
+## SCSS FILE TRACKER - MARK EACH FILE AS YOU UPDATE IT
+## ══════════════════════════════════════════════════════════════════════════════
+
+**Copy this tracker and check off EACH file as you edit it:**
+
+```markdown
+### SCSS Files Updated (MUST update ALL before Gate 4)
+
+**Core tokens & base:**
+- [ ] `_tokens.scss` - radius, shadows
+- [ ] `_base.scss` - heading weights (h1-h6)
+
+**Header & Footer:**
+- [ ] `_header.scss` - header styling
+- [ ] `_footer.scss` - footer styling (dark bg if needed!)
+
+**Hero & Search:**
+- [ ] `_hero.scss` - background, spacing, heading weights
+- [ ] `_search.scss` - border-radius, shadows, colors
+
+**Buttons:**
+- [ ] `_buttons.scss` - radius, shadows, colors
+
+**Cards & Containers (CRITICAL - often skipped!):**
+- [ ] `_blocks.scss` - home page category cards
+- [ ] `_category.scss` - category/section tree cards
+- [ ] `_section.scss` - section page cards/containers
+- [ ] `_article.scss` - article containers
+- [ ] `_recent-activity.scss` - activity cards
+
+**Page sections:**
+- [ ] `_home-page.scss` - community section, spacing
+- [ ] `_breadcrumbs.scss` - breadcrumb styling
+
+**Count: ___/15 files updated**
+```
+
+**STOP! If fewer than 12 files are checked, you're not done with SCSS!**
+
+---
+
 ### 4.1 Header & Footer SCSS
 
 **IMPORTANT:** Use `Edit` tool to update specific values, NOT `Write` to replace entire files. Replacing files loses previous refinements!
@@ -516,6 +800,24 @@ Edit `styles/_search.scss`:
 - Set border-radius to extracted value (usually 8px)
 - Set border and shadow to match target
 
+## ══════════════════════════════════════════════════════════════════════════════
+## CHECKPOINT: Before Typography & Cards
+## ══════════════════════════════════════════════════════════════════════════════
+
+**STOP! Before proceeding, verify you've updated:**
+- [ ] `_tokens.scss`
+- [ ] `_header.scss`
+- [ ] `_footer.scss`
+- [ ] `_hero.scss`
+- [ ] `_search.scss`
+- [ ] `_buttons.scss`
+
+**If any are unchecked, go back and update them NOW.**
+
+The next sections (Typography & Cards) are the MOST COMMONLY SKIPPED parts of a reskin. They require updating MANY files. Do not rush through them!
+
+---
+
 ### 4.3 Typography (ALL FILES)
 
 **MANDATORY:** Run this command and fix EVERY result:
@@ -536,7 +838,26 @@ Files to update:
 - `_category.scss` - .section-tree-title weight
 - `_recent-activity.scss` - heading weights
 
+## ══════════════════════════════════════════════════════════════════════════════
+## CHECKPOINT: Typography Complete?
+## ══════════════════════════════════════════════════════════════════════════════
+
+**Run this command NOW:**
+```bash
+grep -rn "font-weight.*extrabold\|font-weight.*800" styles/*.scss | grep -v "//" | wc -l
+```
+
+**Expected: 0 (or very low for specific use cases)**
+
+If the number is high (5+), you skipped typography updates. Go back to 4.3!
+
+---
+
 ### 4.4 Cards & Containers (ALL FILES) - CRITICAL
+
+**THIS SECTION IS FREQUENTLY SKIPPED - DO NOT SKIP IT!**
+
+Cards appear on: home page, category pages, section pages, article pages, search results. If you don't update card styling, the reskin will look incomplete on EVERY page.
 
 **MANDATORY:** Run these commands and fix EVERY result:
 
@@ -582,6 +903,28 @@ border-radius: 8px;  // ← usually 8px for flat
 ```
 
 **Common mistake:** Reducing shadows but leaving white backgrounds. For flat sites, cards should blend into the page background, not pop out with white backgrounds.
+
+## ══════════════════════════════════════════════════════════════════════════════
+## CHECKPOINT: Cards Complete?
+## ══════════════════════════════════════════════════════════════════════════════
+
+**Verify you edited EACH of these files for card styling:**
+- [ ] `_blocks.scss` - home page category cards
+- [ ] `_category.scss` - section tree cards
+- [ ] `_section.scss` - section list items
+- [ ] `_article.scss` - article containers
+- [ ] `_recent-activity.scss` - activity cards
+
+**Run this command NOW:**
+```bash
+grep -rn "shadow-lg\|shadow-xl\|radius-xl" styles/_blocks.scss styles/_category.scss styles/_section.scss styles/_article.scss styles/_recent-activity.scss | grep -v "//" | wc -l
+```
+
+**Expected: 0 for flat sites**
+
+If the number is high, you didn't update card styling. Go back to 4.4!
+
+---
 
 ### 4.5 Buttons (ALL FILES)
 
@@ -856,6 +1199,61 @@ sleep 1
 zcli themes:preview
 ```
 
+---
+
+## ══════════════════════════════════════════════════════════════════════════════
+## GATE 6: Visual Verification (MANDATORY - DO NOT SKIP!)
+## ══════════════════════════════════════════════════════════════════════════════
+
+**Open target site and preview (localhost:4567) SIDE BY SIDE.**
+
+You MUST visually compare before declaring completion!
+
+### Header Comparison
+- [ ] Number of nav items similar (if target has 0-2, yours should too!)
+- [ ] Logo position and size similar
+- [ ] Background color matches
+- [ ] If target has NO nav links, yours doesn't either
+
+### Hero Comparison
+- [ ] Background type matches (solid color / gradient / image)
+- [ ] Background color matches (if solid)
+- [ ] Height is similar (not drastically taller/shorter)
+
+### Custom Sections
+- [ ] Alert banner present IF target has one
+- [ ] Request callout ("Still have questions?") present IF target has one
+- [ ] Quick actions present IF target has them
+- [ ] If target has custom sections you don't, GO BACK and add them!
+
+### Footer Comparison (CRITICAL!)
+- [ ] Background color matches (ESPECIALLY check if dark!)
+- [ ] Text is readable against background
+- [ ] If target footer is DARK, yours is too
+- [ ] Column count similar
+- [ ] Social icons visible and styled correctly
+
+### Link Colors
+- [ ] Click a link - does the color match target's link color?
+- [ ] Is visited link color correct (often purple, not gray)?
+
+### Overall Feel
+- [ ] Site "feels" similar to target
+- [ ] No jarring visual differences
+- [ ] Color scheme is cohesive
+
+**If ANY checkbox fails, FIX THE ISSUE before proceeding!**
+
+Common fixes needed at this stage:
+| Issue | Fix |
+|-------|-----|
+| Header has too many nav items | Use Type A minimal header template |
+| Footer is light but should be dark | Update `_footer.scss` background-color |
+| Links are wrong color | Update manifest.json `link_color` |
+| Missing custom sections | Create new templates and SCSS |
+
+---
+
 Tell the user: **"Preview running at http://localhost:4567 - please compare with [TARGET_URL] and let me know what needs adjustment."**
 
 ---
@@ -866,15 +1264,35 @@ Tell the user: **"Preview running at http://localhost:4567 - please compare with
 
 **A reskin is COMPLETE only when ALL boxes are checked:**
 
+### Pre-Implementation Analysis (MUST be done FIRST)
+- [ ] Site type classified: A (minimal) / B (standard) / C (custom)
+- [ ] Header nav count documented (determines header approach)
+- [ ] Link color extracted (verified DIFFERENT from brand color if applicable)
+- [ ] Footer background identified: LIGHT / DARK
+- [ ] Custom sections identified (alert, callout, quick-actions)
+
+### Header Structure (Based on Site Type)
+- [ ] **If Type A (minimal):** Header simplified to logo + sign-in only
+- [ ] **If Type B/C:** Standard header with appropriate nav items
+- [ ] Header nav count matches target (not more items than target!)
+- [ ] Logo links to correct destination (main site vs help center)
+
+### Custom Sections (If Target Has Them)
+- [ ] Alert banner template created (if target has one)
+- [ ] Alert banner SCSS created
+- [ ] Request callout template created (if target has one)
+- [ ] Request callout SCSS created
+- [ ] Quick actions implemented (if target has them)
+
 ### Files Modified (Minimum 15)
-- [ ] `manifest.json` - colors and fonts
+- [ ] `manifest.json` - colors and fonts (link_color VERIFIED correct)
 - [ ] `document_head.hbs` - Google Font loaded
-- [ ] `header.hbs` - logo and structure
+- [ ] `header.hbs` - **STRUCTURE matches target** (minimal vs full)
 - [ ] `footer.hbs` - **REWRITTEN** to match target footer (links, social icons, copyright)
 - [ ] `_tokens.scss` - radius and shadow values
 - [ ] `_base.scss` - heading weights
 - [ ] `_header.scss` - header styling
-- [ ] `_footer.scss` - footer styling (must match new footer.hbs structure)
+- [ ] `_footer.scss` - footer styling (**dark bg if target is dark!**)
 - [ ] `_hero.scss` - hero background, spacing, and search area
 - [ ] `_search.scss` - search box styling
 - [ ] `_buttons.scss` - button styling
@@ -916,11 +1334,20 @@ Tell the user: **"Preview running at http://localhost:4567 - please compare with
 - [ ] Gradients grep returns 0 for flat sites
 - [ ] `yarn build` passes
 
+### Gate 6: Visual Verification (MANDATORY!)
+- [ ] Opened target and preview side-by-side
+- [ ] Header nav count matches target
+- [ ] Footer background color matches (especially if DARK!)
+- [ ] Link colors verified by clicking actual links
+- [ ] Custom sections present if target has them
+- [ ] Overall site "feels" similar to target
+
 ### Quality Checks
 - [ ] Logo is EXTRACTED (not fabricated)
-- [ ] Header user-nav structure preserved
+- [ ] Header structure matches target type (minimal vs full)
 - [ ] Footer uses Zendesk helpers for HC links
 - [ ] Preview server is running
+- [ ] User has been asked to compare and provide feedback
 
 ---
 
@@ -1275,6 +1702,14 @@ curl -s -A "Mozilla/5.0..." "<url>/brand"
 | Font size wrong | Resolve CSS variables! `detail-m` often = 16px, not 12px |
 | Spacing too tight | Trace `space--4` etc to actual rem/px values |
 | Footer looks cramped | Check padding (often 5rem), gaps (often 2-3rem) |
+| **Links wrong color** | Brand color ≠ link color! Re-extract link color specifically from CSS `a` styles |
+| **Header has too many items** | Target is Type A (minimal) - simplify to logo + sign-in only |
+| **Footer light but should be dark** | Re-check target footer - update `_footer.scss` background to dark color |
+| **Footer text invisible** | If dark footer, text/links must be light (white or #ccc) |
+| **Missing alert banner** | Target has custom section - create new template + SCSS |
+| **Missing "Still have questions?"** | Target has request-callout - create new template + SCSS |
+| **Site doesn't "feel" like target** | Did you do Gate 6 visual comparison? Compare side-by-side! |
+| **Visited links gray instead of purple** | Many sites use purple (#9358B0) for visited - check and update |
 
 ---
 
@@ -1299,6 +1734,40 @@ If ANY of these are true, the reskin is NOT complete:
 
 6. **Spacing was not adjusted** → POTENTIALLY INCOMPLETE
    - Compare hero height and section gaps to target
+
+7. **Used brand color for link_color without verification** → LIKELY WRONG
+   - Many sites have DIFFERENT brand vs link colors (e.g., Blue Bottle: teal brand, blue links)
+   - Always extract link color from actual `<a>` styles in CSS
+
+8. **Header has full nav when target has minimal** → WRONG STRUCTURE
+   - Did you classify the site type in Step 1.0?
+   - Type A sites need simplified header (logo + sign-in only)
+
+9. **Footer is light but target's is dark** → VISUALLY WRONG
+   - Footer background is one of the most visible differences
+   - Dark footers need inverted text colors
+
+10. **No visual side-by-side comparison done** → NOT VERIFIED
+    - Gate 6 is MANDATORY - you must visually compare before completing
+
+11. **Target has custom sections you didn't implement** → INCOMPLETE
+    - Alert banners, "Still have questions?", quick actions need custom templates
+    - Standard Copenhagen doesn't have these - they must be ADDED
+
+12. **Only updated _tokens.scss, _header.scss, _footer.scss** → MAJORLY INCOMPLETE
+    - You skipped Typography (4.3) and Cards (4.4) sections entirely!
+    - Cards appear on EVERY page - skipping them makes reskin look unfinished
+    - Run the checkpoint verification commands and update ALL listed files
+
+13. **Didn't run Gate 4 verification commands** → NOT VERIFIED
+    - Gate 4 has 7 verification commands that MUST return expected values
+    - If you skipped these, you likely missed files
+    - Go back and run EVERY command in Gate 4
+
+14. **Updated fewer than 12 SCSS files** → INCOMPLETE
+    - Check the SCSS File Tracker at start of Step 4
+    - A proper reskin touches 15+ SCSS files
+    - If your count is low, you skipped sections
 
 ---
 

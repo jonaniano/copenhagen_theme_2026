@@ -45,6 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     element.addEventListener("keyup", (event) => {
+      console.log("escape");
       if (event.keyCode === ESCAPE) {
         closeNavigation(toggle, element);
       }

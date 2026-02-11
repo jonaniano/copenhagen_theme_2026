@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { getColor } from "@zendeskgarden/react-theming";
 import { XXXL } from "@zendeskgarden/react-typography";
 import { ItemThumbnail } from "../item-thumbnail/ItemThumbnail";
-import { sanitizeHtml } from "../../../shared";
 
 const DescriptionWrapper = styled.div`
   border-bottom: ${(props) => props.theme.borders.sm}
@@ -104,7 +103,7 @@ export const CollapsibleDescription = ({
           ref={contentRef}
           className="service-catalog-description"
           isCollapsed={isCollapsed}
-          dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}
+          dangerouslySetInnerHTML={{ __html: description }}
         ></CollapsibleText>
       )}
       {isClamped && (

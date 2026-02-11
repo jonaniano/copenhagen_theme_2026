@@ -50,6 +50,7 @@
       });
 
       element.addEventListener("keyup", (event) => {
+        console.log("escape");
         if (event.keyCode === ESCAPE) {
           closeNavigation(toggle, element);
         }
@@ -386,15 +387,7 @@
     links.forEach((anchor) => {
       anchor.addEventListener("click", (event) => {
         event.preventDefault();
-        // Security: Validate URL protocol to prevent javascript: protocol attacks
-        try {
-          const url = new URL(anchor.href, window.location.origin);
-          if (url.protocol === "https:" || url.protocol === "http:") {
-            window.open(anchor.href, "", "height = 500, width = 500");
-          }
-        } catch {
-          // Invalid URL, ignore
-        }
+        window.open(anchor.href, "", "height = 500, width = 500");
       });
     });
   });
@@ -500,20 +493,15 @@
 
   function saveFocus() {
     const activeElementId = document.activeElement.getAttribute("id");
-    if (activeElementId) {
-      sessionStorage.setItem(key, activeElementId);
-    }
+    sessionStorage.setItem(key, "#" + activeElementId);
   }
 
   function returnFocus() {
-    const elementId = sessionStorage.getItem(key);
-    if (elementId) {
-      sessionStorage.removeItem(key);
-      // Security: Use getElementById instead of querySelector to prevent CSS selector injection
-      const returnFocusToEl = document.getElementById(elementId);
-      if (returnFocusToEl && returnFocusToEl.focus) {
-        returnFocusToEl.focus();
-      }
+    const returnFocusTo = sessionStorage.getItem(key);
+    if (returnFocusTo) {
+      sessionStorage.removeItem("returnFocusTo");
+      const returnFocusToEl = document.querySelector(returnFocusTo);
+      returnFocusToEl && returnFocusToEl.focus && returnFocusToEl.focus();
     }
   }
 
