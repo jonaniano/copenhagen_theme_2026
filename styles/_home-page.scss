@@ -2,17 +2,17 @@
 
 .section {
   @include tablet {
-    margin-bottom: var(--space-10);
+    margin-bottom: var(--space-16);
   }
 
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-12);
 }
 
 .home-section h2 {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-8);
   text-align: center;
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-tight);
 }
 
@@ -44,14 +44,33 @@
     a {
       display: block;
       border-bottom: none;
-      padding: var(--space-3) var(--space-4);
-      border-radius: var(--radius-md);
-      transition: background-color var(--duration-fast) ease;
+      padding: var(--space-4) var(--space-5);
+      border-radius: var(--radius-lg);
+      transition: all var(--duration-normal) ease;
+      position: relative;
+
+      // Accent line on left
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 0;
+        background: var(--color-interactive);
+        border-radius: var(--radius-full);
+        transition: height var(--duration-normal) ease;
+      }
 
       &:hover,
       &:focus {
         background-color: var(--color-surface-raised);
         text-decoration: none;
+
+        &::before {
+          height: 60%;
+        }
       }
     }
 
@@ -69,11 +88,11 @@
 /***** Community section in homepage - Bold CTA *****/
 .community {
   text-align: center;
-  padding: var(--space-8) var(--space-5);
+  padding: var(--space-14) var(--space-5);
 
   h2 {
     font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-extrabold);
     margin-bottom: var(--space-5);
     color: var(--color-text-primary);
     letter-spacing: var(--letter-spacing-tight);
@@ -84,25 +103,44 @@
     display: none;
   }
 
-  // CTA button
+  // Bold CTA button
   &-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
-    padding: var(--space-4) var(--space-8);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-10);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
     color: var(--color-text-inverse);
     background: var(--color-interactive);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
     text-decoration: none;
-    transition: background-color var(--duration-fast) ease;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+
+    // Arrow icon
+    &::after {
+      content: "→";
+      font-size: 1.2em;
+      transition: transform var(--duration-fast) ease;
+    }
 
     &:hover,
     &:focus {
       background: var(--color-interactive-hover);
+      box-shadow: var(--shadow-xl);
       text-decoration: none;
+      transform: translateY(-3px);
+
+      &::after {
+        transform: translateX(6px);
+      }
+    }
+
+    &:active {
+      background: var(--color-interactive-active);
+      transform: translateY(0);
     }
 
     &:visited {
@@ -117,5 +155,5 @@
 }
 
 .activity {
-  padding: var(--space-6) 0;
+  padding: var(--space-10) 0;
 }

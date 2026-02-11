@@ -233,7 +233,20 @@ grep -oE 'src="[^"]*logo[^"]*\.(svg|png|webp)"' /tmp/target-site.html | head -3
 - [ ] **ALL footer links extracted** (every link text + URL in each column)
 - [ ] Social media platforms and URLs extracted
 - [ ] Copyright text extracted (exact)
-- [ ] **Footer typography extracted** (title/link font size and weight)
+
+### Footer Typography (CRITICAL - Often Missed!)
+- [ ] Column title font-size: ______px (RESOLVED, not variable name!)
+- [ ] Column title font-weight: ______ (400/500/600)
+- [ ] Column title letter-spacing: ______em
+- [ ] Link font-size: ______px (RESOLVED!)
+- [ ] Link font-weight: ______ (400/500)
+- [ ] Link letter-spacing: ______em (often negative like -0.01em!)
+- [ ] Link line-height: ______ (often 1.4-1.6)
+- [ ] Link vertical padding/margin: ______px (space between links)
+- [ ] Column gap: ______px (horizontal space between columns)
+- [ ] Footer padding: ______px top/bottom
+
+**WARNING:** CSS variables like `--font-size--detail-m` often resolve to 16px, NOT 12px! Always trace to actual values.
 
 ---
 
@@ -416,14 +429,80 @@ yarn build
 
 ### 4.1 Header & Footer SCSS
 
+**IMPORTANT:** Use `Edit` tool to update specific values, NOT `Write` to replace entire files. Replacing files loses previous refinements!
+
 Edit `styles/_header.scss`:
 - Set header background to extracted color
 - Set nav link colors and hover effects
 - Style CTA button
 
-Edit `styles/_footer.scss`:
-- Set footer background to extracted color
-- Set link colors and hover effects
+### 4.1.1 Footer SCSS (CRITICAL - Detailed Updates Required)
+
+**MANDATORY:** The footer requires updating MANY specific values. Do NOT just set background color!
+
+Edit `styles/_footer.scss` with ALL of these extracted values:
+
+```scss
+// 1. CONTAINER - Background and padding
+.footer {
+  background-color: #191919;           // ← extracted footer bg
+  padding: 80px 0 48px;                // ← extracted padding (often 4-5rem top, 2-3rem bottom)
+}
+
+// 2. COLUMN LAYOUT - Grid gap
+.footer-columns {
+  gap: 32px 24px;                      // ← extracted column gap (row gap, column gap)
+
+  @include desktop {
+    gap: 16px;                         // ← often tighter on desktop
+  }
+}
+
+// 3. COLUMN TITLES - Font styling
+.footer-column-title {
+  font-size: 14px;                     // ← extracted title size (often 13-15px)
+  font-weight: 500;                    // ← extracted weight (often 500-600)
+  letter-spacing: -0.01em;             // ← extracted spacing (often negative!)
+  margin-bottom: 16px;                 // ← extracted margin
+  text-transform: none;                // ← check if uppercase on target
+}
+
+// 4. LINKS - Font styling (MOST COMMONLY MISSED!)
+.footer-column-links {
+  a {
+    font-size: 14px;                   // ← extracted link size (often 13-15px)
+    font-weight: 400;                  // ← extracted weight (usually 400)
+    letter-spacing: -0.01em;           // ← extracted spacing (OFTEN NEGATIVE!)
+    line-height: 1.5;                  // ← extracted line-height
+
+    // Vertical spacing between links
+    display: block;
+    padding: 4px 0;                    // ← OR use margin-bottom on <li>
+  }
+
+  li {
+    margin-bottom: 8px;                // ← extracted vertical spacing
+  }
+}
+
+// 5. BOTTOM SECTION
+.footer-bottom {
+  padding-top: 32px;                   // ← extracted padding
+  margin-top: 48px;                    // ← if separated from columns
+}
+
+// 6. COPYRIGHT
+.footer-copyright {
+  font-size: 13px;                     // ← often smaller than links
+  letter-spacing: -0.01em;
+}
+```
+
+**Common footer mistakes:**
+- Using default `var(--font-size-sm)` instead of extracted px values
+- Missing letter-spacing (many sites use negative values like -0.01em)
+- Wrong vertical spacing between links (too tight or too loose)
+- Forgetting to update column gap for responsive breakpoints
 
 ### 4.2 Hero & Search
 
@@ -738,7 +817,19 @@ grep -rn "background-color: var(--color-surface)" styles/_blocks.scss styles/_ca
 ```
 **Expected: 0 for flat sites** (If not 0, update card backgrounds to match extracted page bg color)
 
-**DO NOT PROCEED** until all five commands return expected values.
+```bash
+# 6. Footer using default token variables instead of extracted values
+grep -n "var(--font-size" styles/_footer.scss | wc -l
+```
+**Expected: 0 or minimal** (Footer typography should use extracted px values, not default tokens!)
+
+```bash
+# 7. Footer typography check - verify extracted values are present
+grep -n "font-size:\|letter-spacing:\|line-height:" styles/_footer.scss | head -10
+```
+**Verify:** Output should show SPECIFIC px values (like `14px`, `-0.01em`, `1.5`) NOT token variables.
+
+**DO NOT PROCEED** until all SEVEN commands return expected values.
 
 ---
 
